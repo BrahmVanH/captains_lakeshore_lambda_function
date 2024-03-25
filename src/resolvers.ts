@@ -3,7 +3,7 @@ import { signToken } from './utils/auth';
 import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
 import { connectToDb } from './connection/db';
 import { IQueryBookingsArgs, ICreateUserArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
-import { Resolvers, HideawayImgPack as IHideawayImgPack, CottageImgPack as ICottageImgPack, HomePgImgPack as IHomePgImgPack } from './generated/graphql';
+import { Resolvers } from './generated/graphql';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -11,7 +11,7 @@ const resolvers: Resolvers = {
 			try {
 				await connectToDb();
 
-				const allUsers: IUser[] = await User.find().exec();
+				const allUsers: IUser[] = await User.find();
 
 				if (!allUsers) {
 					throw new Error('Error fetching all users from database');
@@ -74,6 +74,7 @@ const resolvers: Resolvers = {
 		getCottageImgs: async () => {
 			try {
 				const cottageImgs = await getS3CottagePgImgs();
+				console.log('cottageImgs', cottageImgs);
 
 				if (!cottageImgs) {
 					throw new Error('Something went wrong in fetching cottage object from S3');
@@ -105,28 +106,28 @@ const resolvers: Resolvers = {
 					throw new Error('All fields must be filled to create a user.');
 				} else if (adminCode !== process.env.ADMIN_CODE) {
 					throw new Error('Incorrect admin code');
-				} else {
-					const newUser = await User.create({
-						firstName,
-						lastName,
-						username,
-						password: userPassword,
-					});
-
-					if (!newUser) {
-						throw new Error('There was an error creating user. Try again.');
-					}
-
-					const token = signToken(newUser);
-
-					return { token, newUser };
 				}
+				const user: IUser = await User.create({
+					firstName,
+					lastName,
+					username,
+					password: userPassword,
+				});
+
+				if (!user) {
+					throw new Error('There was an error creating user. Try again.');
+				}
+
+				const token = signToken(user);
+
+				return { token, user };
 			} catch (err: any) {
 				throw new Error('Error in creating user: ' + err.message);
 			}
 		},
 		loginUser: async (_: {}, { username, userPassword }: ILoginUserArgs, __: any) => {
 			try {
+				await connectToDb();
 				if (!username || !userPassword) {
 					throw new Error('username and password fields must be filled to log in');
 				}
@@ -150,6 +151,7 @@ const resolvers: Resolvers = {
 		},
 		removeUser: async (_: {}, { username, userPassword }: IRemoveUserArgs, __: any) => {
 			try {
+				await connectToDb();
 				if (!username) {
 					throw new Error('username  fields must be filled to remove');
 				}
@@ -173,8 +175,9 @@ const resolvers: Resolvers = {
 				throw new Error('Error in removing in user: ' + err.message);
 			}
 		},
-		createBooking: async (_: {}, { propertyName, dateValue }: ICreateBookingArgs) => {
+		createBooking: async (_: {}, { propertyName, dateValue }: ICreateBookingArgs, __: any) => {
 			try {
+				await connectToDb();
 				if (!dateValue) {
 					throw new Error('date object is undefined');
 				} else if (!propertyName) {
@@ -192,6 +195,7 @@ const resolvers: Resolvers = {
 		},
 		removeBooking: async (_: {}, { propertyName, dateValue }: IRemoveBookingArgs) => {
 			try {
+				await connectToDb();
 				if (!propertyName) {
 					throw new Error('property name is undefined');
 				} else if (!dateValue) {

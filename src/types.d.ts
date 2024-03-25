@@ -70,3 +70,11 @@ export interface IError {
 	details: string;
 }
 
+export type S3Object = {
+	Key: string;
+	LastModified: Date;
+	ETag: string;
+	ChecksumAlgorithm: string[]; // You might want to specify the actual type here
+	Size: number;
+	StorageClass: string;
+};

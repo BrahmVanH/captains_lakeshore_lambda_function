@@ -12,7 +12,6 @@ const server = new ApolloDServerDev({
 	resolvers,
 	introspection: true,
 });
-console.log('Starting server', server);
 
 server.listen({ port }).then(({ url }) => {
 	console.log(`🚀 Server ready at ${url}`);

@@ -88,10 +88,10 @@ export type QueryQueryBookingsByPropertyArgs = {
 
 export type User = {
   __typename?: 'User';
-  _id: Scalars['ID']['output'];
+  _id?: Maybe<Scalars['ID']['output']>;
   firstName: Scalars['String']['output'];
   lastName: Scalars['String']['output'];
-  password: Scalars['String']['output'];
+  password?: Maybe<Scalars['String']['output']>;
   username: Scalars['String']['output'];
 };
 
@@ -254,10 +254,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  _id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
