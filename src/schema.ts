@@ -1,10 +1,12 @@
 const typeDefs = `#graphql
+
   type User {
 		_id: ID!
 		firstName: String!
 		lastName: String!
 		username: String!
 		password: String!
+		
 	}
 
 	type Auth {
@@ -12,7 +14,7 @@ const typeDefs = `#graphql
 		user: User
 	}
 
-	type Date {
+	type Booking {
 		_id: ID!
 		propertyName: String!
 		dateValue: String!
@@ -43,7 +45,7 @@ const typeDefs = `#graphql
 
 	type Query {
 		getAllUsers: [User]
-		queryUnavailableDatesByProperty(propertyName: String!): [Date]
+		queryBookingsByProperty(propertyName: String!): [Booking]
 		getHomePgImgs: homePgImgPack
 		getHideawayImgs: hideawayImgPack
 		getCottageImgs: cottageImgPack
@@ -53,8 +55,8 @@ const typeDefs = `#graphql
 		createUser(firstName: String!, lastName: String!, username: String!, userPassword: String!, adminCode: String!): Auth
 		loginUser(username: String!, userPassword: String!): Auth
 		removeUser(username: String!, userPassword: String!): Auth
-		createUnavailableDate(propertyName: String!, dateValue: String!): Date
-		removeUnavailableDate(propertyName: String!, dateValue: String!): Date
+		createBooking(propertyName: String!, dateValue: String!): Booking
+		removeBooking(propertyName: String!, dateValue: String!): Booking
 	}
 `;
 

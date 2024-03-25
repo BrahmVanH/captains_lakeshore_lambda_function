@@ -2,43 +2,42 @@ import { Booking, User } from './models';
 import { signToken } from './utils/auth';
 import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
 import { connectToDb } from './connection/db';
-import { IQueryBookingsArgs, ICreateUserArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs } from './types';
+import { IQueryBookingsArgs, ICreateUserArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
+import { Resolvers, HideawayImgPack as IHideawayImgPack, CottageImgPack as ICottageImgPack, HomePgImgPack as IHomePgImgPack } from './generated/graphql';
 
-const resolvers = {
+const resolvers: Resolvers = {
 	Query: {
 		getAllUsers: async () => {
 			try {
 				await connectToDb();
 
-				const allUsers = await User.find().exec();
+				const allUsers: IUser[] = await User.find().exec();
 
 				if (!allUsers) {
 					throw new Error('Error fetching all users from database');
 				}
 
 				return allUsers;
-			} catch (err) {
+			} catch (err: any) {
 				console.error({ message: 'error in finding user', details: err });
-				throw new Error('Error in finding users');
+				throw new Error('Error in finding users: ' + err.message);
 			}
 		},
-		queryUnavailableDatesByProperty: async (_: {}, args: IQueryBookingsArgs, __: any) => {
+		queryBookingsByProperty: async (_: {}, { propertyName }: IQueryBookingsArgs, __: any) => {
 			try {
 				await connectToDb();
 
-				const { propertyName } = args;
-
 				if (!propertyName) {
-					throw new Error('No property name was presented for querying dates');
+					throw new Error('No property name was presented for querying bookings');
 				}
-				const dates = await Booking.find({ propertyName: propertyName });
-				if (!dates) {
-					throw new Error('Cannot find all dates in database');
+				const bookings = await Booking.find({ propertyName: propertyName });
+				if (!bookings) {
+					throw new Error('Cannot find booking in database');
 				}
-				return dates;
+				return bookings;
 			} catch (err: any) {
-				console.error({ message: 'error in finding dates', details: err });
-				throw new Error('Error in finding dates');
+				console.error({ message: 'error in finding bookings', details: err });
+				throw new Error('Error in finding dates: ' + err.message);
 			}
 		},
 		getHomePgImgs: async () => {
@@ -48,7 +47,6 @@ const resolvers = {
 					console.error('Error in querying s3 for homepage images', homePgImgs);
 					throw new Error('Error in querying s3 for homepage images');
 				}
-				// const { headerImgUrl, hideawayImgUrl, cottageImgUrl } = homePgImgs as { headerImgUrl: string; hideawayImgUrl: string; cottageImgUrl: string };
 
 				if (!homePgImgs?.headerImgUrl || !homePgImgs?.hideawayImgUrl || !homePgImgs?.cottageImgUrl) {
 					console.error('Error in querying s3 for homepage images');
@@ -57,7 +55,7 @@ const resolvers = {
 				return homePgImgs;
 			} catch (err: any) {
 				console.error('Error in querying s3 for homepage images', err);
-				throw new Error('Error in querying s3 for homepage images');
+				throw new Error('Error in querying s3 for homepage images: ' + err.message);
 			}
 		},
 		getHideawayImgs: async () => {
@@ -69,7 +67,8 @@ const resolvers = {
 				}
 				return hideawayImgs;
 			} catch (err: any) {
-				return [{ message: 'Error in getHideawayImages...', details: err.message }];
+				console.error('Error in getHideawayImgs...', err);
+				throw new Error('Error in getting hideaway images from s3: ' + err.message);
 			}
 		},
 		getCottageImgs: async () => {
@@ -81,7 +80,8 @@ const resolvers = {
 				}
 				return cottageImgs;
 			} catch (err: any) {
-				return [{ message: 'Error in getCottageImgs...', details: err.message }];
+				console.error('Error in getCottageImgs...', err);
+				throw new Error('Error in getting cottage images from s3: ' + err.message);
 			}
 		},
 		getAboutPgImg: async () => {
@@ -92,7 +92,8 @@ const resolvers = {
 				}
 				return aboutPgImgs;
 			} catch (err: any) {
-				return [{ message: 'Error in getHomePgImgs...', details: err.message }];
+				console.error('Error in querying s3 for about page image', err);
+				throw new Error('Error in querying s3 for about page image: ' + err.message);
 			}
 		},
 	},
@@ -129,8 +130,9 @@ const resolvers = {
 				if (!username || !userPassword) {
 					throw new Error('username and password fields must be filled to log in');
 				}
-				const user = await User.findOne({ username });
-				if (!user) {
+
+				const user: IUser | null = await User.findOne({ username });
+				if (!user?.comparePassword) {
 					throw new Error("Can't find user with that username");
 				}
 
@@ -152,9 +154,9 @@ const resolvers = {
 					throw new Error('username  fields must be filled to remove');
 				}
 
-				const user = await User.findOne({ username });
+				const user: IUser | null = await User.findOne({ username });
 
-				if (!user) {
+				if (!user?.comparePassword) {
 					throw new Error("Can't find user with that username");
 				}
 
@@ -162,8 +164,11 @@ const resolvers = {
 				if (!isPasswordValid) {
 					throw new Error('Incorrect Password!');
 				}
-				user.deleteOne();
-				return { message: 'User has been deleted' };
+				const deletedUser = await User.findOneAndDelete({ username });
+				if (!deletedUser) {
+					throw new Error('Could not delete user');
+				}
+				return { token: '', user: deletedUser };
 			} catch (err: any) {
 				throw new Error('Error in removing in user: ' + err.message);
 			}
@@ -175,14 +180,14 @@ const resolvers = {
 				} else if (!propertyName) {
 					throw new Error('property name is undefined');
 				}
-				const unavailableDate = await Booking.create({ propertyName, dateValue });
+				const booking = await Booking.create({ propertyName, dateValue });
 
-				if (!unavailableDate) {
+				if (!booking) {
 					throw new Error('Could not create new date');
 				}
-				return unavailableDate;
+				return booking;
 			} catch (err: any) {
-				throw new Error('Error in creating date in db: ' + err.message);
+				throw new Error('Error in creating booking in db: ' + err.message);
 			}
 		},
 		removeBooking: async (_: {}, { propertyName, dateValue }: IRemoveBookingArgs) => {
@@ -190,16 +195,16 @@ const resolvers = {
 				if (!propertyName) {
 					throw new Error('property name is undefined');
 				} else if (!dateValue) {
-					throw new Error('date object is undefined');
+					throw new Error('date value is undefined');
 				}
-				const unavailableDate = await Booking.findOneAndDelete({ propertyName, dateValue });
-				if (!unavailableDate) {
+				const booking = await Booking.findOneAndDelete({ propertyName, dateValue });
+				if (!booking) {
 					throw new Error('could not find unavailable date with that value...');
 				}
 
-				return unavailableDate;
+				return booking;
 			} catch (err: any) {
-				throw new Error('Error in removing unavailable date from db: ' + err.message);
+				throw new Error('Error in removing unavailable booking from db: ' + err.message);
 			}
 		},
 	},

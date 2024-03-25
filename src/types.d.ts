@@ -1,11 +1,13 @@
 import { Types } from "mongoose";
+import { User } from "../generated/graphql";
 
-export interface IUser {
+export interface IUser extends User {
+	_id: string;
 	firstName: string;
 	lastName: string;
 	username: string;
 	password: string;
-	comparePassword(password: string): Promise<boolean>;
+	comparePassword?(password: string): Promise<boolean>;
 }
 
 export interface IBooking {

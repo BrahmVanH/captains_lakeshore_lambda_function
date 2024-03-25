@@ -1,11 +1,11 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import { ISignTokenArgs } from '../types.d';
+import { ISignTokenArgs, IUser } from '../types.d';
 
 const secret = process.env.AUTH_SECRET ?? '';
 const expiration = process.env.AUTH_EXPIRATION ?? '';
 
-export const signToken = ({ username, _id }: ISignTokenArgs) => {
+export const signToken = ({ username, _id }: IUser) => {
 	const payload = { username, _id };
 	return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };

@@ -1,8 +1,9 @@
-import { configDotenv } from 'dotenv';
+import dotenv from 'dotenv';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import { ApolloServer as ApolloDServerDev } from 'apollo-server';
-configDotenv();
+
+dotenv.config();
 
 const port = process.env.PORT || 4000;
 

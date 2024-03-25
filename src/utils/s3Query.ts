@@ -1,4 +1,7 @@
 import AWS from 'aws-sdk';
+import { IHomeUrls } from '../types';
+import { HideawayImgPack as IHideawayImgPack, CottageImgPack as ICottageImgPack, HomePgImgPack as IHomePgImgPack } from '../generated/graphql';
+
 
 // const bucketName = process.env.S3_BUCKET_NAME ?? '';
 
@@ -27,15 +30,11 @@ import AWS from 'aws-sdk';
 // 	Prefix: 'captains_cottage_png/',
 // };
 
-if (process.env.NODE_ENV !== 'production') {
-	AWS.config.loadFromPath('./utils/awsCredentials.json');
-} else if (process.env.NODE_ENV == 'production') {
-	AWS.config.update({
-		accessKeyId: process.env.S3_ACCESS_KEY,
-		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-		region: process.env.S3_REGION,
-	});
-}
+AWS.config.update({
+	accessKeyId: process.env.S3_ACCESS_KEY,
+	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+	region: process.env.S3_REGION,
+});
 
 const s3 = new AWS.S3();
 
@@ -121,7 +120,7 @@ export const getS3HomePageImgs = async () => {
 		const cottageImgIndex = findImgIndex(data, homePgCottageImgKey);
 		const cottageImgUrl = getSignedUrl(homePageParams.Bucket, data.Contents[cottageImgIndex]);
 
-		return { headerImgUrl, hideawayImgUrl, cottageImgUrl };
+		return { headerImgUrl, hideawayImgUrl, cottageImgUrl } as IHomePgImgPack;
 	} catch (err: any) {
 		return [{ message: 'Error in querying s3 for homepage images', details: err.message }];
 	}
@@ -155,7 +154,7 @@ export const getS3HideawayPgImgs = async () => {
 				if (!altTag || !signedUrl) {
 					return null;
 				}
-				return { altTag, signedUrl };
+				return { altTag, signedUrl } as IHideawayImgPack;
 			})
 		);
 
@@ -163,7 +162,7 @@ export const getS3HideawayPgImgs = async () => {
 			console.error('Error in querying s3 for hideaway images');
 			throw new Error('Error in querying s3 for hideaway images');
 		}
-		return { headerUrl, hideawayGalleryObjects };
+		return { headerUrl, hideawayGalleryObjects } as IHideawayImgPack;
 	} catch (err: any) {
 		console.error('Error in querying s3 for hideaway images', err);
 		throw new Error('Error in querying s3 for hideaway images');
@@ -202,7 +201,7 @@ export const getS3CottagePgImgs = async () => {
 					if (!altTag || !signedUrl) {
 						return null;
 					}
-					return { altTag, signedUrl };
+					return { altTag, signedUrl } as ICottageImgPack;
 				})
 		);
 
@@ -231,7 +230,7 @@ export const getS3AboutPgImgs = async () => {
 			console.error('Error in querying s3 for homepage images');
 			throw new Error('Error in querying s3 for homepage images');
 		}
-		return imgUrl;
+		return imgUrl as string;
 	} catch (err: any) {
 		console.error('Error in querying s3 for about page images', err);
 		throw new Error('Error in querying s3 for about page images');

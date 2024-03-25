@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { IBooking } from '../types';
+import {Booking as IBooking} from '../generated/graphql';
 
 const bookingSchema: Schema = new Schema<IBooking>({
 	propertyName: {
