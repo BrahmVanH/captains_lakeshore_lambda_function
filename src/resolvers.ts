@@ -2,8 +2,8 @@ import { Booking, User } from './models';
 import { signToken } from './utils/auth';
 import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
 import { connectToDb } from './connection/db';
-import { IQueryBookingsArgs, ICreateUserArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
-import { Resolvers } from './generated/graphql';
+import { IQueryBookingsArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
+import { CreateUserInput, MutationCreateUserArgs, Resolvers } from './generated/graphql';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -99,7 +99,8 @@ const resolvers: Resolvers = {
 		},
 	},
 	Mutation: {
-		createUser: async (_: {}, { firstName, lastName, username, userPassword, adminCode }: ICreateUserArgs, __: any) => {
+		createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {
+			const { firstName, lastName, username, userPassword, adminCode } = args.input as CreateUserInput;
 			try {
 				await connectToDb();
 				if (!firstName || !lastName || !username || !userPassword || !adminCode) {

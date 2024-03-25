@@ -27,3 +27,5 @@ lambda/bundle
 
 # Local Netlify folder
 .netlify
+
+graphql.schema.json

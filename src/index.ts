@@ -25,7 +25,7 @@ const server = new ApolloDServerDev<BaseContext>({
 const startApolloServer = async () => {
 	try {
 		await server.start();
-		app.use('/graphql', cors<cors.CorsRequest>({ origin: allowedOrigins }), express.json(), expressMiddleware(server));
+		app.use('/graphql', cors<cors.CorsRequest>({ origin: '*' }), express.json(), expressMiddleware(server));
 		app.use((req, res, next) => {
 			if (!allowedOrigins.includes(req.headers.origin ?? '')) {
 				console.log('Origin not allowed:', req.headers.origin);

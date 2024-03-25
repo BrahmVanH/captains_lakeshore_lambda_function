@@ -29,6 +29,14 @@ export type Booking = {
   propertyName: Scalars['String']['output'];
 };
 
+export type CreateUserInput = {
+  adminCode: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  userPassword: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createBooking?: Maybe<Booking>;
@@ -46,11 +54,7 @@ export type MutationCreateBookingArgs = {
 
 
 export type MutationCreateUserArgs = {
-  adminCode: Scalars['String']['input'];
-  firstName: Scalars['String']['input'];
-  lastName: Scalars['String']['input'];
-  userPassword: Scalars['String']['input'];
-  username: Scalars['String']['input'];
+  input?: InputMaybe<CreateUserInput>;
 };
 
 
@@ -196,6 +200,7 @@ export type ResolversTypes = {
   Auth: ResolverTypeWrapper<Auth>;
   Booking: ResolverTypeWrapper<Booking>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateUserInput: CreateUserInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -212,6 +217,7 @@ export type ResolversParentTypes = {
   Auth: Auth;
   Booking: Booking;
   Boolean: Scalars['Boolean']['output'];
+  CreateUserInput: CreateUserInput;
   ID: Scalars['ID']['output'];
   Mutation: {};
   Query: {};
@@ -238,7 +244,7 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBooking?: Resolver<Maybe<ResolversTypes['Booking']>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'dateValue' | 'propertyName'>>;
-  createUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'adminCode' | 'firstName' | 'lastName' | 'userPassword' | 'username'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, Partial<MutationCreateUserArgs>>;
   loginUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'userPassword' | 'username'>>;
   removeBooking?: Resolver<Maybe<ResolversTypes['Booking']>, ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'dateValue' | 'propertyName'>>;
   removeUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'userPassword' | 'username'>>;

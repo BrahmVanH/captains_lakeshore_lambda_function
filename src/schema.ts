@@ -43,6 +43,14 @@ const typeDefs = `#graphql
 		galleryArray: [imageObject]
 	}
 
+	input CreateUserInput {
+		firstName: String!
+		lastName: String!
+		username: String!
+		userPassword: String!
+		adminCode: String!
+	}
+
 	type Query {
 		getAllUsers: [User]
 		queryBookingsByProperty(propertyName: String!): [Booking]
@@ -52,7 +60,7 @@ const typeDefs = `#graphql
 		getAboutPgImg: String
 	}
 	type Mutation {
-		createUser(firstName: String!, lastName: String!, username: String!, userPassword: String!, adminCode: String!): Auth
+		createUser(input: CreateUserInput): Auth
 		loginUser(username: String!, userPassword: String!): Auth
 		removeUser(username: String!, userPassword: String!): Auth
 		createBooking(propertyName: String!, dateValue: String!): Booking
