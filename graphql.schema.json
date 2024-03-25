@@ -1,0 +1,113 @@
+{
+	"types": [
+		{
+			"name": "User",
+			"fields": [
+				{ "name": "_id", "type": "ID!" },
+				{ "name": "firstName", "type": "String!" },
+				{ "name": "lastName", "type": "String!" },
+				{ "name": "username", "type": "String!" },
+				{ "name": "password", "type": "String!" }
+			]
+		},
+		{
+			"name": "Auth",
+			"fields": [
+				{ "name": "token", "type": "ID!" },
+				{ "name": "user", "type": "User" }
+			]
+		},
+		{
+			"name": "Date",
+			"fields": [
+				{ "name": "_id", "type": "ID!" },
+				{ "name": "propertyName", "type": "String!" },
+				{ "name": "dateValue", "type": "String!" }
+			]
+		},
+		{
+			"name": "imageObject",
+			"fields": [
+				{ "name": "original", "type": "String" },
+				{ "name": "thumbnail", "type": "String" },
+				{ "name": "originalAlt", "type": "String" },
+				{ "name": "thumbnailAlt", "type": "String" }
+			]
+		},
+		{
+			"name": "homePgImgPack",
+			"fields": [
+				{ "name": "headerImgUrl", "type": "String" },
+				{ "name": "hideawayImgUrl", "type": "String" },
+				{ "name": "cottageImgUrl", "type": "String" }
+			]
+		},
+		{
+			"name": "hideawayImgPack",
+			"fields": [
+				{ "name": "headerUrl", "type": "String" },
+				{ "name": "galleryArray", "type": "[imageObject]" }
+			]
+		},
+		{
+			"name": "cottageImgPack",
+			"fields": [
+				{ "name": "headerUrl", "type": "String" },
+				{ "name": "galleryArray", "type": "[imageObject]" }
+			]
+		}
+	],
+	"queries": [
+		{ "name": "getAllUsers", "type": "[User]" },
+		{ "name": "queryUnavailableDatesByProperty", "type": "[Date]", "args": [{ "name": "propertyName", "type": "String!" }] },
+		{ "name": "getHomePgImgs", "type": "homePgImgPack" },
+		{ "name": "getHideawayImgs", "type": "hideawayImgPack" },
+		{ "name": "getCottageImgs", "type": "cottageImgPack" },
+		{ "name": "getAboutPgImg", "type": "String" }
+	],
+	"mutations": [
+		{
+			"name": "createUser",
+			"type": "Auth",
+			"args": [
+				{ "name": "firstName", "type": "String!" },
+				{ "name": "lastName", "type": "String!" },
+				{ "name": "username", "type": "String!" },
+				{ "name": "userPassword", "type": "String!" },
+				{ "name": "adminCode", "type": "String!" }
+			]
+		},
+		{
+			"name": "loginUser",
+			"type": "Auth",
+			"args": [
+				{ "name": "username", "type": "String!" },
+				{ "name": "userPassword", "type": "String!" }
+			]
+		},
+		{
+			"name": "removeUser",
+			"type": "Auth",
+			"args": [
+				{ "name": "username", "type": "String!" },
+				{ "name": "userPassword", "type": "String!" }
+			]
+		},
+		{
+			"name": "createUnavailableDate",
+			"type": "Date",
+			"args": [
+				{ "name": "propertyName", "type": "String!" },
+				{ "name": "dateValue", "type": "String!" }
+			]
+		},
+		{
+			"name": "removeUnavailableDate",
+			"type": "Date",
+			"args": [
+				{ "name": "propertyName", "type": "String!" },
+				{ "name": "dateValue", "type": "String!" }
+			]
+		}
+	]
+}
