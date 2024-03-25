@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface IUser {
 	firstName: string;
 	lastName: string;
@@ -45,5 +47,24 @@ export interface IRemoveBookingArgs {
 
 export interface ISignTokenArgs {
 	username: string;
-	_id: string;
+	_id: Types.ObjectId;
 }
+
+export interface IGalleryContent {
+	original: string;
+	thumbnail: string;
+	originalAlt: string | null;
+	thumbnailAlt: string | null;
+}
+
+export interface IHomeUrls {
+	headerImgUrl: string;
+	hideawayImgUrl: string;
+	cottageImgUrl: string;
+}
+
+export interface IError {
+	message: string;
+	details: string;
+}
+

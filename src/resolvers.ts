@@ -1,7 +1,6 @@
 import { Booking, User } from './models';
-import signToken from './utils/auth';
-import { getImages } from './utils/s3Query';
-import { getHideawayImgUrls, getCottageImgUrls, getHomeImgUrls, getAboutImgUrl } from './utils/gallery_image_helpers';
+import Auth from './utils/auth';
+import S3 from './utils/s3Query';
 import { connectToDb } from './connection/db';
 import { IQueryBookingsArgs, ICreateUserArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs } from './types';
 
@@ -20,9 +19,10 @@ const resolvers = {
 				return allUsers;
 			} catch (err) {
 				console.error({ message: 'error in finding user', details: err });
+				throw new Error('Error in finding users');
 			}
 		},
-		queryUnavailableDatesByProperty: async (_: {}, args: IQueryDatesArgs, __: any) => {
+		queryUnavailableDatesByProperty: async (_: {}, args: IQueryBookingsArgs, __: any) => {
 			try {
 				await connectToDb();
 
@@ -31,75 +31,66 @@ const resolvers = {
 				if (!propertyName) {
 					throw new Error('No property name was presented for querying dates');
 				}
-				const dates = await BookingDate.find({ propertyName: propertyName });
+				const dates = await Booking.find({ propertyName: propertyName });
 				if (!dates) {
 					throw new Error('Cannot find all dates in database');
 				}
 				return dates;
 			} catch (err: any) {
-				return [{ message: 'Error in queryUnavailableDates...', details: err.message }];
+				console.error({ message: 'error in finding dates', details: err });
+				throw new Error('Error in finding dates');
 			}
 		},
 		getHomePgImgs: async () => {
 			try {
-				await connectToDb();
+				const homePgImgs = await S3.getHomePageImgs();
+				if (homePgImgs instanceof Array) {
+					console.error('Error in querying s3 for homepage images', homePgImgs);
+					throw new Error('Error in querying s3 for homepage images');
+				}
+				// const { headerImgUrl, hideawayImgUrl, cottageImgUrl } = homePgImgs as { headerImgUrl: string; hideawayImgUrl: string; cottageImgUrl: string };
 
-				const { headerImgUrl, hideawayImgUrl, cottageImgUrl } = await getImages('homePage');
-				if (!headerImgUrl || !hideawayImgUrl || !cottageImgUrl) {
+				if (!homePgImgs?.headerImgUrl || !homePgImgs?.hideawayImgUrl || !homePgImgs?.cottageImgUrl) {
+					console.error('Error in querying s3 for homepage images');
 					throw new Error('Something went wrong in fetching object from s3');
 				}
-				if (headerImgUrl && hideawayImgUrl && cottageImgUrl) {
-					return { headerImgUrl, hideawayImgUrl, cottageImgUrl };
-				}
+				return homePgImgs;
 			} catch (err: any) {
-				return [{ message: 'Error in getHomePgImgs...', details: err.message }];
+				console.error('Error in querying s3 for homepage images', err);
+				throw new Error('Error in querying s3 for homepage images');
 			}
 		},
 		getHideawayImgs: async () => {
 			try {
-				await connectToDb();
+				const hideawayImgs = await S3.getHideawayPgImgs();
 
-				const objectResponse = await getHideawayImgUrls();
-
-				if (!objectResponse) {
+				if (!hideawayImgs) {
 					throw new Error('Something went wrong in fetching hideaway object from S3');
-				} else if (objectResponse) {
-					return objectResponse;
-				} else {
-					return null;
 				}
+				return hideawayImgs;
 			} catch (err: any) {
 				return [{ message: 'Error in getHideawayImages...', details: err.message }];
 			}
 		},
 		getCottageImgs: async () => {
 			try {
-				await connectToDb();
+				const cottageImgs = await S3.getCottagePgImgs();
 
-				const objectResponse = await getCottageImgUrls();
-
-				if (!objectResponse) {
+				if (!cottageImgs) {
 					throw new Error('Something went wrong in fetching cottage object from S3');
-				} else if (objectResponse) {
-					return objectResponse;
-				} else {
-					return null;
 				}
+				return cottageImgs;
 			} catch (err: any) {
 				return [{ message: 'Error in getCottageImgs...', details: err.message }];
 			}
 		},
 		getAboutPgImg: async () => {
 			try {
-				await connectToDb();
-
-				const objectResponse = await getAboutImgUrl();
-				if (!objectResponse) {
+				const aboutPgImgs = await S3.getAboutPgImgs();
+				if (!aboutPgImgs) {
 					throw new Error('Something went wrong in fetching object from s3');
 				}
-				if (objectResponse) {
-					return objectResponse;
-				}
+				return aboutPgImgs;
 			} catch (err: any) {
 				return [{ message: 'Error in getHomePgImgs...', details: err.message }];
 			}
@@ -125,7 +116,7 @@ const resolvers = {
 						throw new Error('There was an error creating user. Try again.');
 					}
 
-					const token = signToken(newUser);
+					const token = Auth.signToken(newUser);
 
 					return { token, newUser };
 				}
@@ -149,7 +140,7 @@ const resolvers = {
 					throw new Error('Incorrect Password!');
 				}
 
-				const token = signToken(user);
+				const token = Auth.signToken(user);
 				return { token, user };
 			} catch (err: any) {
 				throw new Error('Error in logging in user: ' + err.message);
@@ -160,14 +151,19 @@ const resolvers = {
 				if (!username) {
 					throw new Error('username  fields must be filled to remove');
 				}
-				const user = await User.findOneAndDelete({ username });
+
+				const user = await User.findOne({ username });
+
 				if (!user) {
 					throw new Error("Can't find user with that username");
 				}
 
-				if (user) {
-					return { user };
+				const isPasswordValid = await user.comparePassword(userPassword);
+				if (!isPasswordValid) {
+					throw new Error('Incorrect Password!');
 				}
+				user.deleteOne();
+				return { message: 'User has been deleted' };
 			} catch (err: any) {
 				throw new Error('Error in removing in user: ' + err.message);
 			}

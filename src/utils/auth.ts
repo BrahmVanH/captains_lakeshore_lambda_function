@@ -5,7 +5,7 @@ import { ISignTokenArgs } from '../types.d';
 const secret = process.env.AUTH_SECRET ?? '';
 const expiration = process.env.AUTH_EXPIRATION ?? '';
 
-export default {
+const Auth = {
 	signToken: function ({ username, _id }: ISignTokenArgs) {
 		const payload = { username, _id };
 		return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
@@ -31,3 +31,5 @@ export default {
 		return req;
 	},
 };
+
+export default Auth;
