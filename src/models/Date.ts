@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { IBookingDate } from '../types';
+import { IBooking } from '../types';
 
-const bookingDateSchema: Schema = new Schema<IBookingDate>({
+const bookingSchema: Schema = new Schema<IBooking>({
 	propertyName: {
 		type: String,
 		required: true,
@@ -12,6 +12,6 @@ const bookingDateSchema: Schema = new Schema<IBookingDate>({
 	},
 });
 
-const BookingDate = model('BookingDate', bookingDateSchema);
+const Booking = model<IBooking>('BookingDate', bookingSchema);
 
-export default BookingDate;
+export default Booking;

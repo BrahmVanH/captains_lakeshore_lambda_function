@@ -32,6 +32,7 @@
 		"@graphql-codegen/typescript": "^4.0.4",
 		"@graphql-codegen/typescript-resolvers": "^4.0.4",
 		"@types/bcryptjs": "^2.4.6",
+		"@types/jsonwebtoken": "^9.0.6",
 		"@types/mongoose": "^5.11.97",
 		"@types/multer": "^1.4.11",
 		"nodemon": "^3.0.3",
