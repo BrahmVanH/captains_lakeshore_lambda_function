@@ -1,6 +1,6 @@
 import { Booking, User } from './models';
-import Auth from './utils/auth';
-import S3 from './utils/s3Query';
+import { signToken } from './utils/auth';
+import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
 import { connectToDb } from './connection/db';
 import { IQueryBookingsArgs, ICreateUserArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs } from './types';
 
@@ -43,7 +43,7 @@ const resolvers = {
 		},
 		getHomePgImgs: async () => {
 			try {
-				const homePgImgs = await S3.getHomePageImgs();
+				const homePgImgs = await getS3HomePageImgs();
 				if (homePgImgs instanceof Array) {
 					console.error('Error in querying s3 for homepage images', homePgImgs);
 					throw new Error('Error in querying s3 for homepage images');
@@ -62,7 +62,7 @@ const resolvers = {
 		},
 		getHideawayImgs: async () => {
 			try {
-				const hideawayImgs = await S3.getHideawayPgImgs();
+				const hideawayImgs = await getS3HideawayPgImgs();
 
 				if (!hideawayImgs) {
 					throw new Error('Something went wrong in fetching hideaway object from S3');
@@ -74,7 +74,7 @@ const resolvers = {
 		},
 		getCottageImgs: async () => {
 			try {
-				const cottageImgs = await S3.getCottagePgImgs();
+				const cottageImgs = await getS3CottagePgImgs();
 
 				if (!cottageImgs) {
 					throw new Error('Something went wrong in fetching cottage object from S3');
@@ -86,7 +86,7 @@ const resolvers = {
 		},
 		getAboutPgImg: async () => {
 			try {
-				const aboutPgImgs = await S3.getAboutPgImgs();
+				const aboutPgImgs = await getS3AboutPgImgs();
 				if (!aboutPgImgs) {
 					throw new Error('Something went wrong in fetching object from s3');
 				}
@@ -116,7 +116,7 @@ const resolvers = {
 						throw new Error('There was an error creating user. Try again.');
 					}
 
-					const token = Auth.signToken(newUser);
+					const token = signToken(newUser);
 
 					return { token, newUser };
 				}
@@ -140,7 +140,7 @@ const resolvers = {
 					throw new Error('Incorrect Password!');
 				}
 
-				const token = Auth.signToken(user);
+				const token = signToken(user);
 				return { token, user };
 			} catch (err: any) {
 				throw new Error('Error in logging in user: ' + err.message);
