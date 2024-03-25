@@ -1,4 +1,4 @@
-import { ApolloServer } from '@apollo/server';
+import { ApolloServer, BaseContext } from '@apollo/server';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import { startServerAndCreateLambdaHandler, handlers, middleware } from '@as-integrations/aws-lambda';
@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const server = new ApolloServer({
+const server = new ApolloServer<BaseContext>({
 	typeDefs,
 	resolvers,
 	introspection: true,
@@ -17,7 +17,9 @@ const requestHandler = handlers.createAPIGatewayProxyEventV2RequestHandler();
 
 const corsMiddleware: middleware.MiddlewareFn<typeof requestHandler> = async (event) => {
 	const origin = event.headers.origin;
+	console.log('origin', origin);
 	if (origin && allowedOrigins.includes(origin)) {
+		console.log('origin allowed' + origin);
 		return (result) => {
 			result.headers = {
 				...result.headers,
@@ -29,7 +31,7 @@ const corsMiddleware: middleware.MiddlewareFn<typeof requestHandler> = async (ev
 	} else {
 		return (result) => {
 			result.statusCode = 403;
-			result.body = 'Origin not allowed';
+			result.body = 'Origin not allowed' + origin;
 			return Promise.resolve();
 		};
 	}

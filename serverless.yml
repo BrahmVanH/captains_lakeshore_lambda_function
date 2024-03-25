@@ -1,4 +1,4 @@
-service: captains_lakefront_rentals_api
+service: captains-lakefront-rentals-api
 
 provider:
   name: aws

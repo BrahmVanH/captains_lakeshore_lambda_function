@@ -193,7 +193,7 @@ const resolvers: Resolvers = {
 				throw new Error('Error in creating booking in db: ' + err.message);
 			}
 		},
-		removeBooking: async (_: {}, { propertyName, dateValue }: IRemoveBookingArgs) => {
+		removeBooking: async (_: {}, { propertyName, dateValue }: IRemoveBookingArgs, __: any) => {
 			try {
 				await connectToDb();
 				if (!propertyName) {
