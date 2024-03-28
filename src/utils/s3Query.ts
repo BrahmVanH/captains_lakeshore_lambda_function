@@ -1,4 +1,6 @@
 import AWS from 'aws-sdk';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { GetObjectCommand, ListObjectsV2CommandOutput, S3 } from '@aws-sdk/client-s3';
 import { IHomeUrls, S3Object } from '../types';
 import { HideawayImgPack as IHideawayImgPack, CottageImgPack as ICottageImgPack, HomePgImgPack as IHomePgImgPack } from '../generated/graphql';
 import { createImgGalArr } from './helpers';
@@ -30,15 +32,29 @@ import { createImgGalArr } from './helpers';
 // 	Prefix: 'captains_cottage_png/',
 // };
 
+// JS SDK v3 does not support global configuration.
+// Codemod has attempted to pass values to each service client in this file.
+// You may need to update clients outside of this file, if they use global config.
 AWS.config.update({
 	accessKeyId: process.env.S3_ACCESS_KEY,
 	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 	region: process.env.S3_REGION,
 });
 
-const s3 = new AWS.S3();
+// const s3 = new S3({
+// 	credentials: {
+// 		accessKeyId: process.env.S3_ACCESS_KEY,
+// 		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+// 	},
 
-const findImgIndex = (data: AWS.S3.ListObjectsV2Output, imgKey: string) => {
+// 	region: process.env.S3_REGION,
+// });
+
+const s3 = new S3({
+	region: process.env.S3_REGION,
+});
+
+const findImgIndex = (data: ListObjectsV2CommandOutput, imgKey: string) => {
 	if (!data.Contents || !imgKey) {
 		return 0;
 	}
@@ -49,37 +65,52 @@ const findImgIndex = (data: AWS.S3.ListObjectsV2Output, imgKey: string) => {
 	return foundIndex;
 };
 
-const getSignedUrl = (imageBucket: string, imageItem: S3Object | string) => {
-	if (!imageItem || !imageBucket) {
+const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) => {
+	try {
+		if (!imageItem || !imageBucket) {
+			return '';
+		}
+		if (typeof imageItem === 'object') {
+			return await getSignedUrl(
+				s3,
+				new GetObjectCommand({
+					Bucket: imageBucket,
+					Key: imageItem?.Key,
+				}),
+				{
+					expiresIn: 60,
+				}
+			);
+		}
+		return await getSignedUrl(
+			s3,
+			new GetObjectCommand({
+				Bucket: imageBucket,
+				Key: imageItem,
+			}),
+			{
+				expiresIn: 60,
+			}
+		);
+	} catch (err) {
+		console.error('there was an error in signing the url', err);
 		return '';
 	}
-	if (typeof imageItem === 'object') {
-		return s3.getSignedUrl('getObject', {
-			Bucket: imageBucket,
-			Key: imageItem?.Key,
-			Expires: 60,
-		});
-	}
-	return s3.getSignedUrl('getObject', {
-		Bucket: imageBucket,
-		Key: imageItem,
-		Expires: 60,
-	});
 };
 
 const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
 	try {
 		if (imageItem) {
-			const altTag = await s3
-				.getObjectTagging({
-					Bucket: imageBucket,
-					Key: imageItem?.Key,
-				})
-				.promise();
+			const altTag = await s3.getObjectTagging({
+				Bucket: imageBucket,
+				Key: imageItem?.Key,
+			});
 
-			if (altTag) {
-				return altTag.TagSet[0]?.Value;
+			if (!altTag?.TagSet) {
+				console.error('Error in retrieving image tags');
+				throw new Error('Error in retrieving image tags');
 			}
+			return altTag.TagSet[0]?.Value;
 		}
 	} catch (err) {
 		console.error('there was an error in retrieving image tags', err);
@@ -102,7 +133,7 @@ export const getS3HomePageImgs = async () => {
 			throw new Error('Error in querying s3 for homepage images');
 		}
 
-		const data = await s3.listObjectsV2(homePageParams).promise();
+		const data = await s3.listObjectsV2(homePageParams);
 		const s3Objects = data?.Contents as S3Object[];
 
 		if (!data?.Contents) {
@@ -110,13 +141,13 @@ export const getS3HomePageImgs = async () => {
 			throw new Error('Error in querying s3 for homepage images');
 		}
 		const headerImgIndex = findImgIndex(data, homeHeaderImgKey);
-		const headerImgUrl = getSignedUrl(homePageParams.Bucket, s3Objects[headerImgIndex]);
+		const headerImgUrl = await handleSignUrl(homePageParams.Bucket, s3Objects[headerImgIndex]);
 
 		const hideawayImgIndex = findImgIndex(data, homePgHideawayImgKey);
-		const hideawayImgUrl = getSignedUrl(homePageParams.Bucket, s3Objects[hideawayImgIndex]);
+		const hideawayImgUrl = await handleSignUrl(homePageParams.Bucket, s3Objects[hideawayImgIndex]);
 
 		const cottageImgIndex = findImgIndex(data, homePgCottageImgKey);
-		const cottageImgUrl = getSignedUrl(homePageParams.Bucket, s3Objects[cottageImgIndex]);
+		const cottageImgUrl = await handleSignUrl(homePageParams.Bucket, s3Objects[cottageImgIndex]);
 
 		return { headerImgUrl, hideawayImgUrl, cottageImgUrl } as IHomePgImgPack;
 	} catch (err: any) {
@@ -137,7 +168,7 @@ export const getS3HideawayPgImgs = async () => {
 			Bucket: bucket,
 			Prefix: 'captains_hideaway_png/',
 		};
-		const data = await s3.listObjectsV2(hideawayParams).promise();
+		const data = await s3.listObjectsV2(hideawayParams);
 		const s3Objects = data?.Contents as S3Object[];
 
 		if (!s3Objects) {
@@ -146,13 +177,13 @@ export const getS3HideawayPgImgs = async () => {
 		}
 
 		const headerImgIndex = findImgIndex(data, hideawayHeaderImgKey);
-		const headerUrl = getSignedUrl(hideawayParams.Bucket, s3Objects[headerImgIndex]);
+		const headerUrl = await handleSignUrl(hideawayParams.Bucket, s3Objects[headerImgIndex]);
 		const hideawayGalleryObjects = await Promise.all(
 			s3Objects
 				.filter((s3Object) => s3Object.Key !== 'captains_hideaway_png/')
 				.map(async (s3Object) => {
 					const altTag = await getImgTag(hideawayParams.Bucket, s3Object);
-					const signedUrl = getSignedUrl(hideawayParams.Bucket, s3Object);
+					const signedUrl = await handleSignUrl(hideawayParams.Bucket, s3Object);
 					if (!altTag || !signedUrl) {
 						throw new Error('Error in querying s3 for hideaway images');
 					}
@@ -195,7 +226,7 @@ export const getS3CottagePgImgs = async () => {
 			throw new Error('Error in querying s3 for cottage images');
 		}
 
-		const data = await s3.listObjectsV2(cottageParams).promise();
+		const data = await s3.listObjectsV2(cottageParams);
 		const s3Objects = data?.Contents as S3Object[];
 
 		if (!s3Objects) {
@@ -204,7 +235,7 @@ export const getS3CottagePgImgs = async () => {
 		}
 
 		const headerImgIndex = findImgIndex(data, cottageHeaderImgKey);
-		const headerUrl = getSignedUrl(cottageParams.Bucket, s3Objects[headerImgIndex]);
+		const headerUrl = await handleSignUrl(cottageParams.Bucket, s3Objects[headerImgIndex]);
 
 		if (!headerUrl) {
 			console.error('Error in querying s3 for cottage images');
@@ -217,7 +248,7 @@ export const getS3CottagePgImgs = async () => {
 				.filter((s3Object) => s3Object.Key !== cottageHeaderImgKey)
 				.map(async (s3Object) => {
 					const altTag = await getImgTag(cottageParams.Bucket, s3Object);
-					const signedUrl = getSignedUrl(cottageParams.Bucket, s3Object);
+					const signedUrl = await handleSignUrl(cottageParams.Bucket, s3Object);
 					if (!altTag || !signedUrl) {
 						throw new Error('Error in querying s3 for cottage images');
 					}
@@ -256,7 +287,7 @@ export const getS3AboutPgImgs = async () => {
 			console.error('Error in querying s3 for about page images');
 			throw new Error('Error in querying s3 for about page images');
 		}
-		const imgUrl = getSignedUrl(bucketName, aboutImgKey);
+		const imgUrl = await handleSignUrl(bucketName, aboutImgKey);
 		if (!imgUrl) {
 			console.error('Error in querying s3 for homepage images');
 			throw new Error('Error in querying s3 for homepage images');
