@@ -3,7 +3,7 @@ import { signToken } from './utils/auth';
 import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
 import { connectToDb } from './connection/db';
 import { IQueryBookingsArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
-import { CreateUserInput, MutationCreateUserArgs, Resolvers } from './generated/graphql';
+import { CreateUserInput, Resolvers, MutationCreateUserArgs, MutationLoginUserArgs, MutationCreateBookingArgs, MutationRemoveUserArgs, MutationRemoveBookingArgs } from './generated/graphql';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -126,8 +126,9 @@ const resolvers: Resolvers = {
 				throw new Error('Error in creating user: ' + err.message);
 			}
 		},
-		loginUser: async (_: {}, { username, userPassword }: ILoginUserArgs, __: any) => {
+		loginUser: async (_: {}, args: MutationLoginUserArgs, __: any) => {
 			try {
+				const { username, userPassword } = args.input as ILoginUserArgs; 
 				await connectToDb();
 				if (!username || !userPassword) {
 					throw new Error('username and password fields must be filled to log in');
@@ -150,8 +151,9 @@ const resolvers: Resolvers = {
 				throw new Error('Error in logging in user: ' + err.message);
 			}
 		},
-		removeUser: async (_: {}, { username, userPassword }: IRemoveUserArgs, __: any) => {
+		removeUser: async (_: {}, args: MutationRemoveUserArgs, __: any) => {
 			try {
+				const { username, userPassword } = args.input as IRemoveUserArgs; 
 				await connectToDb();
 				if (!username) {
 					throw new Error('username  fields must be filled to remove');
@@ -176,8 +178,10 @@ const resolvers: Resolvers = {
 				throw new Error('Error in removing in user: ' + err.message);
 			}
 		},
-		createBooking: async (_: {}, { propertyName, dateValue }: ICreateBookingArgs, __: any) => {
+		createBooking: async (_: {}, args: MutationCreateBookingArgs, __: any) => {
 			try {
+				const { propertyName, dateValue } = args.input as ICreateBookingArgs;
+
 				await connectToDb();
 				if (!dateValue) {
 					throw new Error('date object is undefined');
@@ -194,8 +198,9 @@ const resolvers: Resolvers = {
 				throw new Error('Error in creating booking in db: ' + err.message);
 			}
 		},
-		removeBooking: async (_: {}, { propertyName, dateValue }: IRemoveBookingArgs, __: any) => {
+		removeBooking: async (_: {}, args: MutationRemoveBookingArgs, __: any) => {
 			try {
+				const { propertyName, dateValue } = args.input as IRemoveBookingArgs;
 				await connectToDb();
 				if (!propertyName) {
 					throw new Error('property name is undefined');

@@ -106,7 +106,8 @@ const resolvers = {
         }),
     },
     Mutation: {
-        createUser: (_2, _b, __2) => __awaiter(void 0, [_2, _b, __2], void 0, function* (_, { firstName, lastName, username, userPassword, adminCode }, __) {
+        createUser: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
+            const { firstName, lastName, username, userPassword, adminCode } = args.input;
             try {
                 yield (0, db_1.connectToDb)();
                 if (!firstName || !lastName || !username || !userPassword || !adminCode) {
@@ -131,8 +132,9 @@ const resolvers = {
                 throw new Error('Error in creating user: ' + err.message);
             }
         }),
-        loginUser: (_3, _c, __3) => __awaiter(void 0, [_3, _c, __3], void 0, function* (_, { username, userPassword }, __) {
+        loginUser: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             try {
+                const { username, userPassword } = args.input;
                 yield (0, db_1.connectToDb)();
                 if (!username || !userPassword) {
                     throw new Error('username and password fields must be filled to log in');
@@ -152,8 +154,9 @@ const resolvers = {
                 throw new Error('Error in logging in user: ' + err.message);
             }
         }),
-        removeUser: (_4, _d, __4) => __awaiter(void 0, [_4, _d, __4], void 0, function* (_, { username, userPassword }, __) {
+        removeUser: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             try {
+                const { username, userPassword } = args.input;
                 yield (0, db_1.connectToDb)();
                 if (!username) {
                     throw new Error('username  fields must be filled to remove');
@@ -176,8 +179,9 @@ const resolvers = {
                 throw new Error('Error in removing in user: ' + err.message);
             }
         }),
-        createBooking: (_5, _e, __5) => __awaiter(void 0, [_5, _e, __5], void 0, function* (_, { propertyName, dateValue }, __) {
+        createBooking: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             try {
+                const { propertyName, dateValue } = args.input;
                 yield (0, db_1.connectToDb)();
                 if (!dateValue) {
                     throw new Error('date object is undefined');
@@ -195,8 +199,9 @@ const resolvers = {
                 throw new Error('Error in creating booking in db: ' + err.message);
             }
         }),
-        removeBooking: (_6, _f) => __awaiter(void 0, [_6, _f], void 0, function* (_, { propertyName, dateValue }) {
+        removeBooking: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             try {
+                const { propertyName, dateValue } = args.input;
                 yield (0, db_1.connectToDb)();
                 if (!propertyName) {
                     throw new Error('property name is undefined');

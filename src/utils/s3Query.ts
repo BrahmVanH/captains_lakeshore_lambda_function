@@ -53,7 +53,6 @@ const getSignedUrl = (imageBucket: string, imageItem: S3Object | string) => {
 	if (!imageItem || !imageBucket) {
 		return '';
 	}
-	console.log('add type for imageItem: ', imageItem);
 	if (typeof imageItem === 'object') {
 		return s3.getSignedUrl('getObject', {
 			Bucket: imageBucket,
@@ -69,7 +68,6 @@ const getSignedUrl = (imageBucket: string, imageItem: S3Object | string) => {
 };
 
 const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
-	console.log('add type for imageItem: ', typeof imageItem);
 	try {
 		if (imageItem) {
 			const altTag = await s3

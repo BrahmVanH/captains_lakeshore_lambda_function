@@ -51,6 +51,26 @@ const typeDefs = `#graphql
 		adminCode: String!
 	}
 
+	input LoginUserInput {
+		username: String!
+		userPassword: String!
+	}
+
+	input RemoveUserInput {
+		username: String!
+		userPassword: String!
+	}
+
+	input CreateBookingInput {
+		propertyName: String!
+		dateValue: String!
+	}
+
+	input RemoveBookingInput {
+		propertyName: String!
+		dateValue: String!
+	}
+
 	type Query {
 		getAllUsers: [User]
 		queryBookingsByProperty(propertyName: String!): [Booking]
@@ -61,10 +81,10 @@ const typeDefs = `#graphql
 	}
 	type Mutation {
 		createUser(input: CreateUserInput): Auth
-		loginUser(username: String!, userPassword: String!): Auth
-		removeUser(username: String!, userPassword: String!): Auth
-		createBooking(propertyName: String!, dateValue: String!): Booking
-		removeBooking(propertyName: String!, dateValue: String!): Booking
+		loginUser(input: LoginUserInput): Auth
+		removeUser(input: RemoveUserInput): Auth
+		createBooking(input: CreateBookingInput): Booking
+		removeBooking(input: RemoveBookingInput): Booking
 	}
 `;
 
