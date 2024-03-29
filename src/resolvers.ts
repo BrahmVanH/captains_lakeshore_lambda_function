@@ -97,6 +97,8 @@ const resolvers: Resolvers = {
 				throw new Error('Error in querying s3 for about page image: ' + err.message);
 			}
 		},
+		getS3UploadUrl: async (_: {}, { imgKey }: { imgKey: string }, __: any) => {
+			
 	},
 	Mutation: {
 		createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {
@@ -128,7 +130,7 @@ const resolvers: Resolvers = {
 		},
 		loginUser: async (_: {}, args: MutationLoginUserArgs, __: any) => {
 			try {
-				const { username, userPassword } = args.input as ILoginUserArgs; 
+				const { username, userPassword } = args.input as ILoginUserArgs;
 				await connectToDb();
 				if (!username || !userPassword) {
 					throw new Error('username and password fields must be filled to log in');
@@ -153,7 +155,7 @@ const resolvers: Resolvers = {
 		},
 		removeUser: async (_: {}, args: MutationRemoveUserArgs, __: any) => {
 			try {
-				const { username, userPassword } = args.input as IRemoveUserArgs; 
+				const { username, userPassword } = args.input as IRemoveUserArgs;
 				await connectToDb();
 				if (!username) {
 					throw new Error('username  fields must be filled to remove');

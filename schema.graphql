@@ -76,6 +76,8 @@
 		getHideawayImgs: hideawayImgPack
 		getCottageImgs: cottageImgPack
 		getAboutPgImg: String
+		getS3UploadUrl(imgKey: String!): String
+
 	}
 	type Mutation {
 		createUser(input: CreateUserInput): Auth
