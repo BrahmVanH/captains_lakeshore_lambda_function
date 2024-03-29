@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getS3AboutPgImgs = exports.getS3CottagePgImgs = exports.getS3HideawayPgImgs = exports.getS3HomePageImgs = void 0;
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
+const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
+const client_s3_1 = require("@aws-sdk/client-s3");
 const helpers_1 = require("./helpers");
 // const bucketName = process.env.S3_BUCKET_NAME ?? '';
 // const homeHeaderImgKey = process.env.HOME_HEADER_IMG_KEY ?? '';
@@ -34,12 +36,24 @@ const helpers_1 = require("./helpers");
 // 	Bucket: bucketName,
 // 	Prefix: 'captains_cottage_png/',
 // };
+// JS SDK v3 does not support global configuration.
+// Codemod has attempted to pass values to each service client in this file.
+// You may need to update clients outside of this file, if they use global config.
 aws_sdk_1.default.config.update({
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     region: process.env.S3_REGION,
 });
-const s3 = new aws_sdk_1.default.S3();
+// const s3 = new S3({
+// 	credentials: {
+// 		accessKeyId: process.env.S3_ACCESS_KEY,
+// 		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+// 	},
+// 	region: process.env.S3_REGION,
+// });
+const s3 = new client_s3_1.S3({
+    region: process.env.S3_REGION,
+});
 const findImgIndex = (data, imgKey) => {
     if (!data.Contents || !imgKey) {
         return 0;
@@ -50,36 +64,44 @@ const findImgIndex = (data, imgKey) => {
     }
     return foundIndex;
 };
-const getSignedUrl = (imageBucket, imageItem) => {
-    if (!imageItem || !imageBucket) {
-        return '';
-    }
-    if (typeof imageItem === 'object') {
-        return s3.getSignedUrl('getObject', {
+const handleSignUrl = (imageBucket, imageItem) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!imageItem || !imageBucket) {
+            return '';
+        }
+        if (typeof imageItem === 'object') {
+            return yield (0, s3_request_presigner_1.getSignedUrl)(s3, new client_s3_1.GetObjectCommand({
+                Bucket: imageBucket,
+                Key: imageItem === null || imageItem === void 0 ? void 0 : imageItem.Key,
+            }), {
+                expiresIn: 60,
+            });
+        }
+        return yield (0, s3_request_presigner_1.getSignedUrl)(s3, new client_s3_1.GetObjectCommand({
             Bucket: imageBucket,
-            Key: imageItem === null || imageItem === void 0 ? void 0 : imageItem.Key,
-            Expires: 60,
+            Key: imageItem,
+        }), {
+            expiresIn: 60,
         });
     }
-    return s3.getSignedUrl('getObject', {
-        Bucket: imageBucket,
-        Key: imageItem,
-        Expires: 60,
-    });
-};
+    catch (err) {
+        console.error('there was an error in signing the url', err);
+        return '';
+    }
+});
 const getImgTag = (imageBucket, imageItem) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         if (imageItem) {
-            const altTag = yield s3
-                .getObjectTagging({
+            const altTag = yield s3.getObjectTagging({
                 Bucket: imageBucket,
                 Key: imageItem === null || imageItem === void 0 ? void 0 : imageItem.Key,
-            })
-                .promise();
-            if (altTag) {
-                return (_a = altTag.TagSet[0]) === null || _a === void 0 ? void 0 : _a.Value;
+            });
+            if (!(altTag === null || altTag === void 0 ? void 0 : altTag.TagSet)) {
+                console.error('Error in retrieving image tags');
+                throw new Error('Error in retrieving image tags');
             }
+            return (_a = altTag.TagSet[0]) === null || _a === void 0 ? void 0 : _a.Value;
         }
     }
     catch (err) {
@@ -101,18 +123,18 @@ const getS3HomePageImgs = () => __awaiter(void 0, void 0, void 0, function* () {
             console.error('Error in querying s3 for homepage images');
             throw new Error('Error in querying s3 for homepage images');
         }
-        const data = yield s3.listObjectsV2(homePageParams).promise();
+        const data = yield s3.listObjectsV2(homePageParams);
         const s3Objects = data === null || data === void 0 ? void 0 : data.Contents;
         if (!(data === null || data === void 0 ? void 0 : data.Contents)) {
             console.error('Error in querying s3 for homepage images');
             throw new Error('Error in querying s3 for homepage images');
         }
         const headerImgIndex = findImgIndex(data, homeHeaderImgKey);
-        const headerImgUrl = getSignedUrl(homePageParams.Bucket, s3Objects[headerImgIndex]);
+        const headerImgUrl = yield handleSignUrl(homePageParams.Bucket, s3Objects[headerImgIndex]);
         const hideawayImgIndex = findImgIndex(data, homePgHideawayImgKey);
-        const hideawayImgUrl = getSignedUrl(homePageParams.Bucket, s3Objects[hideawayImgIndex]);
+        const hideawayImgUrl = yield handleSignUrl(homePageParams.Bucket, s3Objects[hideawayImgIndex]);
         const cottageImgIndex = findImgIndex(data, homePgCottageImgKey);
-        const cottageImgUrl = getSignedUrl(homePageParams.Bucket, s3Objects[cottageImgIndex]);
+        const cottageImgUrl = yield handleSignUrl(homePageParams.Bucket, s3Objects[cottageImgIndex]);
         return { headerImgUrl, hideawayImgUrl, cottageImgUrl };
     }
     catch (err) {
@@ -133,19 +155,19 @@ const getS3HideawayPgImgs = () => __awaiter(void 0, void 0, void 0, function* ()
             Bucket: bucket,
             Prefix: 'captains_hideaway_png/',
         };
-        const data = yield s3.listObjectsV2(hideawayParams).promise();
+        const data = yield s3.listObjectsV2(hideawayParams);
         const s3Objects = data === null || data === void 0 ? void 0 : data.Contents;
         if (!s3Objects) {
             console.error('Error in querying s3 for hideaway images');
             throw new Error('Error in querying s3 for hideaway images');
         }
         const headerImgIndex = findImgIndex(data, hideawayHeaderImgKey);
-        const headerUrl = getSignedUrl(hideawayParams.Bucket, s3Objects[headerImgIndex]);
+        const headerUrl = yield handleSignUrl(hideawayParams.Bucket, s3Objects[headerImgIndex]);
         const hideawayGalleryObjects = yield Promise.all(s3Objects
             .filter((s3Object) => s3Object.Key !== 'captains_hideaway_png/')
             .map((s3Object) => __awaiter(void 0, void 0, void 0, function* () {
             const altTag = yield getImgTag(hideawayParams.Bucket, s3Object);
-            const signedUrl = getSignedUrl(hideawayParams.Bucket, s3Object);
+            const signedUrl = yield handleSignUrl(hideawayParams.Bucket, s3Object);
             if (!altTag || !signedUrl) {
                 throw new Error('Error in querying s3 for hideaway images');
             }
@@ -181,14 +203,14 @@ const getS3CottagePgImgs = () => __awaiter(void 0, void 0, void 0, function* () 
             console.error('Error in querying s3 for cottage images');
             throw new Error('Error in querying s3 for cottage images');
         }
-        const data = yield s3.listObjectsV2(cottageParams).promise();
+        const data = yield s3.listObjectsV2(cottageParams);
         const s3Objects = data === null || data === void 0 ? void 0 : data.Contents;
         if (!s3Objects) {
             console.error('Error in querying s3 for cottage images');
             throw new Error('Error in querying s3 for cottage images');
         }
         const headerImgIndex = findImgIndex(data, cottageHeaderImgKey);
-        const headerUrl = getSignedUrl(cottageParams.Bucket, s3Objects[headerImgIndex]);
+        const headerUrl = yield handleSignUrl(cottageParams.Bucket, s3Objects[headerImgIndex]);
         if (!headerUrl) {
             console.error('Error in querying s3 for cottage images');
             throw new Error('Error in querying s3 for cottage images');
@@ -198,7 +220,7 @@ const getS3CottagePgImgs = () => __awaiter(void 0, void 0, void 0, function* () 
             .filter((s3Object) => s3Object.Key !== cottageHeaderImgKey)
             .map((s3Object) => __awaiter(void 0, void 0, void 0, function* () {
             const altTag = yield getImgTag(cottageParams.Bucket, s3Object);
-            const signedUrl = getSignedUrl(cottageParams.Bucket, s3Object);
+            const signedUrl = yield handleSignUrl(cottageParams.Bucket, s3Object);
             if (!altTag || !signedUrl) {
                 throw new Error('Error in querying s3 for cottage images');
             }
@@ -230,7 +252,7 @@ const getS3AboutPgImgs = () => __awaiter(void 0, void 0, void 0, function* () {
             console.error('Error in querying s3 for about page images');
             throw new Error('Error in querying s3 for about page images');
         }
-        const imgUrl = getSignedUrl(bucketName, aboutImgKey);
+        const imgUrl = yield handleSignUrl(bucketName, aboutImgKey);
         if (!imgUrl) {
             console.error('Error in querying s3 for homepage images');
             throw new Error('Error in querying s3 for homepage images');

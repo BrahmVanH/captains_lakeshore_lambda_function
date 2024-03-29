@@ -88,7 +88,13 @@ export type Query = {
   getCottageImgs?: Maybe<CottageImgPack>;
   getHideawayImgs?: Maybe<HideawayImgPack>;
   getHomePgImgs?: Maybe<HomePgImgPack>;
+  getS3UploadUrl?: Maybe<Scalars['String']['output']>;
   queryBookingsByProperty?: Maybe<Array<Maybe<Booking>>>;
+};
+
+
+export type QueryGetS3UploadUrlArgs = {
+  imgKey: Scalars['String']['input'];
 };
 
 
@@ -280,6 +286,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getCottageImgs?: Resolver<Maybe<ResolversTypes['cottageImgPack']>, ParentType, ContextType>;
   getHideawayImgs?: Resolver<Maybe<ResolversTypes['hideawayImgPack']>, ParentType, ContextType>;
   getHomePgImgs?: Resolver<Maybe<ResolversTypes['homePgImgPack']>, ParentType, ContextType>;
+  getS3UploadUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetS3UploadUrlArgs, 'imgKey'>>;
   queryBookingsByProperty?: Resolver<Maybe<Array<Maybe<ResolversTypes['Booking']>>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
 };
 

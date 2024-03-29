@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeDefs = `#graphql
 
+
   type User {
 		_id: ID
 		firstName: String!
@@ -73,6 +74,8 @@ const typeDefs = `#graphql
 		dateValue: String!
 	}
 
+
+
 	type Query {
 		getAllUsers: [User]
 		queryBookingsByProperty(propertyName: String!): [Booking]
@@ -80,6 +83,7 @@ const typeDefs = `#graphql
 		getHideawayImgs: hideawayImgPack
 		getCottageImgs: cottageImgPack
 		getAboutPgImg: String
+		getS3UploadUrl(imgKey: String!): String
 	}
 	type Mutation {
 		createUser(input: CreateUserInput): Auth

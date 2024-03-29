@@ -4,6 +4,8 @@ import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutP
 import { connectToDb } from './connection/db';
 import { IQueryBookingsArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
 import { CreateUserInput, Resolvers, MutationCreateUserArgs, MutationLoginUserArgs, MutationCreateBookingArgs, MutationRemoveUserArgs, MutationRemoveBookingArgs } from './generated/graphql';
+import { ConnectionPoolClosedEvent } from 'mongodb';
+import { getPresignedUrl } from './utils/s3Upload';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -98,7 +100,17 @@ const resolvers: Resolvers = {
 			}
 		},
 		getS3UploadUrl: async (_: {}, { imgKey }: { imgKey: string }, __: any) => {
-			
+			try {
+				const preSignedUrl = await getPresignedUrl(imgKey);
+				if (!preSignedUrl) {
+					throw new Error('Error in getting presigned URL');
+				}
+				return preSignedUrl;
+			} catch (err: any) {
+				console.log('Error in getting Upload URL for s3', err);
+				throw new Error('Error in getting upload url for s3: ' + err.message);
+			}
+		},
 	},
 	Mutation: {
 		createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {

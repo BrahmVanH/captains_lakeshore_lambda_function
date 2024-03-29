@@ -28,6 +28,7 @@ const server = new server_1.ApolloServer({
 const allowedOrigins = ((_a = process.env.ALLOWED_ORIGINS) === null || _a === void 0 ? void 0 : _a.split(',')) || [];
 const requestHandler = aws_lambda_1.handlers.createAPIGatewayProxyEventV2RequestHandler();
 const corsMiddleware = (event) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('event.headers', event.headers);
     const origin = event.headers.origin;
     console.log('origin', origin);
     if (origin && allowedOrigins.includes(origin)) {
