@@ -10,6 +10,18 @@ const typeDefs = `#graphql
 		
 	}
 
+	type Amenity {
+		amenityName: String
+		amenityIconJSX: String
+	}
+
+	type Property {
+		propertyName: String
+  	propertyDescription: String
+  	amenities: [Amenity]
+		headerImgKey: String
+	}
+
 	type Auth {
 		token: ID!
 		user: User
@@ -72,6 +84,18 @@ const typeDefs = `#graphql
 		dateValue: String!
 	}
 
+	input AmenityInput {
+		amenityName: String
+		amenityIconJSX: String
+	}
+
+	input UpdatePropertyInput {
+		propertyName: String
+		propertyDescription: String
+		amenities: [AmenityInput]
+		headerImgKey: String
+	}
+
 
 
 	type Query {
@@ -82,6 +106,7 @@ const typeDefs = `#graphql
 		getCottageImgs: cottageImgPack
 		getAboutPgImg: String
 		getS3UploadUrl(imgKey: String!): String
+		getPropertyInfo(propertyName: String!): Property
 	}
 	type Mutation {
 		createUser(input: CreateUserInput): Auth
@@ -89,6 +114,7 @@ const typeDefs = `#graphql
 		removeUser(input: RemoveUserInput): Auth
 		createBooking(input: CreateBookingInput): Booking
 		removeBooking(input: RemoveBookingInput): Booking
+		updatePropertyInfo(input: UpdatePropertyInput): Property
 	}
 `;
 

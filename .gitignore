@@ -29,3 +29,5 @@ lambda/bundle
 .netlify
 
 graphql.schema.json
+
+codegen.ts

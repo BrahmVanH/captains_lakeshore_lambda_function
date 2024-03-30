@@ -1,89 +1,112 @@
-  type User {
-		_id: ID
-		firstName: String!
-		lastName: String!
-		username: String!
-		password: String
-		
-	}
+type User {
+	_id: ID
+	firstName: String!
+	lastName: String!
+	username: String!
+	password: String
+}
 
-	type Auth {
-		token: ID!
-		user: User
-	}
+type Amenity {
+	amenityName: String
+	amenityIconJSX: String
+}
 
-	type Booking {
-		_id: ID!
-		propertyName: String!
-		dateValue: String!
-	}
+type Property {
+	propertyName: String
+	propertyDescription: String
+	amenities: [Amenity]
+	headerImgKey: String
+}
 
-	type imageObject {
-		original: String
-		thumbnail: String
-		originalAlt: String
-		thumbnailAlt: String
-	}
+type Auth {
+	token: ID!
+	user: User
+}
 
-	type homePgImgPack {
-		headerImgUrl: String
-		hideawayImgUrl: String
-		cottageImgUrl: String
-	}
+type Booking {
+	_id: ID!
+	propertyName: String!
+	dateValue: String!
+}
 
-	type hideawayImgPack {
-		headerUrl: String
-		galleryArray: [imageObject]
-	}
+type imageObject {
+	original: String
+	thumbnail: String
+	originalAlt: String
+	thumbnailAlt: String
+}
 
-	type cottageImgPack {
-		headerUrl: String
-		galleryArray: [imageObject]
-	}
+type homePgImgPack {
+	headerImgUrl: String
+	hideawayImgUrl: String
+	cottageImgUrl: String
+}
 
-	input CreateUserInput {
-		firstName: String!
-		lastName: String!
-		username: String!
-		userPassword: String!
-		adminCode: String!
-	}
+type hideawayImgPack {
+	headerUrl: String
+	galleryArray: [imageObject]
+}
 
-	input LoginUserInput {
-		username: String!
-		userPassword: String!
-	}
+type cottageImgPack {
+	headerUrl: String
+	galleryArray: [imageObject]
+}
 
-	input RemoveUserInput {
-		username: String!
-		userPassword: String!
-	}
+input CreateUserInput {
+	firstName: String!
+	lastName: String!
+	username: String!
+	userPassword: String!
+	adminCode: String!
+}
 
-	input CreateBookingInput {
-		propertyName: String!
-		dateValue: String!
-	}
+input LoginUserInput {
+	username: String!
+	userPassword: String!
+}
 
-	input RemoveBookingInput {
-		propertyName: String!
-		dateValue: String!
-	}
+input RemoveUserInput {
+	username: String!
+	userPassword: String!
+}
 
-	type Query {
-		getAllUsers: [User]
-		queryBookingsByProperty(propertyName: String!): [Booking]
-		getHomePgImgs: homePgImgPack
-		getHideawayImgs: hideawayImgPack
-		getCottageImgs: cottageImgPack
-		getAboutPgImg: String
-		getS3UploadUrl(imgKey: String!): String
+input CreateBookingInput {
+	propertyName: String!
+	dateValue: String!
+}
 
-	}
-	type Mutation {
-		createUser(input: CreateUserInput): Auth
-		loginUser(input: LoginUserInput): Auth
-		removeUser(input: RemoveUserInput): Auth
-		createBooking(input: CreateBookingInput): Booking
-		removeBooking(input: RemoveBookingInput): Booking
-	}
+input RemoveBookingInput {
+	propertyName: String!
+	dateValue: String!
+}
 
+input AmenityInput {
+	amenityName: String
+	amenityIconJSX: String
+}
+
+input UpdatePropertyInput {
+	propertyName: String
+	propertyDescription: String
+	amenities: [AmenityInput]
+	headerImgKey: String
+}
+
+type Query {
+	getAllUsers: [User]
+	queryBookingsByProperty(propertyName: String!): [Booking]
+	getHomePgImgs: homePgImgPack
+	getHideawayImgs: hideawayImgPack
+	getCottageImgs: cottageImgPack
+	getAboutPgImg: String
+	getS3UploadUrl(imgKey: String!): String
+	getPropertyInfo(propertyName: String!): Property
+}
+type Mutation {
+	createUser(input: CreateUserInput): Auth
+	loginUser(input: LoginUserInput): Auth
+	removeUser(input: RemoveUserInput): Auth
+	createBooking(input: CreateBookingInput): Booking
+	removeBooking(input: RemoveBookingInput): Booking
+	updatePropertyInfo(input: UpdatePropertyInput): Property
+}

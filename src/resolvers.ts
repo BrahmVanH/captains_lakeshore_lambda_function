@@ -111,6 +111,14 @@ const resolvers: Resolvers = {
 				throw new Error('Error in getting upload url for s3: ' + err.message);
 			}
 		},
+		getPropertyInfo: async (_: {}, { propertyName }: { propertyName: string }, __: any) => {
+			try {
+				await connectToDb();
+				
+				if (!propertyName) {
+					throw new Error('Property name is undefined');
+				}
+				const property
 	},
 	Mutation: {
 		createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {
