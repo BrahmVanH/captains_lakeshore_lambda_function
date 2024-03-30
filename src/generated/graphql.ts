@@ -143,11 +143,15 @@ export type RemoveUserInput = {
   username: Scalars['String']['input'];
 };
 
-export type UpdatePropertyInput = {
+export type Update = {
   amenities?: InputMaybe<Array<InputMaybe<AmenityInput>>>;
   headerImgKey?: InputMaybe<Scalars['String']['input']>;
   propertyDescription?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdatePropertyInput = {
   propertyName?: InputMaybe<Scalars['String']['input']>;
+  update?: InputMaybe<Update>;
 };
 
 export type User = {
@@ -272,6 +276,7 @@ export type ResolversTypes = {
   RemoveBookingInput: RemoveBookingInput;
   RemoveUserInput: RemoveUserInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Update: Update;
   UpdatePropertyInput: UpdatePropertyInput;
   User: ResolverTypeWrapper<User>;
   cottageImgPack: ResolverTypeWrapper<CottageImgPack>;
@@ -297,6 +302,7 @@ export type ResolversParentTypes = {
   RemoveBookingInput: RemoveBookingInput;
   RemoveUserInput: RemoveUserInput;
   String: Scalars['String']['output'];
+  Update: Update;
   UpdatePropertyInput: UpdatePropertyInput;
   User: User;
   cottageImgPack: CottageImgPack;

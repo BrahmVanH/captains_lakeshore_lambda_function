@@ -52,6 +52,18 @@ export interface ISignTokenArgs {
 	_id: Types.ObjectId;
 }
 
+export interface IUpdatePropertyArgs {
+	propertyName: string;
+	update: {
+		propertyDescription?: string;
+		amenities?: {
+			amenityName: string;
+			amenityIconJSX: string;
+		}[];
+		headerImgKey?: string;
+	};
+}
+
 export interface IGalleryContent {
 	original: string;
 	thumbnail: string;

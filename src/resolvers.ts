@@ -1,11 +1,29 @@
-import { Booking, User } from './models';
+import { Booking, User, Property } from './models';
 import { signToken } from './utils/auth';
 import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
 import { connectToDb } from './connection/db';
-import { IQueryBookingsArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser } from './types';
-import { CreateUserInput, Resolvers, MutationCreateUserArgs, MutationLoginUserArgs, MutationCreateBookingArgs, MutationRemoveUserArgs, MutationRemoveBookingArgs } from './generated/graphql';
+import { IQueryBookingsArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser, IUpdatePropertyArgs } from './types';
+import {
+	CreateUserInput,
+	Resolvers,
+	MutationCreateUserArgs,
+	MutationLoginUserArgs,
+	MutationCreateBookingArgs,
+	MutationRemoveUserArgs,
+	MutationRemoveBookingArgs,
+	MutationUpdatePropertyInfoArgs,
+	Update,
+	UpdatePropertyInput,
+	AmenityInput,
+	Amenity,
+} from './generated/graphql';
 import { ConnectionPoolClosedEvent } from 'mongodb';
 import { getPresignedUrl } from './utils/s3Upload';
+
+type Temp = {
+	updateType: string;
+	update: string | Amenity;
+};
 
 const resolvers: Resolvers = {
 	Query: {
@@ -114,11 +132,22 @@ const resolvers: Resolvers = {
 		getPropertyInfo: async (_: {}, { propertyName }: { propertyName: string }, __: any) => {
 			try {
 				await connectToDb();
-				
+
 				if (!propertyName) {
 					throw new Error('Property name is undefined');
 				}
-				const property
+				const propertyInfo = await Property.findOne({ propertyName });
+
+				if (!propertyInfo) {
+					throw new Error('Could not find property with that name');
+				}
+
+				return propertyInfo;
+			} catch (err: any) {
+				console.error('Error in getting property info', err);
+				throw new Error('Error in getting property info: ' + err.message);
+			}
+		},
 	},
 	Mutation: {
 		createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {
@@ -237,6 +266,29 @@ const resolvers: Resolvers = {
 				return booking;
 			} catch (err: any) {
 				throw new Error('Error in removing unavailable booking from db: ' + err.message);
+			}
+		},
+		updatePropertyInfo: async (_: {}, args: MutationUpdatePropertyInfoArgs, __: any) => {
+			try {
+				const { propertyName, update } = args.input as IUpdatePropertyArgs;
+				await connectToDb();
+				if (!propertyName) {
+					throw new Error('Property name is undefined');
+				}
+
+				if (!update?.propertyDescription || !update?.amenities || !update?.headerImgKey) {
+					throw new Error('Update object is undefined');
+				}
+
+				const property = await Property.findOneAndUpdate({ propertyName: propertyName }, { $set: update });
+
+				if (!property) {
+					throw new Error('Could not find property with that name');
+				}
+
+				return property;
+			} catch (err: any) {
+				throw new Error('Error in updating property info: ' + err.message);
 			}
 		},
 	},

@@ -89,11 +89,15 @@ const typeDefs = `#graphql
 		amenityIconJSX: String
 	}
 
-	input UpdatePropertyInput {
-		propertyName: String
+	input Update {
 		propertyDescription: String
 		amenities: [AmenityInput]
 		headerImgKey: String
+	
+	}
+	input UpdatePropertyInput {
+		propertyName: String
+		update: Update
 	}
 
 
