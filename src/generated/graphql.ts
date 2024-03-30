@@ -120,6 +120,7 @@ export type Query = {
 
 
 export type QueryGetPresignedS3UrlArgs = {
+  altTag: Scalars['String']['input'];
   commandType: Scalars['String']['input'];
   imgKey: Scalars['String']['input'];
 };
@@ -355,7 +356,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getCottageImgs?: Resolver<ResolversTypes['cottageImgPack'], ParentType, ContextType>;
   getHideawayImgs?: Resolver<ResolversTypes['hideawayImgPack'], ParentType, ContextType>;
   getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
-  getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'commandType' | 'imgKey'>>;
+  getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'altTag' | 'commandType' | 'imgKey'>>;
   getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, 'propertyName'>>;
   queryBookingsByProperty?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
 };

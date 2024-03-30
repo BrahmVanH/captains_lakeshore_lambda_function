@@ -106,7 +106,7 @@ type Query {
 	getHideawayImgs: hideawayImgPack!
 	getCottageImgs: cottageImgPack!
 	getAboutPgImg: String!
-	getPresignedS3Url(imgKey: String!, commandType: String!): String!
+	getPresignedS3Url(imgKey: String!, commandType: String!, altTag: String!): String!
 	getPropertyInfo(propertyName: String!): Property!
 }
 type Mutation {

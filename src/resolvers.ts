@@ -117,9 +117,10 @@ const resolvers: Resolvers = {
 				throw new Error('Error in querying s3 for about page image: ' + err.message);
 			}
 		},
-		getPresignedS3Url: async (_: {}, { imgKey, commandType }: { imgKey: string; commandType: string }, __: any) => {
+		getPresignedS3Url: async (_: {}, { imgKey, commandType, altTag }: { imgKey: string; commandType: string, altTag: string }, __: any) => {
 			try {
-				const preSignedUrl = await getPresignedUrl(imgKey, commandType);
+				console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag)
+				const preSignedUrl = await getPresignedUrl(imgKey, commandType, altTag);
 				if (!preSignedUrl) {
 					throw new Error('Error in getting presigned URL');
 				}
