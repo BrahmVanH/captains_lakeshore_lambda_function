@@ -1,23 +1,30 @@
 import https from 'https';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand, DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { fromIni } from '@aws-sdk/credential-providers';
 import { HttpRequest } from '@smithy/protocol-http';
-import { getSignedUrl, S3RequestPresigner } from '@aws-sdk/s3-request-presigner';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { parseUrl } from '@smithy/url-parser';
 import { formatUrl } from '@aws-sdk/util-format-url';
 import { Hash } from '@smithy/hash-node';
 
-const createPresignedUrlWithClient = ({ region, bucket, key }: { region: string; bucket: string; key: string }) => {
+const createPresignedUrlWithClient = ({ region, bucket, key, commandType }: { region: string; bucket: string; key: string; commandType: string }) => {
 	const client = new S3Client({ region });
-	const command = new PutObjectCommand({ Bucket: bucket, Key: key });
+	let command;
+	if (commandType === 'put') {
+		command = new PutObjectCommand({ Bucket: bucket, Key: key });
+	} else if (commandType === 'delete') {
+		command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
+	} else {
+		console.error('Invalid command type');
+		throw new Error();
+	}
 	return getSignedUrl(client, command, { expiresIn: 3600 });
 };
 
-export const getPresignedUrl = async (key: string) => {
+export const getPresignedUrl = async (key: string, commandType: string) => {
 	if (!key) {
 		console.error('No key provided');
 		throw new Error();
-		return;
 	}
 	const REGION = process.env.S3_REGION ?? '';
 	const BUCKET = process.env.S3_BUCKET_NAME ?? '';
@@ -28,6 +35,7 @@ export const getPresignedUrl = async (key: string) => {
 			region: REGION,
 			bucket: BUCKET,
 			key: KEY,
+			commandType,
 		});
 
 		return clientUrl;

@@ -12,6 +12,18 @@ const typeDefs = `#graphql
 		
 	}
 
+	type Amenity {
+		amenityName: String
+		amenityIconJSX: String
+	}
+
+	type Property {
+		propertyName: String
+  	propertyDescription: String
+  	amenities: [Amenity]
+		headerImgKey: String
+	}
+
 	type Auth {
 		token: ID!
 		user: User
@@ -31,19 +43,19 @@ const typeDefs = `#graphql
 	}
 
 	type homePgImgPack {
-		headerImgUrl: String
-		hideawayImgUrl: String
-		cottageImgUrl: String
+		headerImgUrl: String!
+		hideawayImgUrl: String!
+		cottageImgUrl: String!
 	}
 
 	type hideawayImgPack {
-		headerUrl: String
-		galleryArray: [imageObject]
+		headerUrl: String!
+		galleryArray: [imageObject!]!
 	}
 
 	type cottageImgPack {
-		headerUrl: String
-		galleryArray: [imageObject]
+		headerUrl: String!
+		galleryArray: [imageObject!]!
 	}
 
 	input CreateUserInput {
@@ -74,6 +86,22 @@ const typeDefs = `#graphql
 		dateValue: String!
 	}
 
+	input AmenityInput {
+		amenityName: String
+		amenityIconJSX: String
+	}
+
+	input Update {
+		propertyDescription: String
+		amenities: [AmenityInput]
+		headerImgKey: String
+	
+	}
+	input UpdatePropertyInput {
+		propertyName: String
+		update: Update
+	}
+
 
 
 	type Query {
@@ -84,6 +112,7 @@ const typeDefs = `#graphql
 		getCottageImgs: cottageImgPack
 		getAboutPgImg: String
 		getS3UploadUrl(imgKey: String!): String
+		getPropertyInfo(propertyName: String!): Property
 	}
 	type Mutation {
 		createUser(input: CreateUserInput): Auth
@@ -91,6 +120,7 @@ const typeDefs = `#graphql
 		removeUser(input: RemoveUserInput): Auth
 		createBooking(input: CreateBookingInput): Booking
 		removeBooking(input: RemoveBookingInput): Booking
+		updatePropertyInfo(input: UpdatePropertyInput): Property
 	}
 `;
 exports.default = typeDefs;

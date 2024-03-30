@@ -18,19 +18,19 @@ export type Scalars = {
 
 export type Amenity = {
   __typename?: 'Amenity';
-  amenityIconJSX?: Maybe<Scalars['String']['output']>;
-  amenityName?: Maybe<Scalars['String']['output']>;
+  amenityIconJSX: Scalars['String']['output'];
+  amenityName: Scalars['String']['output'];
 };
 
 export type AmenityInput = {
-  amenityIconJSX?: InputMaybe<Scalars['String']['input']>;
-  amenityName?: InputMaybe<Scalars['String']['input']>;
+  amenityIconJSX: Scalars['String']['input'];
+  amenityName: Scalars['String']['input'];
 };
 
 export type Auth = {
   __typename?: 'Auth';
   token: Scalars['ID']['output'];
-  user?: Maybe<User>;
+  user: User;
 };
 
 export type Booking = {
@@ -60,12 +60,12 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createBooking?: Maybe<Booking>;
-  createUser?: Maybe<Auth>;
-  loginUser?: Maybe<Auth>;
-  removeBooking?: Maybe<Booking>;
-  removeUser?: Maybe<Auth>;
-  updatePropertyInfo?: Maybe<Property>;
+  createBooking: Booking;
+  createUser: Auth;
+  loginUser: Auth;
+  removeBooking: Booking;
+  removeUser: Auth;
+  updatePropertyInfo: Property;
 };
 
 
@@ -100,32 +100,33 @@ export type MutationUpdatePropertyInfoArgs = {
 
 export type Property = {
   __typename?: 'Property';
-  amenities?: Maybe<Array<Maybe<Amenity>>>;
-  headerImgKey?: Maybe<Scalars['String']['output']>;
-  propertyDescription?: Maybe<Scalars['String']['output']>;
-  propertyName?: Maybe<Scalars['String']['output']>;
+  amenities?: Maybe<Array<Amenity>>;
+  headerImgKey: Scalars['String']['output'];
+  propertyDescription: Scalars['String']['output'];
+  propertyName: Scalars['String']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  getAboutPgImg?: Maybe<Scalars['String']['output']>;
-  getAllUsers?: Maybe<Array<Maybe<User>>>;
-  getCottageImgs?: Maybe<CottageImgPack>;
-  getHideawayImgs?: Maybe<HideawayImgPack>;
-  getHomePgImgs?: Maybe<HomePgImgPack>;
-  getPropertyInfo?: Maybe<Property>;
-  getS3UploadUrl?: Maybe<Scalars['String']['output']>;
-  queryBookingsByProperty?: Maybe<Array<Maybe<Booking>>>;
+  getAboutPgImg: Scalars['String']['output'];
+  getAllUsers?: Maybe<Array<User>>;
+  getCottageImgs: CottageImgPack;
+  getHideawayImgs: HideawayImgPack;
+  getHomePgImgs: HomePgImgPack;
+  getPresignedS3Url: Scalars['String']['output'];
+  getPropertyInfo: Property;
+  queryBookingsByProperty?: Maybe<Array<Booking>>;
+};
+
+
+export type QueryGetPresignedS3UrlArgs = {
+  commandType: Scalars['String']['input'];
+  imgKey: Scalars['String']['input'];
 };
 
 
 export type QueryGetPropertyInfoArgs = {
   propertyName: Scalars['String']['input'];
-};
-
-
-export type QueryGetS3UploadUrlArgs = {
-  imgKey: Scalars['String']['input'];
 };
 
 
@@ -144,14 +145,14 @@ export type RemoveUserInput = {
 };
 
 export type Update = {
-  amenities?: InputMaybe<Array<InputMaybe<AmenityInput>>>;
-  headerImgKey?: InputMaybe<Scalars['String']['input']>;
-  propertyDescription?: InputMaybe<Scalars['String']['input']>;
+  amenities?: InputMaybe<Array<AmenityInput>>;
+  headerImgKey: Scalars['String']['input'];
+  propertyDescription: Scalars['String']['input'];
 };
 
 export type UpdatePropertyInput = {
-  propertyName?: InputMaybe<Scalars['String']['input']>;
-  update?: InputMaybe<Update>;
+  propertyName: Scalars['String']['input'];
+  update: Update;
 };
 
 export type User = {
@@ -165,29 +166,30 @@ export type User = {
 
 export type CottageImgPack = {
   __typename?: 'cottageImgPack';
-  galleryArray?: Maybe<Array<Maybe<ImageObject>>>;
-  headerUrl?: Maybe<Scalars['String']['output']>;
+  galleryArray: Array<ImageObject>;
+  headerUrl: Scalars['String']['output'];
 };
 
 export type HideawayImgPack = {
   __typename?: 'hideawayImgPack';
-  galleryArray?: Maybe<Array<Maybe<ImageObject>>>;
-  headerUrl?: Maybe<Scalars['String']['output']>;
+  galleryArray: Array<ImageObject>;
+  headerUrl: Scalars['String']['output'];
 };
 
 export type HomePgImgPack = {
   __typename?: 'homePgImgPack';
-  cottageImgUrl?: Maybe<Scalars['String']['output']>;
-  headerImgUrl?: Maybe<Scalars['String']['output']>;
-  hideawayImgUrl?: Maybe<Scalars['String']['output']>;
+  cottageImgUrl: Scalars['String']['output'];
+  headerImgUrl: Scalars['String']['output'];
+  hideawayImgUrl: Scalars['String']['output'];
 };
 
 export type ImageObject = {
   __typename?: 'imageObject';
-  original?: Maybe<Scalars['String']['output']>;
-  originalAlt?: Maybe<Scalars['String']['output']>;
-  thumbnail?: Maybe<Scalars['String']['output']>;
-  thumbnailAlt?: Maybe<Scalars['String']['output']>;
+  imgKey: Scalars['String']['output'];
+  original: Scalars['String']['output'];
+  originalAlt: Scalars['String']['output'];
+  thumbnail: Scalars['String']['output'];
+  thumbnailAlt: Scalars['String']['output'];
 };
 
 
@@ -312,14 +314,14 @@ export type ResolversParentTypes = {
 };
 
 export type AmenityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity']> = {
-  amenityIconJSX?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  amenityName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  amenityIconJSX?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  amenityName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['Auth'] = ResolversParentTypes['Auth']> = {
   token?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -331,31 +333,31 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createBooking?: Resolver<Maybe<ResolversTypes['Booking']>, ParentType, ContextType, Partial<MutationCreateBookingArgs>>;
-  createUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, Partial<MutationCreateUserArgs>>;
-  loginUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, Partial<MutationLoginUserArgs>>;
-  removeBooking?: Resolver<Maybe<ResolversTypes['Booking']>, ParentType, ContextType, Partial<MutationRemoveBookingArgs>>;
-  removeUser?: Resolver<Maybe<ResolversTypes['Auth']>, ParentType, ContextType, Partial<MutationRemoveUserArgs>>;
-  updatePropertyInfo?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, Partial<MutationUpdatePropertyInfoArgs>>;
+  createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, Partial<MutationCreateBookingArgs>>;
+  createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, Partial<MutationCreateUserArgs>>;
+  loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, Partial<MutationLoginUserArgs>>;
+  removeBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, Partial<MutationRemoveBookingArgs>>;
+  removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, Partial<MutationRemoveUserArgs>>;
+  updatePropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, Partial<MutationUpdatePropertyInfoArgs>>;
 };
 
 export type PropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = {
-  amenities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Amenity']>>>, ParentType, ContextType>;
-  headerImgKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  propertyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  propertyName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  amenities?: Resolver<Maybe<Array<ResolversTypes['Amenity']>>, ParentType, ContextType>;
+  headerImgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  propertyDescription?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  propertyName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getAboutPgImg?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  getAllUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
-  getCottageImgs?: Resolver<Maybe<ResolversTypes['cottageImgPack']>, ParentType, ContextType>;
-  getHideawayImgs?: Resolver<Maybe<ResolversTypes['hideawayImgPack']>, ParentType, ContextType>;
-  getHomePgImgs?: Resolver<Maybe<ResolversTypes['homePgImgPack']>, ParentType, ContextType>;
-  getPropertyInfo?: Resolver<Maybe<ResolversTypes['Property']>, ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, 'propertyName'>>;
-  getS3UploadUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetS3UploadUrlArgs, 'imgKey'>>;
-  queryBookingsByProperty?: Resolver<Maybe<Array<Maybe<ResolversTypes['Booking']>>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
+  getAboutPgImg?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
+  getCottageImgs?: Resolver<ResolversTypes['cottageImgPack'], ParentType, ContextType>;
+  getHideawayImgs?: Resolver<ResolversTypes['hideawayImgPack'], ParentType, ContextType>;
+  getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
+  getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'commandType' | 'imgKey'>>;
+  getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, 'propertyName'>>;
+  queryBookingsByProperty?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -368,29 +370,30 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type CottageImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['cottageImgPack'] = ResolversParentTypes['cottageImgPack']> = {
-  galleryArray?: Resolver<Maybe<Array<Maybe<ResolversTypes['imageObject']>>>, ParentType, ContextType>;
-  headerUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  galleryArray?: Resolver<Array<ResolversTypes['imageObject']>, ParentType, ContextType>;
+  headerUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type HideawayImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['hideawayImgPack'] = ResolversParentTypes['hideawayImgPack']> = {
-  galleryArray?: Resolver<Maybe<Array<Maybe<ResolversTypes['imageObject']>>>, ParentType, ContextType>;
-  headerUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  galleryArray?: Resolver<Array<ResolversTypes['imageObject']>, ParentType, ContextType>;
+  headerUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type HomePgImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['homePgImgPack'] = ResolversParentTypes['homePgImgPack']> = {
-  cottageImgUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  headerImgUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  hideawayImgUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  cottageImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  headerImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  hideawayImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ImageObjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['imageObject'] = ResolversParentTypes['imageObject']> = {
-  original?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  originalAlt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  thumbnail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  thumbnailAlt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  imgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  original?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  originalAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnailAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

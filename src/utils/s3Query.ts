@@ -182,12 +182,13 @@ export const getS3HideawayPgImgs = async () => {
 			s3Objects
 				.filter((s3Object) => s3Object.Key !== 'captains_hideaway_png/')
 				.map(async (s3Object) => {
+					console.log('s3Object', s3Object);
 					const altTag = await getImgTag(hideawayParams.Bucket, s3Object);
 					const signedUrl = await handleSignUrl(hideawayParams.Bucket, s3Object);
 					if (!altTag || !signedUrl) {
 						throw new Error('Error in querying s3 for hideaway images');
 					}
-					return { altTag, signedUrl };
+					return { altTag, signedUrl, key: s3Object.Key };
 				})
 		);
 
@@ -198,7 +199,8 @@ export const getS3HideawayPgImgs = async () => {
 
 		const galleryArray = createImgGalArr(
 			hideawayGalleryObjects.map((obj) => obj.altTag),
-			hideawayGalleryObjects.map((obj) => obj.signedUrl)
+			hideawayGalleryObjects.map((obj) => obj.signedUrl),
+			hideawayGalleryObjects.map((obj) => obj.key)
 		);
 
 		if (!galleryArray) {
@@ -253,7 +255,7 @@ export const getS3CottagePgImgs = async () => {
 						throw new Error('Error in querying s3 for cottage images');
 					}
 
-					return { altTag, signedUrl };
+					return { altTag, signedUrl, key: s3Object.Key };
 				})
 		);
 
@@ -264,7 +266,8 @@ export const getS3CottagePgImgs = async () => {
 
 		const galleryArray = createImgGalArr(
 			cottageGalleryObjects.map((obj) => obj.altTag),
-			cottageGalleryObjects.map((obj) => obj.signedUrl)
+			cottageGalleryObjects.map((obj) => obj.signedUrl),
+			cottageGalleryObjects.map((obj) => obj.key)
 		);
 
 		if (!galleryArray) {

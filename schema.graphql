@@ -7,20 +7,20 @@ type User {
 }
 
 type Amenity {
-	amenityName: String
-	amenityIconJSX: String
+	amenityName: String!
+	amenityIconJSX: String!
 }
 
 type Property {
-	propertyName: String
-	propertyDescription: String
-	amenities: [Amenity]
-	headerImgKey: String
+	propertyName: String!
+	propertyDescription: String!
+	amenities: [Amenity!]
+	headerImgKey: String!
 }
 
 type Auth {
 	token: ID!
-	user: User
+	user: User!
 }
 
 type Booking {
@@ -30,26 +30,27 @@ type Booking {
 }
 
 type imageObject {
-	original: String
-	thumbnail: String
-	originalAlt: String
-	thumbnailAlt: String
+	imgKey: String!
+	original: String!
+	thumbnail: String!
+	originalAlt: String!
+	thumbnailAlt: String!
 }
 
 type homePgImgPack {
-	headerImgUrl: String
-	hideawayImgUrl: String
-	cottageImgUrl: String
+	headerImgUrl: String!
+	hideawayImgUrl: String!
+	cottageImgUrl: String!
 }
 
 type hideawayImgPack {
-	headerUrl: String
-	galleryArray: [imageObject]
+	headerUrl: String!
+	galleryArray: [imageObject!]!
 }
 
 type cottageImgPack {
-	headerUrl: String
-	galleryArray: [imageObject]
+	headerUrl: String!
+	galleryArray: [imageObject!]!
 }
 
 input CreateUserInput {
@@ -81,35 +82,35 @@ input RemoveBookingInput {
 }
 
 input AmenityInput {
-	amenityName: String
-	amenityIconJSX: String
+	amenityName: String!
+	amenityIconJSX: String!
 }
 
 input Update {
-	propertyDescription: String
-	amenities: [AmenityInput]
-	headerImgKey: String
+	propertyDescription: String!
+	amenities: [AmenityInput!]
+	headerImgKey: String!
 }
 input UpdatePropertyInput {
-	propertyName: String
-	update: Update
+	propertyName: String!
+	update: Update!
 }
 
 type Query {
-	getAllUsers: [User]
-	queryBookingsByProperty(propertyName: String!): [Booking]
-	getHomePgImgs: homePgImgPack
-	getHideawayImgs: hideawayImgPack
-	getCottageImgs: cottageImgPack
-	getAboutPgImg: String
-	getS3UploadUrl(imgKey: String!): String
-	getPropertyInfo(propertyName: String!): Property
+	getAllUsers: [User!]
+	queryBookingsByProperty(propertyName: String!): [Booking!]
+	getHomePgImgs: homePgImgPack!
+	getHideawayImgs: hideawayImgPack!
+	getCottageImgs: cottageImgPack!
+	getAboutPgImg: String!
+	getPresignedS3Url(imgKey: String!, commandType: String!): String!
+	getPropertyInfo(propertyName: String!): Property!
 }
 type Mutation {
-	createUser(input: CreateUserInput): Auth
-	loginUser(input: LoginUserInput): Auth
-	removeUser(input: RemoveUserInput): Auth
-	createBooking(input: CreateBookingInput): Booking
-	removeBooking(input: RemoveBookingInput): Booking
-	updatePropertyInfo(input: UpdatePropertyInput): Property
+	createUser(input: CreateUserInput): Auth!
+	loginUser(input: LoginUserInput): Auth!
+	removeUser(input: RemoveUserInput): Auth!
+	createBooking(input: CreateBookingInput): Booking!
+	removeBooking(input: RemoveBookingInput): Booking!
+	updatePropertyInfo(input: UpdatePropertyInput): Property!
 }
