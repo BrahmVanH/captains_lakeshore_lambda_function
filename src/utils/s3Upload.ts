@@ -6,13 +6,15 @@ const createPresignedUrlWithClient = ({ region, bucket, key, commandType, altTag
 	let command;
 	if (commandType === 'put') {
 		command = new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: 'image/jpg', Tagging: `alt=${altTag}` });
+		return getSignedUrl(client, command, { expiresIn: 3600, unhoistableHeaders: new Set(['x-amz-tagging']) });
 	} else if (commandType === 'delete') {
+		console.log('deleting object, ', key);
 		command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
+		return getSignedUrl(client, command, { expiresIn: 3600 });
 	} else {
 		console.error('Invalid command type');
 		throw new Error();
 	}
-	return getSignedUrl(client, command, { expiresIn: 3600, unhoistableHeaders: new Set(['x-amz-tagging']) });
 };
 
 export const getPresignedUrl = async (key: string, commandType: string, altTag: string) => {
