@@ -5,7 +5,10 @@ const amenitiesSchema: Schema<Amenity> = new Schema<Amenity>({
 	amenityName: {
 		type: String,
 	},
-	amenityIconJSX: {
+	amenityType: {
+		type: String,
+	},
+	amenityProperty: {
 		type: String,
 	},
 });

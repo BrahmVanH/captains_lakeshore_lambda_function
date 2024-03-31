@@ -11,7 +11,7 @@ const typeDefs = `#graphql
 
 type Amenity {
 	amenityName: String!
-	amenityIconJSX: String!
+	amenityType: String!
 }
 
 type Property {
@@ -86,7 +86,7 @@ input RemoveBookingInput {
 
 input AmenityInput {
 	amenityName: String!
-	amenityIconJSX: String!
+	amenityType: String!
 }
 
 input Update {
@@ -101,13 +101,14 @@ input UpdatePropertyInput {
 
 type Query {
 	getAllUsers: [User!]
-	queryBookingsByProperty(propertyName: String!): [Booking!]
+	queryBookingsByProperty(propertyName: String!): [Booking!]!
 	getHomePgImgs: homePgImgPack!
 	getHideawayImgs: hideawayImgPack!
 	getCottageImgs: cottageImgPack!
 	getAboutPgImg: String!
 	getPresignedS3Url(imgKey: String!, commandType: String!, altTag: String!): String!
-	getPropertyInfo(propertyName: String!): Property!
+	getPropertyInfo: [Property!]!
+
 }
 type Mutation {
 	createUser(input: CreateUserInput): Auth!

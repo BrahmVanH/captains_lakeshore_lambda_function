@@ -98,13 +98,13 @@ input UpdatePropertyInput {
 
 type Query {
 	getAllUsers: [User!]
-	queryBookingsByProperty(propertyName: String!): [Booking!]
+	queryBookingsByProperty(propertyName: String!): [Booking!]!
 	getHomePgImgs: homePgImgPack!
 	getHideawayImgs: hideawayImgPack!
 	getCottageImgs: cottageImgPack!
 	getAboutPgImg: String!
 	getPresignedS3Url(imgKey: String!, commandType: String!): String!
-	getPropertyInfo(propertyName: String!): Property!
+	getPropertyInfo: [Property!]!
 }
 type Mutation {
 	createUser(input: CreateUserInput): Auth!

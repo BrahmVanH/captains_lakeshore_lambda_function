@@ -31,3 +31,5 @@ lambda/bundle
 graphql.schema.json
 
 codegen.ts
+
+src/seed

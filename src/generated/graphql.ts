@@ -18,13 +18,13 @@ export type Scalars = {
 
 export type Amenity = {
   __typename?: 'Amenity';
-  amenityIconJSX: Scalars['String']['output'];
   amenityName: Scalars['String']['output'];
+  amenityType: Scalars['String']['output'];
 };
 
 export type AmenityInput = {
-  amenityIconJSX: Scalars['String']['input'];
   amenityName: Scalars['String']['input'];
+  amenityType: Scalars['String']['input'];
 };
 
 export type Auth = {
@@ -114,8 +114,8 @@ export type Query = {
   getHideawayImgs: HideawayImgPack;
   getHomePgImgs: HomePgImgPack;
   getPresignedS3Url: Scalars['String']['output'];
-  getPropertyInfo: Property;
-  queryBookingsByProperty?: Maybe<Array<Booking>>;
+  getPropertyInfo: Array<Property>;
+  queryBookingsByProperty: Array<Booking>;
 };
 
 
@@ -123,11 +123,6 @@ export type QueryGetPresignedS3UrlArgs = {
   altTag: Scalars['String']['input'];
   commandType: Scalars['String']['input'];
   imgKey: Scalars['String']['input'];
-};
-
-
-export type QueryGetPropertyInfoArgs = {
-  propertyName: Scalars['String']['input'];
 };
 
 
@@ -315,8 +310,8 @@ export type ResolversParentTypes = {
 };
 
 export type AmenityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity']> = {
-  amenityIconJSX?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   amenityName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  amenityType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -357,8 +352,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getHideawayImgs?: Resolver<ResolversTypes['hideawayImgPack'], ParentType, ContextType>;
   getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
   getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'altTag' | 'commandType' | 'imgKey'>>;
-  getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, 'propertyName'>>;
-  queryBookingsByProperty?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
+  getPropertyInfo?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
+  queryBookingsByProperty?: Resolver<Array<ResolversTypes['Booking']>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {

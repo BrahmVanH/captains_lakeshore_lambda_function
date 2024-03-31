@@ -16,6 +16,7 @@ import {
 	UpdatePropertyInput,
 	AmenityInput,
 	Amenity,
+	Property as IProperty,
 } from './generated/graphql';
 import { ConnectionPoolClosedEvent } from 'mongodb';
 import { getPresignedUrl } from './utils/s3Upload';
@@ -25,7 +26,7 @@ type Temp = {
 	update: string | Amenity;
 };
 
-const resolvers: Resolvers = {
+const resolvers = {
 	Query: {
 		getAllUsers: async () => {
 			try {
@@ -130,14 +131,12 @@ const resolvers: Resolvers = {
 				throw new Error('Error in getting upload url for s3: ' + err.message);
 			}
 		},
-		getPropertyInfo: async (_: {}, { propertyName }: { propertyName: string }, __: any) => {
+		getPropertyInfo: async () => {
 			try {
 				await connectToDb();
 
-				if (!propertyName) {
-					throw new Error('Property name is undefined');
-				}
-				const propertyInfo = await Property.findOne({ propertyName });
+				
+				const propertyInfo: IProperty[] = await Property.find();
 
 				if (!propertyInfo) {
 					throw new Error('Could not find property with that name');

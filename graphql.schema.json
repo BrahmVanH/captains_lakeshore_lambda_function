@@ -14,7 +14,7 @@
         "description": null,
         "fields": [
           {
-            "name": "amenityIconJSX",
+            "name": "amenityName",
             "description": null,
             "args": [],
             "type": {
@@ -30,7 +30,7 @@
             "deprecationReason": null
           },
           {
-            "name": "amenityName",
+            "name": "amenityType",
             "description": null,
             "args": [],
             "type": {
@@ -58,7 +58,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "amenityIconJSX",
+            "name": "amenityName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -74,7 +74,7 @@
             "deprecationReason": null
           },
           {
-            "name": "amenityName",
+            "name": "amenityType",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -814,31 +814,22 @@
           {
             "name": "getPropertyInfo",
             "description": null,
-            "args": [
-              {
-                "name": "propertyName",
-                "description": null,
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
+            "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "Property",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Property",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
@@ -866,15 +857,19 @@
               }
             ],
             "type": {
-              "kind": "LIST",
+              "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "NON_NULL",
+                "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Booking",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Booking",
+                    "ofType": null
+                  }
                 }
               }
             },
