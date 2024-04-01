@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { GetObjectCommand, ListObjectsV2CommandOutput, S3 } from '@aws-sdk/client-s3';
+import { GetObjectCommand, GetObjectTaggingCommand, ListObjectsV2Command, ListObjectsV2CommandOutput, S3Client } from '@aws-sdk/client-s3';
 import { IHomeUrls, S3Object } from '../types';
 import { HideawayImgPack as IHideawayImgPack, CottageImgPack as ICottageImgPack, HomePgImgPack as IHomePgImgPack } from '../generated/graphql';
 import { createImgGalArr } from './helpers';
@@ -35,24 +35,24 @@ import { createImgGalArr } from './helpers';
 // JS SDK v3 does not support global configuration.
 // Codemod has attempted to pass values to each service client in this file.
 // You may need to update clients outside of this file, if they use global config.
-AWS.config.update({
-	accessKeyId: process.env.S3_ACCESS_KEY,
-	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-	region: process.env.S3_REGION,
-});
-
-// const s3 = new S3({
-// 	credentials: {
-// 		accessKeyId: process.env.S3_ACCESS_KEY,
-// 		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-// 	},
-
+// AWS.config.update({
+// 	accessKeyId: process.env.S3_ACCESS_KEY,
+// 	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 // 	region: process.env.S3_REGION,
 // });
 
-const s3 = new S3({
-	region: process.env.S3_REGION,
+const s3 = new S3Client({
+	credentials: {
+		accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+	},
+
+	region: process.env.S3_REGION ?? '',
 });
+
+// const s3 = new S3({
+// 	region: process.env.S3_REGION,
+// });
 
 const findImgIndex = (data: ListObjectsV2CommandOutput, imgKey: string) => {
 	if (!data.Contents || !imgKey) {
@@ -100,18 +100,29 @@ const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) 
 
 const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
 	try {
-		if (imageItem) {
-			const altTag = await s3.getObjectTagging({
-				Bucket: imageBucket,
-				Key: imageItem?.Key,
-			});
-
-			if (!altTag?.TagSet) {
-				console.error('Error in retrieving image tags');
-				throw new Error('Error in retrieving image tags');
-			}
-			return altTag.TagSet[0]?.Value;
+		if (!imageItem) {
+			console.error('Error in retrieving image tags');
+			throw new Error('Error in retrieving image tags');
 		}
+
+		
+
+		const altTag = new GetObjectTaggingCommand({
+			Bucket: imageBucket,
+			Key: imageItem?.Key,
+		});
+
+		const response = await s3.send(altTag);
+
+
+
+
+
+		if (!response?.TagSet) {
+			console.error('Error in retrieving image tags');
+			throw new Error('Error in retrieving image tags');
+		}
+		return response.TagSet[0]?.Value;
 	} catch (err) {
 		console.error('there was an error in retrieving image tags', err);
 	}
@@ -133,7 +144,8 @@ export const getS3HomePageImgs = async () => {
 			throw new Error('Error in querying s3 for homepage images');
 		}
 
-		const data = await s3.listObjectsV2(homePageParams);
+		// const data = await s3.listObjectsV2(homePageParams);
+		const data = await s3.send(new ListObjectsV2Command(homePageParams));
 		const s3Objects = data?.Contents as S3Object[];
 
 		if (!data?.Contents) {
@@ -168,7 +180,7 @@ export const getS3HideawayPgImgs = async () => {
 			Bucket: bucket,
 			Prefix: 'captains_hideaway_png/',
 		};
-		const data = await s3.listObjectsV2(hideawayParams);
+		const data = await s3.send(new ListObjectsV2Command(hideawayParams));
 		const s3Objects = data?.Contents as S3Object[];
 
 		if (!s3Objects) {
@@ -228,7 +240,7 @@ export const getS3CottagePgImgs = async () => {
 			throw new Error('Error in querying s3 for cottage images');
 		}
 
-		const data = await s3.listObjectsV2(cottageParams);
+		const data = await s3.send(new ListObjectsV2Command(cottageParams));
 		const s3Objects = data?.Contents as S3Object[];
 
 		if (!s3Objects) {

@@ -8,9 +8,6 @@ const amenitiesSchema: Schema<Amenity> = new Schema<Amenity>({
 	amenityType: {
 		type: String,
 	},
-	amenityProperty: {
-		type: String,
-	},
 });
 
 const propertySchema: Schema<Property> = new Schema<Property>({
@@ -23,11 +20,10 @@ const propertySchema: Schema<Property> = new Schema<Property>({
 	amenities: {
 		type: [amenitiesSchema],
 	},
-  headerImgKey: {
-    type: String,
-  },
+	headerImgKey: {
+		type: String,
+	},
 });
-
 
 const Property = model<Property>('Property', propertySchema);
 

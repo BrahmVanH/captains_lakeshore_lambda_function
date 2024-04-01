@@ -21,11 +21,6 @@ import {
 import { ConnectionPoolClosedEvent } from 'mongodb';
 import { getPresignedUrl } from './utils/s3Upload';
 
-type Temp = {
-	updateType: string;
-	update: string | Amenity;
-};
-
 const resolvers = {
 	Query: {
 		getAllUsers: async () => {
@@ -118,9 +113,9 @@ const resolvers = {
 				throw new Error('Error in querying s3 for about page image: ' + err.message);
 			}
 		},
-		getPresignedS3Url: async (_: {}, { imgKey, commandType, altTag }: { imgKey: string; commandType: string, altTag: string }, __: any) => {
+		getPresignedS3Url: async (_: {}, { imgKey, commandType, altTag }: { imgKey: string; commandType: string; altTag: string }, __: any) => {
 			try {
-				console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag)
+				console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag);
 				const preSignedUrl = await getPresignedUrl(imgKey, commandType, altTag);
 				if (!preSignedUrl) {
 					throw new Error('Error in getting presigned URL');
@@ -135,7 +130,6 @@ const resolvers = {
 			try {
 				await connectToDb();
 
-				
 				const propertyInfo: IProperty[] = await Property.find();
 
 				if (!propertyInfo) {
