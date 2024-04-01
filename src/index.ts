@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 const httpServer = http.createServer(app);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT ?? 4000;
 
 const server = new ApolloDServerDev<BaseContext>({
 	typeDefs,
@@ -21,6 +21,8 @@ const server = new ApolloDServerDev<BaseContext>({
 	introspection: true,
 	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 
 const startApolloServer = async () => {
 	try {
@@ -37,28 +39,7 @@ const startApolloServer = async () => {
 	}
 };
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 
-// const corsMiddleware = async (event: any) => {
-// 	const origin = event.headers.origin;
-// 	console.log('origin', origin);
-// 	if (origin && allowedOrigins.includes(origin)) {
-// 		return (result: any) => {
-// 			result.headers = {
-// 				...result.headers,
-// 				'Access-Control-Allow-Origin': origin,
-// 				Vary: 'Origin',
-// 			};
-// 			return Promise.resolve();
-// 		};
-// 	} else {
-// 		return (result: any) => {
-// 			result.statusCode = 403;
-// 			result.body = 'Origin not allowed';
-// 			return Promise.resolve();
-// 		};
-// 	}
-// };
 
 const startHttpServer = async () => {
 	try {

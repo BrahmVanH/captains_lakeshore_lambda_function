@@ -41,15 +41,6 @@ import { createImgGalArr } from './helpers';
 // 	region: process.env.S3_REGION,
 // });
 
-const s3 = new S3Client({
-	credentials: {
-		accessKeyId: process.env.S3_ACCESS_KEY ?? '',
-		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
-	},
-
-	region: process.env.S3_REGION ?? '',
-});
-
 // const s3 = new S3({
 // 	region: process.env.S3_REGION,
 // });
@@ -66,6 +57,13 @@ const findImgIndex = (data: ListObjectsV2CommandOutput, imgKey: string) => {
 };
 
 const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) => {
+	const s3 = new S3Client({
+		region: process.env.S3_REGION ?? '',
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+		},
+	});
 	try {
 		if (!imageItem || !imageBucket) {
 			return '';
@@ -99,24 +97,25 @@ const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) 
 };
 
 const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
+	const s3 = new S3Client({
+		region: process.env.S3_REGION ?? '',
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+		},
+	});
+	if (!imageItem) {
+		console.error('Error in retrieving image tags');
+		throw new Error('Error in retrieving image tags');
+	}
+
+	const altTag = new GetObjectTaggingCommand({
+		Bucket: imageBucket,
+		Key: imageItem?.Key,
+	});
+
 	try {
-		if (!imageItem) {
-			console.error('Error in retrieving image tags');
-			throw new Error('Error in retrieving image tags');
-		}
-
-		
-
-		const altTag = new GetObjectTaggingCommand({
-			Bucket: imageBucket,
-			Key: imageItem?.Key,
-		});
-
 		const response = await s3.send(altTag);
-
-
-
-
 
 		if (!response?.TagSet) {
 			console.error('Error in retrieving image tags');
@@ -129,22 +128,28 @@ const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
 };
 
 export const getS3HomePageImgs = async () => {
+	const bucketName = process.env.S3_BUCKET_NAME ?? '';
+	const homeHeaderImgKey = process.env.HOME_HEADER_IMG_KEY ?? '';
+	const homePgHideawayImgKey = process.env.HIDEAWAY_HOMEPAGE_IMG_KEY ?? '';
+	const homePgCottageImgKey = process.env.COTTAGE_HOMEPAGE_IMG_KEY ?? '';
+	const homePageParams = {
+		Bucket: bucketName,
+		Prefix: 'home_page/',
+	};
+	const s3 = new S3Client({
+		region: process.env.S3_REGION ?? '',
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+		},
+	});
+
+	if (bucketName === '' || homeHeaderImgKey === '' || homePgHideawayImgKey === '' || homePgCottageImgKey === '') {
+		console.error('Error in querying s3 for homepage images');
+		throw new Error('Error in querying s3 for homepage images');
+	}
+
 	try {
-		const bucketName = process.env.S3_BUCKET_NAME ?? '';
-		const homeHeaderImgKey = process.env.HOME_HEADER_IMG_KEY ?? '';
-		const homePgHideawayImgKey = process.env.HIDEAWAY_HOMEPAGE_IMG_KEY ?? '';
-		const homePgCottageImgKey = process.env.COTTAGE_HOMEPAGE_IMG_KEY ?? '';
-		const homePageParams = {
-			Bucket: bucketName,
-			Prefix: 'home_page/',
-		};
-
-		if (bucketName === '' || homeHeaderImgKey === '' || homePgHideawayImgKey === '' || homePgCottageImgKey === '') {
-			console.error('Error in querying s3 for homepage images');
-			throw new Error('Error in querying s3 for homepage images');
-		}
-
-		// const data = await s3.listObjectsV2(homePageParams);
 		const data = await s3.send(new ListObjectsV2Command(homePageParams));
 		const s3Objects = data?.Contents as S3Object[];
 
@@ -168,18 +173,26 @@ export const getS3HomePageImgs = async () => {
 };
 
 export const getS3HideawayPgImgs = async () => {
-	try {
-		const bucket = process.env.S3_BUCKET_NAME ?? '';
-		const hideawayHeaderImgKey = process.env.HIDEAWAY_HEADER_IMG_KEY ?? '';
+	const bucket = process.env.S3_BUCKET_NAME ?? '';
+	const hideawayHeaderImgKey = process.env.HIDEAWAY_HEADER_IMG_KEY ?? '';
 
-		if (bucket === '' || hideawayHeaderImgKey === '') {
-			console.error('Error in querying s3 for hideaway images');
-			throw new Error('Error in querying s3 for hideaway images');
-		}
-		const hideawayParams = {
-			Bucket: bucket,
-			Prefix: 'captains_hideaway_png/',
-		};
+	const s3 = new S3Client({
+		region: process.env.S3_REGION ?? '',
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+		},
+	});
+	
+	if (bucket === '' || hideawayHeaderImgKey === '') {
+		console.error('Error in querying s3 for hideaway images');
+		throw new Error('Error in querying s3 for hideaway images');
+	}
+	const hideawayParams = {
+		Bucket: bucket,
+		Prefix: 'captains_hideaway_png/',
+	};
+	try {
 		const data = await s3.send(new ListObjectsV2Command(hideawayParams));
 		const s3Objects = data?.Contents as S3Object[];
 
@@ -228,17 +241,26 @@ export const getS3HideawayPgImgs = async () => {
 };
 
 export const getS3CottagePgImgs = async () => {
-	try {
-		const bucketName = process.env.S3_BUCKET_NAME ?? '';
-		const cottageHeaderImgKey = process.env.COTTAGE_HEADER_IMG_KEY ?? '';
-		const cottageParams = {
+	const bucketName = process.env.S3_BUCKET_NAME ?? '';
+	const cottageHeaderImgKey = process.env.COTTAGE_HEADER_IMG_KEY ?? '';
+	const cottageParams = {
 			Bucket: bucketName,
 			Prefix: 'captains_cottage_png/',
 		};
+
+		const s3 = new S3Client({
+			region: process.env.S3_REGION ?? '',
+			credentials: {
+				accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+				secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+			},
+		});
+		
 		if (cottageHeaderImgKey === '') {
 			console.error('Error in querying s3 for cottage images');
 			throw new Error('Error in querying s3 for cottage images');
 		}
+		try {
 
 		const data = await s3.send(new ListObjectsV2Command(cottageParams));
 		const s3Objects = data?.Contents as S3Object[];
