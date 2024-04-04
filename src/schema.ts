@@ -15,9 +15,10 @@ type Amenity {
 }
 
 type Property {
+	_id: ID!
 	propertyName: String!
 	propertyDescription: String!
-	amenities: [Amenity!]
+	amenities: [Amenity!]!
 	headerImgKey: String!
 }
 
@@ -90,12 +91,13 @@ input AmenityInput {
 }
 
 input Update {
+	propertyName: String!
 	propertyDescription: String!
 	amenities: [AmenityInput!]
 	headerImgKey: String!
 }
 input UpdatePropertyInput {
-	propertyName: String!
+	_id: ID!
 	update: Update!
 }
 
@@ -107,16 +109,17 @@ type Query {
 	getCottageImgs: cottageImgPack!
 	getAboutPgImg: String!
 	getPresignedS3Url(imgKey: String!, commandType: String!, altTag: String!): String!
-	getPropertyInfo: [Property!]!
+	getPropertyInfo(_id: ID!): Property!
+	getProperties: [Property!]!
 
 }
 type Mutation {
-	createUser(input: CreateUserInput): Auth!
-	loginUser(input: LoginUserInput): Auth!
-	removeUser(input: RemoveUserInput): Auth!
-	createBooking(input: CreateBookingInput): Booking!
-	removeBooking(input: RemoveBookingInput): Booking!
-	updatePropertyInfo(input: UpdatePropertyInput): Property!
+	createUser(input: CreateUserInput!): Auth!
+	loginUser(input: LoginUserInput!): Auth!
+	removeUser(input: RemoveUserInput!): Auth!
+	createBooking(input: CreateBookingInput!): Booking!
+	removeBooking(input: RemoveBookingInput!): Booking!
+	updatePropertyInfo(input: UpdatePropertyInput!): Property!
 }
 
 `;

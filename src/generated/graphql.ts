@@ -70,37 +70,38 @@ export type Mutation = {
 
 
 export type MutationCreateBookingArgs = {
-  input?: InputMaybe<CreateBookingInput>;
+  input: CreateBookingInput;
 };
 
 
 export type MutationCreateUserArgs = {
-  input?: InputMaybe<CreateUserInput>;
+  input: CreateUserInput;
 };
 
 
 export type MutationLoginUserArgs = {
-  input?: InputMaybe<LoginUserInput>;
+  input: LoginUserInput;
 };
 
 
 export type MutationRemoveBookingArgs = {
-  input?: InputMaybe<RemoveBookingInput>;
+  input: RemoveBookingInput;
 };
 
 
 export type MutationRemoveUserArgs = {
-  input?: InputMaybe<RemoveUserInput>;
+  input: RemoveUserInput;
 };
 
 
 export type MutationUpdatePropertyInfoArgs = {
-  input?: InputMaybe<UpdatePropertyInput>;
+  input: UpdatePropertyInput;
 };
 
 export type Property = {
   __typename?: 'Property';
-  amenities?: Maybe<Array<Amenity>>;
+  _id: Scalars['ID']['output'];
+  amenities: Array<Amenity>;
   headerImgKey: Scalars['String']['output'];
   propertyDescription: Scalars['String']['output'];
   propertyName: Scalars['String']['output'];
@@ -114,7 +115,8 @@ export type Query = {
   getHideawayImgs: HideawayImgPack;
   getHomePgImgs: HomePgImgPack;
   getPresignedS3Url: Scalars['String']['output'];
-  getPropertyInfo: Array<Property>;
+  getProperties: Array<Property>;
+  getPropertyInfo: Property;
   queryBookingsByProperty: Array<Booking>;
 };
 
@@ -123,6 +125,11 @@ export type QueryGetPresignedS3UrlArgs = {
   altTag: Scalars['String']['input'];
   commandType: Scalars['String']['input'];
   imgKey: Scalars['String']['input'];
+};
+
+
+export type QueryGetPropertyInfoArgs = {
+  _id: Scalars['ID']['input'];
 };
 
 
@@ -144,10 +151,11 @@ export type Update = {
   amenities?: InputMaybe<Array<AmenityInput>>;
   headerImgKey: Scalars['String']['input'];
   propertyDescription: Scalars['String']['input'];
+  propertyName: Scalars['String']['input'];
 };
 
 export type UpdatePropertyInput = {
-  propertyName: Scalars['String']['input'];
+  _id: Scalars['ID']['input'];
   update: Update;
 };
 
@@ -329,16 +337,17 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, Partial<MutationCreateBookingArgs>>;
-  createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, Partial<MutationCreateUserArgs>>;
-  loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, Partial<MutationLoginUserArgs>>;
-  removeBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, Partial<MutationRemoveBookingArgs>>;
-  removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, Partial<MutationRemoveUserArgs>>;
-  updatePropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, Partial<MutationUpdatePropertyInfoArgs>>;
+  createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
+  createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
+  loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
+  removeBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
+  removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;
+  updatePropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyInfoArgs, 'input'>>;
 };
 
 export type PropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = {
-  amenities?: Resolver<Maybe<Array<ResolversTypes['Amenity']>>, ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  amenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
   headerImgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   propertyDescription?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   propertyName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -352,7 +361,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getHideawayImgs?: Resolver<ResolversTypes['hideawayImgPack'], ParentType, ContextType>;
   getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
   getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'altTag' | 'commandType' | 'imgKey'>>;
-  getPropertyInfo?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
+  getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
+  getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, '_id'>>;
   queryBookingsByProperty?: Resolver<Array<ResolversTypes['Booking']>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyName'>>;
 };
 

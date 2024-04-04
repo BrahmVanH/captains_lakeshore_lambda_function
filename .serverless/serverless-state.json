@@ -177,7 +177,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/captains-lakefront-rentals-api/dev/1711932046022-2024-04-01T00:40:46.022Z/captains-lakefront-rentals-api.zip"
+                "S3Key": "serverless/captains-lakefront-rentals-api/dev/1712032744082-2024-04-02T04:39:04.082Z/captains-lakefront-rentals-api.zip"
               },
               "Handler": "lambda/dist/server.handler",
               "Runtime": "nodejs16.x",
@@ -533,7 +533,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/captains-lakefront-rentals-api/dev/code-artifacts",
         "artifact": "C:\\Users\\Brahm\\Dev-Stuff\\Apps\\captains_lakefront_rentals\\lambda_function\\.serverless\\captains-lakefront-rentals-api.zip",
-        "artifactDirectoryName": "serverless/captains-lakefront-rentals-api/dev/1711932046022-2024-04-01T00:40:46.022Z"
+        "artifactDirectoryName": "serverless/captains-lakefront-rentals-api/dev/1712032744082-2024-04-02T04:39:04.082Z"
       },
       "plugins": {
         "$ref": "$[\"service\"][\"plugins\"]"
@@ -547,7 +547,7 @@
     "artifact": "C:\\Users\\Brahm\\Dev-Stuff\\Apps\\captains_lakefront_rentals\\lambda_function\\.serverless\\captains-lakefront-rentals-api.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/captains-lakefront-rentals-api/dev/1711932046022-2024-04-01T00:40:46.022Z",
+    "artifactDirectoryName": "serverless/captains-lakefront-rentals-api/dev/1712032744082-2024-04-02T04:39:04.082Z",
     "artifact": "captains-lakefront-rentals-api.zip"
   }
 }

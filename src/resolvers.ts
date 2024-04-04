@@ -21,7 +21,7 @@ import {
 import { ConnectionPoolClosedEvent } from 'mongodb';
 import { getPresignedUrl } from './utils/s3Upload';
 
-const resolvers = {
+const resolvers: Resolvers = {
 	Query: {
 		getAllUsers: async () => {
 			try {
@@ -126,11 +126,15 @@ const resolvers = {
 				throw new Error('Error in getting upload url for s3: ' + err.message);
 			}
 		},
-		getPropertyInfo: async () => {
+		getPropertyInfo: async (_: {}, { _id }: { _id: string }, __: any) => {
 			try {
 				await connectToDb();
 
-				const propertyInfo: IProperty[] = await Property.find();
+				if (!_id) {
+					throw new Error('No ID was presented for querying property info');
+				}
+
+				const propertyInfo: IProperty | null = await Property.findOne({ _id });
 
 				if (!propertyInfo) {
 					throw new Error('Could not find property with that name');
@@ -142,17 +146,36 @@ const resolvers = {
 				throw new Error('Error in getting property info: ' + err.message);
 			}
 		},
+		getProperties: async () => {
+			try {
+				await connectToDb();
+
+				const properties: IProperty[] = await Property.find();
+
+				if (!properties) {
+					throw new Error('Error fetching all properties from database');
+				}
+
+				return properties;
+			} catch (err: any) {
+				console.error({ message: 'error in finding properties', details: err });
+				throw new Error('Error in finding properties: ' + err.message);
+			}
+		},
 	},
 	Mutation: {
 		createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {
-			const { firstName, lastName, username, userPassword, adminCode } = args.input as CreateUserInput;
+			const { firstName, lastName, username, userPassword, adminCode } = args.input;
+
+			if (!firstName || !lastName || !username || !userPassword || !adminCode) {
+				throw new Error('All fields must be filled to create a user.');
+			} else if (adminCode !== process.env.ADMIN_CODE) {
+				throw new Error('Incorrect admin code');
+			}
+
 			try {
 				await connectToDb();
-				if (!firstName || !lastName || !username || !userPassword || !adminCode) {
-					throw new Error('All fields must be filled to create a user.');
-				} else if (adminCode !== process.env.ADMIN_CODE) {
-					throw new Error('Incorrect admin code');
-				}
+				
 				const user: IUser = await User.create({
 					firstName,
 					lastName,
@@ -263,18 +286,23 @@ const resolvers = {
 			}
 		},
 		updatePropertyInfo: async (_: {}, args: MutationUpdatePropertyInfoArgs, __: any) => {
+			if (!args.input) {
+				throw new Error('No input object was presented for updating property info');
+			}
+
+			const { _id, update } = args.input;
+
+			if (!_id) {
+				throw new Error('Property name is undefined');
+			}
+
+			if (!update?.propertyDescription || !update?.amenities || !update?.headerImgKey) {
+				throw new Error('Update object is undefined');
+			}
 			try {
-				const { propertyName, update } = args.input as IUpdatePropertyArgs;
 				await connectToDb();
-				if (!propertyName) {
-					throw new Error('Property name is undefined');
-				}
 
-				if (!update?.propertyDescription || !update?.amenities || !update?.headerImgKey) {
-					throw new Error('Update object is undefined');
-				}
-
-				const property = await Property.findOneAndUpdate({ propertyName: propertyName }, { $set: update });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: update });
 
 				if (!property) {
 					throw new Error('Could not find property with that name');

@@ -207,7 +207,6 @@ export const getS3HideawayPgImgs = async () => {
 			s3Objects
 				.filter((s3Object) => s3Object.Key !== 'captains_hideaway_png/')
 				.map(async (s3Object) => {
-					console.log('s3Object', s3Object);
 					const altTag = await getImgTag(hideawayParams.Bucket, s3Object);
 					const signedUrl = await handleSignUrl(hideawayParams.Bucket, s3Object);
 					if (!altTag || !signedUrl) {

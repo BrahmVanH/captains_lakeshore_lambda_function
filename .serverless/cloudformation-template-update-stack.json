@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/captains-lakefront-rentals-api/dev/1711932046022-2024-04-01T00:40:46.022Z/captains-lakefront-rentals-api.zip"
+          "S3Key": "serverless/captains-lakefront-rentals-api/dev/1712032744082-2024-04-02T04:39:04.082Z/captains-lakefront-rentals-api.zip"
         },
         "Handler": "lambda/dist/server.handler",
         "Runtime": "nodejs16.x",
