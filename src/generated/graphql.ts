@@ -53,6 +53,10 @@ export type CreateUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type DeleteS3ObjectInput = {
+  imgKey: Scalars['String']['input'];
+};
+
 export type LoginUserInput = {
   userPassword: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -62,6 +66,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createBooking: Booking;
   createUser: Auth;
+  deleteS3Object: Scalars['String']['output'];
   loginUser: Auth;
   removeBooking: Booking;
   removeUser: Auth;
@@ -76,6 +81,11 @@ export type MutationCreateBookingArgs = {
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+
+export type MutationDeleteS3ObjectArgs = {
+  input: DeleteS3ObjectInput;
 };
 
 
@@ -274,6 +284,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateBookingInput: CreateBookingInput;
   CreateUserInput: CreateUserInput;
+  DeleteS3ObjectInput: DeleteS3ObjectInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   LoginUserInput: LoginUserInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -300,6 +311,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateBookingInput: CreateBookingInput;
   CreateUserInput: CreateUserInput;
+  DeleteS3ObjectInput: DeleteS3ObjectInput;
   ID: Scalars['ID']['output'];
   LoginUserInput: LoginUserInput;
   Mutation: {};
@@ -339,6 +351,7 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
+  deleteS3Object?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectArgs, 'input'>>;
   loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
   removeBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
   removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;

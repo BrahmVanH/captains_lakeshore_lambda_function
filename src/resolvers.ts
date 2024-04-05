@@ -17,9 +17,9 @@ import {
 	AmenityInput,
 	Amenity,
 	Property as IProperty,
+	MutationDeleteS3ObjectArgs,
 } from './generated/graphql';
-import { ConnectionPoolClosedEvent } from 'mongodb';
-import { getPresignedUrl } from './utils/s3Upload';
+import { getPresignedUrl, deleteSingleS3Object } from './utils/s3Upload';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -118,8 +118,10 @@ const resolvers: Resolvers = {
 				console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag);
 				const preSignedUrl = await getPresignedUrl(imgKey, commandType, altTag);
 				if (!preSignedUrl) {
+					console.error('Error in getting presigned URL');
 					throw new Error('Error in getting presigned URL');
 				}
+				console.log('preSignedUrl', preSignedUrl);
 				return preSignedUrl;
 			} catch (err: any) {
 				console.log('Error in getting Upload URL for s3', err);
@@ -175,7 +177,7 @@ const resolvers: Resolvers = {
 
 			try {
 				await connectToDb();
-				
+
 				const user: IUser = await User.create({
 					firstName,
 					lastName,
@@ -311,6 +313,24 @@ const resolvers: Resolvers = {
 				return property;
 			} catch (err: any) {
 				throw new Error('Error in updating property info: ' + err.message);
+			}
+		},
+		deleteS3Object: async (_: {}, args: MutationDeleteS3ObjectArgs, __: any) => {
+			const { imgKey } = args;
+			try {
+				await connectToDb();
+				if (!imgKey) {
+					throw new Error('No key was presented for deleting object');
+				}
+
+				const response = await deleteSingleS3Object(imgKey);
+
+				if (!response) {
+					throw new Error('Could not delete object from s3');
+				}
+				return response;
+			} catch (err: any) {
+				throw new Error('Error in deleting object from s3: ' + err.message);
 			}
 		},
 	},

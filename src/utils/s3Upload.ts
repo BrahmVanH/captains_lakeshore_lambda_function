@@ -46,3 +46,25 @@ export const getPresignedUrl = async (key: string, commandType: string, altTag: 
 		console.error(err);
 	}
 };
+
+export const deleteSingleS3Object = async (key: string) => {
+	const client = new S3Client({
+		region: process.env.S3_REGION ?? '',
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+		},
+	});
+	const command = new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET_NAME ?? '', Key: key });
+	try {
+		const data = await client.send(command);
+		console.log('Successfully deleted object', data);
+		if (data.$metadata.httpStatusCode === 204) {
+
+			return key;
+		} 
+		return false;
+	} catch (err) {
+		console.error(err);
+	}
+};

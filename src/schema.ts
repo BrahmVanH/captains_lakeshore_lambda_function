@@ -101,6 +101,10 @@ input UpdatePropertyInput {
 	update: Update!
 }
 
+input DeleteS3ObjectInput {
+	imgKey: String!
+}
+
 type Query {
 	getAllUsers: [User!]
 	queryBookingsByProperty(propertyName: String!): [Booking!]!
@@ -120,6 +124,7 @@ type Mutation {
 	createBooking(input: CreateBookingInput!): Booking!
 	removeBooking(input: RemoveBookingInput!): Booking!
 	updatePropertyInfo(input: UpdatePropertyInput!): Property!
+	deleteS3Object(input: DeleteS3ObjectInput!): String!
 }
 
 `;
