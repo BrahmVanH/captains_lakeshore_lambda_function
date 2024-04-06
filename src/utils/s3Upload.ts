@@ -1,4 +1,4 @@
-import { PutObjectCommand, DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand, DeleteObjectCommand, S3Client, DeleteObjectCommandOutput } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const createPresignedUrlWithClient = ({ region, bucket, key, commandType, altTag }: { region: string; bucket: string; key: string; commandType: string; altTag: string }) => {
@@ -58,12 +58,19 @@ export const deleteSingleS3Object = async (key: string) => {
 	const command = new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET_NAME ?? '', Key: key });
 	try {
 		const data = await client.send(command);
-		console.log('Successfully deleted object', data);
 		if (data.$metadata.httpStatusCode === 204) {
+			console.log('Successfully deleted object', data);
 
-			return key;
-		} 
-		return false;
+			return {
+				status: data.$metadata.httpStatusCode,
+				message: 'Successfully deleted object',
+			};
+		}
+		console.error('Failed to delete object', data);
+		return {
+			status: 400,
+			message: 'Failed to delete object',
+		};
 	} catch (err) {
 		console.error(err);
 	}

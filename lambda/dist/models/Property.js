@@ -5,7 +5,7 @@ const amenitiesSchema = new mongoose_1.Schema({
     amenityName: {
         type: String,
     },
-    amenityIconJSX: {
+    amenityType: {
         type: String,
     },
 });

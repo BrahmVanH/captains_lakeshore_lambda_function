@@ -12,14 +12,11 @@ import {
 	MutationRemoveUserArgs,
 	MutationRemoveBookingArgs,
 	MutationUpdatePropertyInfoArgs,
-	Update,
-	UpdatePropertyInput,
-	AmenityInput,
-	Amenity,
 	Property as IProperty,
 	MutationDeleteS3ObjectArgs,
 } from './generated/graphql';
 import { getPresignedUrl, deleteSingleS3Object } from './utils/s3Upload';
+import { Delete } from '@aws-sdk/client-s3';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -316,12 +313,12 @@ const resolvers: Resolvers = {
 			}
 		},
 		deleteS3Object: async (_: {}, args: MutationDeleteS3ObjectArgs, __: any) => {
-			const { imgKey } = args;
+			const { imgKey } = args?.input;
+			if (!imgKey || imgKey === '') {
+				throw new Error('No key was presented for deleting object');
+			}
 			try {
 				await connectToDb();
-				if (!imgKey) {
-					throw new Error('No key was presented for deleting object');
-				}
 
 				const response = await deleteSingleS3Object(imgKey);
 

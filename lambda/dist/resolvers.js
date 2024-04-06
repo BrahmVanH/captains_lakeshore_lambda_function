@@ -105,12 +105,15 @@ const resolvers = {
                 throw new Error('Error in querying s3 for about page image: ' + err.message);
             }
         }),
-        getS3UploadUrl: (_2, _b, __2) => __awaiter(void 0, [_2, _b, __2], void 0, function* (_, { imgKey }, __) {
+        getPresignedS3Url: (_2, _b, __2) => __awaiter(void 0, [_2, _b, __2], void 0, function* (_, { imgKey, commandType, altTag }, __) {
             try {
-                const preSignedUrl = yield (0, s3Upload_1.getPresignedUrl)(imgKey);
+                console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag);
+                const preSignedUrl = yield (0, s3Upload_1.getPresignedUrl)(imgKey, commandType, altTag);
                 if (!preSignedUrl) {
+                    console.error('Error in getting presigned URL');
                     throw new Error('Error in getting presigned URL');
                 }
+                console.log('preSignedUrl', preSignedUrl);
                 return preSignedUrl;
             }
             catch (err) {
@@ -118,13 +121,13 @@ const resolvers = {
                 throw new Error('Error in getting upload url for s3: ' + err.message);
             }
         }),
-        getPropertyInfo: (_3, _c, __3) => __awaiter(void 0, [_3, _c, __3], void 0, function* (_, { propertyName }, __) {
+        getPropertyInfo: (_3, _c, __3) => __awaiter(void 0, [_3, _c, __3], void 0, function* (_, { _id }, __) {
             try {
                 yield (0, db_1.connectToDb)();
-                if (!propertyName) {
-                    throw new Error('Property name is undefined');
+                if (!_id) {
+                    throw new Error('No ID was presented for querying property info');
                 }
-                const propertyInfo = yield models_1.Property.findOne({ propertyName });
+                const propertyInfo = yield models_1.Property.findOne({ _id });
                 if (!propertyInfo) {
                     throw new Error('Could not find property with that name');
                 }
@@ -135,18 +138,32 @@ const resolvers = {
                 throw new Error('Error in getting property info: ' + err.message);
             }
         }),
+        getProperties: () => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                yield (0, db_1.connectToDb)();
+                const properties = yield models_1.Property.find();
+                if (!properties) {
+                    throw new Error('Error fetching all properties from database');
+                }
+                return properties;
+            }
+            catch (err) {
+                console.error({ message: 'error in finding properties', details: err });
+                throw new Error('Error in finding properties: ' + err.message);
+            }
+        }),
     },
     Mutation: {
         createUser: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             const { firstName, lastName, username, userPassword, adminCode } = args.input;
+            if (!firstName || !lastName || !username || !userPassword || !adminCode) {
+                throw new Error('All fields must be filled to create a user.');
+            }
+            else if (adminCode !== process.env.ADMIN_CODE) {
+                throw new Error('Incorrect admin code');
+            }
             try {
                 yield (0, db_1.connectToDb)();
-                if (!firstName || !lastName || !username || !userPassword || !adminCode) {
-                    throw new Error('All fields must be filled to create a user.');
-                }
-                else if (adminCode !== process.env.ADMIN_CODE) {
-                    throw new Error('Incorrect admin code');
-                }
                 const user = yield models_1.User.create({
                     firstName,
                     lastName,
@@ -251,16 +268,19 @@ const resolvers = {
             }
         }),
         updatePropertyInfo: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
+            if (!args.input) {
+                throw new Error('No input object was presented for updating property info');
+            }
+            const { _id, update } = args.input;
+            if (!_id) {
+                throw new Error('Property name is undefined');
+            }
+            if (!(update === null || update === void 0 ? void 0 : update.propertyDescription) || !(update === null || update === void 0 ? void 0 : update.amenities) || !(update === null || update === void 0 ? void 0 : update.headerImgKey)) {
+                throw new Error('Update object is undefined');
+            }
             try {
-                const { propertyName, update } = args.input;
                 yield (0, db_1.connectToDb)();
-                if (!propertyName) {
-                    throw new Error('Property name is undefined');
-                }
-                if (!(update === null || update === void 0 ? void 0 : update.propertyDescription) || !(update === null || update === void 0 ? void 0 : update.amenities) || !(update === null || update === void 0 ? void 0 : update.headerImgKey)) {
-                    throw new Error('Update object is undefined');
-                }
-                const property = yield models_1.Property.findOneAndUpdate({ propertyName: propertyName }, { $set: update });
+                const property = yield models_1.Property.findOneAndUpdate({ _id }, { $set: update });
                 if (!property) {
                     throw new Error('Could not find property with that name');
                 }
@@ -268,6 +288,23 @@ const resolvers = {
             }
             catch (err) {
                 throw new Error('Error in updating property info: ' + err.message);
+            }
+        }),
+        deleteS3Object: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
+            const { imgKey } = args === null || args === void 0 ? void 0 : args.input;
+            if (!imgKey) {
+                throw new Error('No key was presented for deleting object');
+            }
+            try {
+                yield (0, db_1.connectToDb)();
+                const response = yield (0, s3Upload_1.deleteSingleS3Object)(imgKey);
+                if (!response) {
+                    throw new Error('Could not delete object from s3');
+                }
+                return response;
+            }
+            catch (err) {
+                throw new Error('Error in deleting object from s3: ' + err.message);
             }
         }),
     },

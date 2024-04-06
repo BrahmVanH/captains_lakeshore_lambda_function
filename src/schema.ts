@@ -1,3 +1,5 @@
+import { DeleteObjectCommandOutput } from '@aws-sdk/client-s3';
+
 const typeDefs = `#graphql
 
 
@@ -39,6 +41,13 @@ type imageObject {
 	thumbnail: String!
 	originalAlt: String!
 	thumbnailAlt: String!
+}
+
+
+
+type DeleteS3ObjectResponse {
+	status: Int!
+	message: String!
 }
 
 type homePgImgPack {
@@ -105,6 +114,8 @@ input DeleteS3ObjectInput {
 	imgKey: String!
 }
 
+
+
 type Query {
 	getAllUsers: [User!]
 	queryBookingsByProperty(propertyName: String!): [Booking!]!
@@ -124,7 +135,7 @@ type Mutation {
 	createBooking(input: CreateBookingInput!): Booking!
 	removeBooking(input: RemoveBookingInput!): Booking!
 	updatePropertyInfo(input: UpdatePropertyInput!): Property!
-	deleteS3Object(input: DeleteS3ObjectInput!): String!
+	deleteS3Object(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
 }
 
 `;

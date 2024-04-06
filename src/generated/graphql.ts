@@ -57,6 +57,12 @@ export type DeleteS3ObjectInput = {
   imgKey: Scalars['String']['input'];
 };
 
+export type DeleteS3ObjectResponse = {
+  __typename?: 'DeleteS3ObjectResponse';
+  message: Scalars['String']['output'];
+  status: Scalars['Int']['output'];
+};
+
 export type LoginUserInput = {
   userPassword: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -66,7 +72,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createBooking: Booking;
   createUser: Auth;
-  deleteS3Object: Scalars['String']['output'];
+  deleteS3Object: DeleteS3ObjectResponse;
   loginUser: Auth;
   removeBooking: Booking;
   removeUser: Auth;
@@ -285,7 +291,9 @@ export type ResolversTypes = {
   CreateBookingInput: CreateBookingInput;
   CreateUserInput: CreateUserInput;
   DeleteS3ObjectInput: DeleteS3ObjectInput;
+  DeleteS3ObjectResponse: ResolverTypeWrapper<DeleteS3ObjectResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   LoginUserInput: LoginUserInput;
   Mutation: ResolverTypeWrapper<{}>;
   Property: ResolverTypeWrapper<Property>;
@@ -312,7 +320,9 @@ export type ResolversParentTypes = {
   CreateBookingInput: CreateBookingInput;
   CreateUserInput: CreateUserInput;
   DeleteS3ObjectInput: DeleteS3ObjectInput;
+  DeleteS3ObjectResponse: DeleteS3ObjectResponse;
   ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   LoginUserInput: LoginUserInput;
   Mutation: {};
   Property: Property;
@@ -348,10 +358,16 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteS3ObjectResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteS3ObjectResponse'] = ResolversParentTypes['DeleteS3ObjectResponse']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
-  deleteS3Object?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectArgs, 'input'>>;
+  deleteS3Object?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectArgs, 'input'>>;
   loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
   removeBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
   removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;
@@ -420,6 +436,7 @@ export type Resolvers<ContextType = any> = {
   Amenity?: AmenityResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
   Booking?: BookingResolvers<ContextType>;
+  DeleteS3ObjectResponse?: DeleteS3ObjectResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

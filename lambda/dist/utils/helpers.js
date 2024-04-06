@@ -3,14 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createImgGalArr = void 0;
 // Takes in alt tags, gallery image urls and header url from property pages and
 // formats an array for image gallery in client
-const createImgGalArr = (galleryAltTags, imageUrls) => {
+const createImgGalArr = (galleryAltTags, imageUrls, imageKeys) => {
     const galleryArray = imageUrls.map((url) => {
         const original = url;
+        const imgKey = imageKeys[imageUrls.indexOf(url)];
         return {
+            imgKey: imgKey,
             original: original,
             thumbnail: original,
-            originalAlt: null,
-            thumbnailAlt: null,
+            originalAlt: 'null',
+            thumbnailAlt: 'null',
         };
     });
     for (let i = 0; i < galleryArray.length; i++) {

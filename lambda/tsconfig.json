@@ -9,7 +9,8 @@
 		"moduleResolution": "node",
 		"skipLibCheck": true,
 		"esModuleInterop": true,
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"resolveJsonModule": true
 	},
 	"include": ["./*.ts", "./**/*.ts", "./**/*.js"],
 	"exclude": ["./generated/*.js"]
