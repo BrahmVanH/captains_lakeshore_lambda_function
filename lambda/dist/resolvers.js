@@ -292,7 +292,7 @@ const resolvers = {
         }),
         deleteS3Object: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             const { imgKey } = args === null || args === void 0 ? void 0 : args.input;
-            if (!imgKey) {
+            if (!imgKey || imgKey === '') {
                 throw new Error('No key was presented for deleting object');
             }
             try {

@@ -43,6 +43,13 @@ type imageObject {
 	thumbnailAlt: String!
 }
 
+
+
+type DeleteS3ObjectResponse {
+	status: Int!
+	message: String!
+}
+
 type homePgImgPack {
 	headerImgUrl: String!
 	hideawayImgUrl: String!
@@ -107,6 +114,8 @@ input DeleteS3ObjectInput {
 	imgKey: String!
 }
 
+
+
 type Query {
 	getAllUsers: [User!]
 	queryBookingsByProperty(propertyName: String!): [Booking!]!
@@ -126,7 +135,7 @@ type Mutation {
 	createBooking(input: CreateBookingInput!): Booking!
 	removeBooking(input: RemoveBookingInput!): Booking!
 	updatePropertyInfo(input: UpdatePropertyInput!): Property!
-	deleteS3Object(input: DeleteS3ObjectInput!): String!
+	deleteS3Object(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
 }
 
 `;

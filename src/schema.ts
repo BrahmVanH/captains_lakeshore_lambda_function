@@ -111,7 +111,7 @@ input UpdatePropertyInput {
 }
 
 input DeleteS3ObjectInput {
-	imgKey: String!
+	imgKeys: [String!]!
 }
 
 
@@ -135,7 +135,7 @@ type Mutation {
 	createBooking(input: CreateBookingInput!): Booking!
 	removeBooking(input: RemoveBookingInput!): Booking!
 	updatePropertyInfo(input: UpdatePropertyInput!): Property!
-	deleteS3Object(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
+	deleteS3Objects(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
 }
 
 `;

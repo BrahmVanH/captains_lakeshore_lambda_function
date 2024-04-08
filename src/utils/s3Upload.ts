@@ -1,4 +1,4 @@
-import { PutObjectCommand, DeleteObjectCommand, S3Client, DeleteObjectCommandOutput } from '@aws-sdk/client-s3';
+import { PutObjectCommand, DeleteObjectCommand, DeleteObjectsCommand, S3Client, DeleteObjectCommandOutput } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const createPresignedUrlWithClient = ({ region, bucket, key, commandType, altTag }: { region: string; bucket: string; key: string; commandType: string; altTag: string }) => {
@@ -47,7 +47,7 @@ export const getPresignedUrl = async (key: string, commandType: string, altTag: 
 	}
 };
 
-export const deleteSingleS3Object = async (key: string) => {
+export const deleteS3Objects = async (keys: string[]) => {
 	const client = new S3Client({
 		region: process.env.S3_REGION ?? '',
 		credentials: {
@@ -55,21 +55,37 @@ export const deleteSingleS3Object = async (key: string) => {
 			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
 		},
 	});
-	const command = new DeleteObjectCommand({ Bucket: process.env.S3_BUCKET_NAME ?? '', Key: key });
+
+	console.log('client created', client);
+
+	if (!keys.length) {
+		console.error('No keys provided');
+		throw new Error('No image keys provided');
+	}
+
+	const params = {
+		Bucket: process.env.S3_BUCKET_NAME ?? '',
+		Delete: {
+			Objects: keys.map((key) => ({ Key: key })),
+		},
+	};
+
+	const command = new DeleteObjectsCommand(params);
+	console.log('command', command);
 	try {
 		const data = await client.send(command);
-		if (data.$metadata.httpStatusCode === 204) {
-			console.log('Successfully deleted object', data);
+		if (data.$metadata.httpStatusCode === 204 || data.$metadata.httpStatusCode === 200) {
+			console.log('Successfully deleted object(s)', data);
 
 			return {
 				status: data.$metadata.httpStatusCode,
-				message: 'Successfully deleted object',
+				message: 'Successfully deleted image(s)',
 			};
 		}
 		console.error('Failed to delete object', data);
 		return {
 			status: 400,
-			message: 'Failed to delete object',
+			message: 'Failed to delete image(s)',
 		};
 	} catch (err) {
 		console.error(err);

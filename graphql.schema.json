@@ -347,15 +347,23 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "imgKey",
+            "name": "imgKeys",
             "description": null,
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
               }
             },
             "defaultValue": null,
@@ -545,7 +553,7 @@
             "deprecationReason": null
           },
           {
-            "name": "deleteS3Object",
+            "name": "deleteS3Objects",
             "description": null,
             "args": [
               {

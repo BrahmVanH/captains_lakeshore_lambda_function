@@ -54,7 +54,7 @@ export type CreateUserInput = {
 };
 
 export type DeleteS3ObjectInput = {
-  imgKey: Scalars['String']['input'];
+  imgKeys: Array<Scalars['String']['input']>;
 };
 
 export type DeleteS3ObjectResponse = {
@@ -72,7 +72,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createBooking: Booking;
   createUser: Auth;
-  deleteS3Object: DeleteS3ObjectResponse;
+  deleteS3Objects: DeleteS3ObjectResponse;
   loginUser: Auth;
   removeBooking: Booking;
   removeUser: Auth;
@@ -90,7 +90,7 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationDeleteS3ObjectArgs = {
+export type MutationDeleteS3ObjectsArgs = {
   input: DeleteS3ObjectInput;
 };
 
@@ -367,7 +367,7 @@ export type DeleteS3ObjectResponseResolvers<ContextType = any, ParentType extend
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
-  deleteS3Object?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectArgs, 'input'>>;
+  deleteS3Objects?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectsArgs, 'input'>>;
   loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
   removeBooking?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
   removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;

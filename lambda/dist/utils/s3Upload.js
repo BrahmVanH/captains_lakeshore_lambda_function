@@ -69,14 +69,23 @@ const deleteSingleS3Object = (key) => __awaiter(void 0, void 0, void 0, function
             secretAccessKey: (_e = process.env.S3_SECRET_ACCESS_KEY) !== null && _e !== void 0 ? _e : '',
         },
     });
+    console.log('client created', client);
     const command = new client_s3_1.DeleteObjectCommand({ Bucket: (_f = process.env.S3_BUCKET_NAME) !== null && _f !== void 0 ? _f : '', Key: key });
+    console.log('command', command);
     try {
         const data = yield client.send(command);
-        console.log('Successfully deleted object', data);
         if (data.$metadata.httpStatusCode === 204) {
-            return key;
+            console.log('Successfully deleted object', data);
+            return {
+                status: data.$metadata.httpStatusCode,
+                message: 'Successfully deleted object',
+            };
         }
-        return false;
+        console.error('Failed to delete object', data);
+        return {
+            status: 400,
+            message: 'Failed to delete object',
+        };
     }
     catch (err) {
         console.error(err);

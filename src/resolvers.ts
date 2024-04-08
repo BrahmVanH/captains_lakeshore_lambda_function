@@ -13,10 +13,9 @@ import {
 	MutationRemoveBookingArgs,
 	MutationUpdatePropertyInfoArgs,
 	Property as IProperty,
-	MutationDeleteS3ObjectArgs,
+	MutationDeleteS3ObjectsArgs,
 } from './generated/graphql';
-import { getPresignedUrl, deleteSingleS3Object } from './utils/s3Upload';
-import { Delete } from '@aws-sdk/client-s3';
+import { getPresignedUrl, deleteS3Objects } from './utils/s3Upload';
 
 const resolvers: Resolvers = {
 	Query: {
@@ -312,15 +311,15 @@ const resolvers: Resolvers = {
 				throw new Error('Error in updating property info: ' + err.message);
 			}
 		},
-		deleteS3Object: async (_: {}, args: MutationDeleteS3ObjectArgs, __: any) => {
-			const { imgKey } = args?.input;
-			if (!imgKey || imgKey === '') {
+		deleteS3Objects: async (_: {}, args: MutationDeleteS3ObjectsArgs, __: any) => {
+			const { imgKeys } = args?.input;
+			if (!imgKeys || imgKeys.length === 0) {
 				throw new Error('No key was presented for deleting object');
 			}
 			try {
 				await connectToDb();
 
-				const response = await deleteSingleS3Object(imgKey);
+				const response = await deleteS3Objects(imgKeys);
 
 				if (!response) {
 					throw new Error('Could not delete object from s3');
