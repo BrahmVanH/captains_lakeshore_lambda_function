@@ -14,6 +14,8 @@ import {
 	MutationUpdatePropertyInfoArgs,
 	Property as IProperty,
 	MutationDeleteS3ObjectsArgs,
+	QueryQueryBookingsByPropertyArgs,
+	RemoveBookingResponse,
 } from './generated/graphql';
 import { getPresignedUrl, deleteS3Objects } from './utils/s3Upload';
 
@@ -35,14 +37,14 @@ const resolvers: Resolvers = {
 				throw new Error('Error in finding users: ' + err.message);
 			}
 		},
-		queryBookingsByProperty: async (_: {}, { propertyName }: IQueryBookingsArgs, __: any) => {
+		queryBookingsByProperty: async (_: {}, { propertyId }: QueryQueryBookingsByPropertyArgs, __: any) => {
 			try {
 				await connectToDb();
 
-				if (!propertyName) {
+				if (!propertyId) {
 					throw new Error('No property name was presented for querying bookings');
 				}
-				const bookings = await Booking.find({ propertyName: propertyName });
+				const bookings = await Booking.find({ propertyId: propertyId });
 				if (!bookings) {
 					throw new Error('Cannot find booking in database');
 				}
@@ -132,7 +134,7 @@ const resolvers: Resolvers = {
 					throw new Error('No ID was presented for querying property info');
 				}
 
-				const propertyInfo: IProperty | null = await Property.findOne({ _id });
+				const propertyInfo: IProperty | null = await Property.findOne({ _id }).populate('bookings');
 
 				if (!propertyInfo) {
 					throw new Error('Could not find property with that name');
@@ -148,7 +150,7 @@ const resolvers: Resolvers = {
 			try {
 				await connectToDb();
 
-				const properties: IProperty[] = await Property.find();
+				const properties: IProperty[] = await Property.find().populate('bookings');
 
 				if (!properties) {
 					throw new Error('Error fetching all properties from database');
@@ -246,34 +248,30 @@ const resolvers: Resolvers = {
 		},
 		createBooking: async (_: {}, args: MutationCreateBookingArgs, __: any) => {
 			try {
-				const { propertyName, dateValue } = args.input as ICreateBookingArgs;
+				const { bookings } = args.input;
 
 				await connectToDb();
-				if (!dateValue) {
-					throw new Error('date object is undefined');
-				} else if (!propertyName) {
-					throw new Error('property name is undefined');
+				if (!bookings || bookings.length === 0) {
+					throw new Error('No bookings provided to create');
 				}
-				const booking = await Booking.create({ propertyName, dateValue });
+				const createdBookings = await Booking.create(bookings);
 
-				if (!booking) {
+				if (!createdBookings) {
 					throw new Error('Could not create new date');
 				}
-				return booking;
+				return createdBookings;
 			} catch (err: any) {
 				throw new Error('Error in creating booking in db: ' + err.message);
 			}
 		},
 		removeBooking: async (_: {}, args: MutationRemoveBookingArgs, __: any) => {
 			try {
-				const { propertyName, dateValue } = args.input as IRemoveBookingArgs;
+				const { bookingIds } = args.input;
 				await connectToDb();
-				if (!propertyName) {
-					throw new Error('property name is undefined');
-				} else if (!dateValue) {
-					throw new Error('date value is undefined');
+				if (!bookingIds || bookingIds.length === 0) {
+					throw new Error('booking ID is undefined');
 				}
-				const booking = await Booking.findOneAndDelete({ propertyName, dateValue });
+				const booking = await Booking.deleteMany({ _id: { $in: bookingIds } });
 				if (!booking) {
 					throw new Error('could not find unavailable date with that value...');
 				}

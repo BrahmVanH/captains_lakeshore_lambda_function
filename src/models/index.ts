@@ -1,4 +1,4 @@
-import Booking from './Date';
+import Booking from './Booking';
 import User from './User';
 import Property from './Property';
 

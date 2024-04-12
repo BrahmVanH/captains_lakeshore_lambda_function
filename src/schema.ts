@@ -11,6 +11,12 @@ const typeDefs = `#graphql
 	password: String
 }
 
+type Booking {
+	_id: ID!
+	propertyId: ID!
+	dateValue: String!
+}
+
 type Amenity {
 	amenityName: String!
 	amenityType: String!
@@ -22,6 +28,7 @@ type Property {
 	propertyDescription: String!
 	amenities: [Amenity!]!
 	headerImgKey: String!
+	bookings: [Booking!]
 }
 
 type Auth {
@@ -29,11 +36,7 @@ type Auth {
 	user: User!
 }
 
-type Booking {
-	_id: ID!
-	propertyName: String!
-	dateValue: String!
-}
+
 
 type imageObject {
 	imgKey: String!
@@ -84,14 +87,23 @@ input RemoveUserInput {
 	userPassword: String!
 }
 
-input CreateBookingInput {
-	propertyName: String!
+input NewBookingInput {
+	propertyId: ID!
 	dateValue: String!
 }
 
+input CreateBookingInput {
+	bookings: [NewBookingInput!]
+}
+
+
+
 input RemoveBookingInput {
-	propertyName: String!
-	dateValue: String!
+	bookingIds: [ID!]!
+}
+
+type RemoveBookingResponse {
+	deletedCount: Int!
 }
 
 input AmenityInput {
@@ -118,7 +130,7 @@ input DeleteS3ObjectInput {
 
 type Query {
 	getAllUsers: [User!]
-	queryBookingsByProperty(propertyName: String!): [Booking!]!
+	queryBookingsByProperty(propertyId: ID!): [Booking!]
 	getHomePgImgs: homePgImgPack!
 	getHideawayImgs: hideawayImgPack!
 	getCottageImgs: cottageImgPack!
@@ -132,8 +144,8 @@ type Mutation {
 	createUser(input: CreateUserInput!): Auth!
 	loginUser(input: LoginUserInput!): Auth!
 	removeUser(input: RemoveUserInput!): Auth!
-	createBooking(input: CreateBookingInput!): Booking!
-	removeBooking(input: RemoveBookingInput!): Booking!
+	createBooking(input: CreateBookingInput!): [Booking]!
+	removeBooking(input: RemoveBookingInput!): RemoveBookingResponse!
 	updatePropertyInfo(input: UpdatePropertyInput!): Property!
 	deleteS3Objects(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
 }

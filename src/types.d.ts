@@ -38,7 +38,7 @@ export interface IRemoveUserArgs {
 }
 
 export interface ICreateBookingArgs {
-	propertyName: string;
+	propertyId: string;
 	dateValue: string;
 }
 

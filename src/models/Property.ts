@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import { Amenity, Property } from '../generated/graphql';
 
 const amenitiesSchema: Schema<Amenity> = new Schema<Amenity>({
@@ -23,6 +23,12 @@ const propertySchema: Schema<Property> = new Schema<Property>({
 	headerImgKey: {
 		type: String,
 	},
+	bookings: [
+		{
+			type: Types.ObjectId,
+			ref: 'Booking',
+		},
+	],
 });
 
 const Property = model<Property>('Property', propertySchema);

@@ -12,8 +12,8 @@ custom:
       commands: npm run build:lambda
 
 package:
-  exclude:
-    - src/**/*.ts
+  include:
+    - lambda/dist/**
 
 plugins:
   - serverless-offline
