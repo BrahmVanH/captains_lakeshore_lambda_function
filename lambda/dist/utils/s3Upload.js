@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSingleS3Object = exports.getPresignedUrl = void 0;
+exports.deleteS3Objects = exports.getPresignedUrl = void 0;
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 const createPresignedUrlWithClient = ({ region, bucket, key, commandType, altTag }) => {
@@ -27,7 +27,6 @@ const createPresignedUrlWithClient = ({ region, bucket, key, commandType, altTag
         return (0, s3_request_presigner_1.getSignedUrl)(client, command, { expiresIn: 3600, unhoistableHeaders: new Set(['x-amz-tagging']) });
     }
     else if (commandType === 'delete') {
-        console.log('deleting object, ', key);
         command = new client_s3_1.DeleteObjectCommand({ Bucket: bucket, Key: key });
         return (0, s3_request_presigner_1.getSignedUrl)(client, command, { expiresIn: 3600 });
     }
@@ -60,7 +59,7 @@ const getPresignedUrl = (key, commandType, altTag) => __awaiter(void 0, void 0, 
     }
 });
 exports.getPresignedUrl = getPresignedUrl;
-const deleteSingleS3Object = (key) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteS3Objects = (keys) => __awaiter(void 0, void 0, void 0, function* () {
     var _c, _d, _e, _f;
     const client = new client_s3_1.S3Client({
         region: (_c = process.env.S3_REGION) !== null && _c !== void 0 ? _c : '',
@@ -69,27 +68,34 @@ const deleteSingleS3Object = (key) => __awaiter(void 0, void 0, void 0, function
             secretAccessKey: (_e = process.env.S3_SECRET_ACCESS_KEY) !== null && _e !== void 0 ? _e : '',
         },
     });
-    console.log('client created', client);
-    const command = new client_s3_1.DeleteObjectCommand({ Bucket: (_f = process.env.S3_BUCKET_NAME) !== null && _f !== void 0 ? _f : '', Key: key });
-    console.log('command', command);
+    if (!keys.length) {
+        console.error('No keys provided');
+        throw new Error('No image keys provided');
+    }
+    const params = {
+        Bucket: (_f = process.env.S3_BUCKET_NAME) !== null && _f !== void 0 ? _f : '',
+        Delete: {
+            Objects: keys.map((key) => ({ Key: key })),
+        },
+    };
+    const command = new client_s3_1.DeleteObjectsCommand(params);
     try {
         const data = yield client.send(command);
-        if (data.$metadata.httpStatusCode === 204) {
-            console.log('Successfully deleted object', data);
+        if (data.$metadata.httpStatusCode === 204 || data.$metadata.httpStatusCode === 200) {
             return {
                 status: data.$metadata.httpStatusCode,
-                message: 'Successfully deleted object',
+                message: 'Successfully deleted image(s)',
             };
         }
         console.error('Failed to delete object', data);
         return {
             status: 400,
-            message: 'Failed to delete object',
+            message: 'Failed to delete image(s)',
         };
     }
     catch (err) {
         console.error(err);
     }
 });
-exports.deleteSingleS3Object = deleteSingleS3Object;
+exports.deleteS3Objects = deleteS3Objects;
 //# sourceMappingURL=s3Upload.js.map

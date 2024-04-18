@@ -14,7 +14,6 @@ const createPresignedUrlWithClient = ({ region, bucket, key, commandType, altTag
 		command = new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: 'image/jpg', Tagging: `alt=${altTag}` });
 		return getSignedUrl(client, command, { expiresIn: 3600, unhoistableHeaders: new Set(['x-amz-tagging']) });
 	} else if (commandType === 'delete') {
-		console.log('deleting object, ', key);
 		command = new DeleteObjectCommand({ Bucket: bucket, Key: key });
 		return getSignedUrl(client, command, { expiresIn: 3600 });
 	} else {
@@ -56,7 +55,6 @@ export const deleteS3Objects = async (keys: string[]) => {
 		},
 	});
 
-	console.log('client created', client);
 
 	if (!keys.length) {
 		console.error('No keys provided');
@@ -71,11 +69,9 @@ export const deleteS3Objects = async (keys: string[]) => {
 	};
 
 	const command = new DeleteObjectsCommand(params);
-	console.log('command', command);
 	try {
 		const data = await client.send(command);
 		if (data.$metadata.httpStatusCode === 204 || data.$metadata.httpStatusCode === 200) {
-			console.log('Successfully deleted object(s)', data);
 
 			return {
 				status: data.$metadata.httpStatusCode,

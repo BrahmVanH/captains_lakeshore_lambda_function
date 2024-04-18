@@ -88,7 +88,6 @@ const resolvers: Resolvers = {
 		getCottageImgs: async () => {
 			try {
 				const cottageImgs = await getS3CottagePgImgs();
-				console.log('cottageImgs', cottageImgs);
 
 				if (!cottageImgs) {
 					throw new Error('Something went wrong in fetching cottage object from S3');
@@ -113,16 +112,13 @@ const resolvers: Resolvers = {
 		},
 		getPresignedS3Url: async (_: {}, { imgKey, commandType, altTag }: { imgKey: string; commandType: string; altTag: string }, __: any) => {
 			try {
-				console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag);
 				const preSignedUrl = await getPresignedUrl(imgKey, commandType, altTag);
 				if (!preSignedUrl) {
 					console.error('Error in getting presigned URL');
 					throw new Error('Error in getting presigned URL');
 				}
-				console.log('preSignedUrl', preSignedUrl);
 				return preSignedUrl;
 			} catch (err: any) {
-				console.log('Error in getting Upload URL for s3', err);
 				throw new Error('Error in getting upload url for s3: ' + err.message);
 			}
 		},

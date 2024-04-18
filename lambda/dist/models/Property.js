@@ -22,6 +22,12 @@ const propertySchema = new mongoose_1.Schema({
     headerImgKey: {
         type: String,
     },
+    bookings: [
+        {
+            type: mongoose_1.Types.ObjectId,
+            ref: 'Booking',
+        },
+    ],
 });
 const Property = (0, mongoose_1.model)('Property', propertySchema);
 exports.default = Property;

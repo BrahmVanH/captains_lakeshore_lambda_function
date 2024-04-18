@@ -30,13 +30,13 @@ const resolvers = {
                 throw new Error('Error in finding users: ' + err.message);
             }
         }),
-        queryBookingsByProperty: (_1, _a, __1) => __awaiter(void 0, [_1, _a, __1], void 0, function* (_, { propertyName }, __) {
+        queryBookingsByProperty: (_1, _a, __1) => __awaiter(void 0, [_1, _a, __1], void 0, function* (_, { propertyId }, __) {
             try {
                 yield (0, db_1.connectToDb)();
-                if (!propertyName) {
+                if (!propertyId) {
                     throw new Error('No property name was presented for querying bookings');
                 }
-                const bookings = yield models_1.Booking.find({ propertyName: propertyName });
+                const bookings = yield models_1.Booking.find({ propertyId: propertyId });
                 if (!bookings) {
                     throw new Error('Cannot find booking in database');
                 }
@@ -81,7 +81,6 @@ const resolvers = {
         getCottageImgs: () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const cottageImgs = yield (0, s3Query_1.getS3CottagePgImgs)();
-                console.log('cottageImgs', cottageImgs);
                 if (!cottageImgs) {
                     throw new Error('Something went wrong in fetching cottage object from S3');
                 }
@@ -107,17 +106,14 @@ const resolvers = {
         }),
         getPresignedS3Url: (_2, _b, __2) => __awaiter(void 0, [_2, _b, __2], void 0, function* (_, { imgKey, commandType, altTag }, __) {
             try {
-                console.log('imgKey', imgKey, 'commandType', commandType, 'altTag', altTag);
                 const preSignedUrl = yield (0, s3Upload_1.getPresignedUrl)(imgKey, commandType, altTag);
                 if (!preSignedUrl) {
                     console.error('Error in getting presigned URL');
                     throw new Error('Error in getting presigned URL');
                 }
-                console.log('preSignedUrl', preSignedUrl);
                 return preSignedUrl;
             }
             catch (err) {
-                console.log('Error in getting Upload URL for s3', err);
                 throw new Error('Error in getting upload url for s3: ' + err.message);
             }
         }),
@@ -127,7 +123,7 @@ const resolvers = {
                 if (!_id) {
                     throw new Error('No ID was presented for querying property info');
                 }
-                const propertyInfo = yield models_1.Property.findOne({ _id });
+                const propertyInfo = yield models_1.Property.findOne({ _id }).populate('bookings');
                 if (!propertyInfo) {
                     throw new Error('Could not find property with that name');
                 }
@@ -141,7 +137,7 @@ const resolvers = {
         getProperties: () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 yield (0, db_1.connectToDb)();
-                const properties = yield models_1.Property.find();
+                const properties = yield models_1.Property.find().populate('bookings');
                 if (!properties) {
                     throw new Error('Error fetching all properties from database');
                 }
@@ -229,19 +225,16 @@ const resolvers = {
         }),
         createBooking: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const { propertyName, dateValue } = args.input;
+                const { bookings } = args.input;
                 yield (0, db_1.connectToDb)();
-                if (!dateValue) {
-                    throw new Error('date object is undefined');
+                if (!bookings || bookings.length === 0) {
+                    throw new Error('No bookings provided to create');
                 }
-                else if (!propertyName) {
-                    throw new Error('property name is undefined');
-                }
-                const booking = yield models_1.Booking.create({ propertyName, dateValue });
-                if (!booking) {
+                const createdBookings = yield models_1.Booking.create(bookings);
+                if (!createdBookings) {
                     throw new Error('Could not create new date');
                 }
-                return booking;
+                return createdBookings;
             }
             catch (err) {
                 throw new Error('Error in creating booking in db: ' + err.message);
@@ -249,15 +242,12 @@ const resolvers = {
         }),
         removeBooking: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const { propertyName, dateValue } = args.input;
+                const { bookingIds } = args.input;
                 yield (0, db_1.connectToDb)();
-                if (!propertyName) {
-                    throw new Error('property name is undefined');
+                if (!bookingIds || bookingIds.length === 0) {
+                    throw new Error('booking ID is undefined');
                 }
-                else if (!dateValue) {
-                    throw new Error('date value is undefined');
-                }
-                const booking = yield models_1.Booking.findOneAndDelete({ propertyName, dateValue });
+                const booking = yield models_1.Booking.deleteMany({ _id: { $in: bookingIds } });
                 if (!booking) {
                     throw new Error('could not find unavailable date with that value...');
                 }
@@ -290,14 +280,14 @@ const resolvers = {
                 throw new Error('Error in updating property info: ' + err.message);
             }
         }),
-        deleteS3Object: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
-            const { imgKey } = args === null || args === void 0 ? void 0 : args.input;
-            if (!imgKey || imgKey === '') {
+        deleteS3Objects: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
+            const { imgKeys } = args === null || args === void 0 ? void 0 : args.input;
+            if (!imgKeys || imgKeys.length === 0) {
                 throw new Error('No key was presented for deleting object');
             }
             try {
                 yield (0, db_1.connectToDb)();
-                const response = yield (0, s3Upload_1.deleteSingleS3Object)(imgKey);
+                const response = yield (0, s3Upload_1.deleteS3Objects)(imgKeys);
                 if (!response) {
                     throw new Error('Could not delete object from s3');
                 }
