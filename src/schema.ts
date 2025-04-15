@@ -18,16 +18,50 @@ type Booking {
 }
 
 type Amenity {
+	_id: ID!
 	amenityName: String!
 	amenityType: String!
+	icon: String
 }
+
+type Space {
+	_id: ID!
+	name: String!
+	icon: String
+}
+type Bed {
+	name: String!
+	quantity: Int!
+	icon: String
+}
+type RoomBed {
+	name: String!
+	beds: [Bed]
+
+}
+
+type HouseRules {
+	general: [String]
+	children: String
+	events: String
+	Pets: String
+	Smoking: String
+	additional: [String]	
+	damages: [String]
+}
+
 
 type Property {
 	_id: ID!
 	propertyName: String!
-	propertyDescription: String!
-	amenities: [Amenity!]!
-	headerImgKey: String!
+	overviewItems: [Amenity]
+	propertyDescription: String
+	roomsAndBeds: [RoomBed]
+	spacesItems: [Space]
+	amenities: [Amenity]
+	importantInfo: [String]
+	houseRules: HouseRules
+	headerImgKey: String
 	bookings: [Booking!]
 }
 
@@ -109,6 +143,11 @@ type RemoveBookingResponse {
 input AmenityInput {
 	amenityName: String!
 	amenityType: String!
+	icon: String
+}
+
+input CreatePropertyInput {
+	propertyName: String!
 }
 
 input Update {
@@ -117,9 +156,80 @@ input Update {
 	amenities: [AmenityInput!]
 	headerImgKey: String!
 }
+
+input UpdatePropertyNameInput {
+	_id: ID!
+	propertyName: String!
+}
+
 input UpdatePropertyInput {
 	_id: ID!
 	update: Update!
+}
+
+input UpdatePropertyDescriptionInput {
+	_id: ID!
+	propertyDescription: String!
+}
+
+input UpdatePropertyAmenitiesInput {
+	_id: ID!
+	amenities: [AmenityInput!]
+}
+
+input UpdatePropertyHeaderImgInput {
+	_id: ID!
+	headerImgKey: String!
+}
+
+input UpdatePropertyOverviewItemsInput {
+	_id: ID!
+	overviewItems: [AmenityInput!]
+}
+
+input BedInput {
+	name: String!
+	quantity: Int!
+	icon: String
+}
+
+input RoomBedInput {
+	name: String!
+	beds: [BedInput]
+}
+input UpdatePropertyRoomsAndBedsInput {
+	_id: ID!
+	roomsAndBeds: [RoomBedInput]
+}
+
+input SpaceInput {
+	name: String!
+	icon: String
+}
+
+input UpdatePropertySpacesInput {
+	_id: ID!
+	spacesItems: [SpaceInput]
+}
+
+input UpdatePropertyImportantInfoInput {
+	_id: ID!
+	importantInfo: [String]
+}
+
+input HouseRulesInput {
+	general: [String]
+	children: String
+	events: String
+	pets: String
+	smoking: String
+	additional: [String]
+	damages: [String]
+}
+
+input UpdatePropertyHouseRulesInput {
+	_id: ID!
+	houseRules: HouseRulesInput
 }
 
 input DeleteS3ObjectInput {
@@ -147,7 +257,18 @@ type Mutation {
 	createBooking(input: CreateBookingInput!): [Booking]!
 	removeBooking(input: RemoveBookingInput!): RemoveBookingResponse!
 	updatePropertyInfo(input: UpdatePropertyInput!): Property!
+	updatePropertyName(input: UpdatePropertyNameInput!): Property!
+	updatePropertyAmenities(input: UpdatePropertyAmenitiesInput!): Property!
+	updatePropertyOverviewItems(input: UpdatePropertyOverviewItemsInput!): Property!
+	updatePropertyDescription(input: UpdatePropertyDescriptionInput!): Property!
+	updatePropertyRoomsAndBeds(input: UpdatePropertyRoomsAndBedsInput!): Property!
+	updatePropertySpaces(input: UpdatePropertySpacesInput!): Property!
+	updatePropertyImportantInfo(input: UpdatePropertyImportantInfoInput!): Property!
+	updatePropertyHouseRules(input: UpdatePropertyHouseRulesInput!): Property!
+	updatePropertyHeaderImg(input: UpdatePropertyHeaderImgInput!): Property!
 	deleteS3Objects(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
+	removeProperty(_id: ID!): Property!
+	createProperty(input: CreatePropertyInput!): Property!
 }
 
 `;

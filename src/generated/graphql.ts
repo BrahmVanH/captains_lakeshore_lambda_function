@@ -18,19 +18,35 @@ export type Scalars = {
 
 export type Amenity = {
   __typename?: 'Amenity';
+  _id: Scalars['ID']['output'];
   amenityName: Scalars['String']['output'];
   amenityType: Scalars['String']['output'];
+  icon?: Maybe<Scalars['String']['output']>;
 };
 
 export type AmenityInput = {
   amenityName: Scalars['String']['input'];
   amenityType: Scalars['String']['input'];
+  icon?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Auth = {
   __typename?: 'Auth';
   token: Scalars['ID']['output'];
   user: User;
+};
+
+export type Bed = {
+  __typename?: 'Bed';
+  icon?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+};
+
+export type BedInput = {
+  icon?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
 };
 
 export type Booking = {
@@ -42,6 +58,10 @@ export type Booking = {
 
 export type CreateBookingInput = {
   bookings?: InputMaybe<Array<NewBookingInput>>;
+};
+
+export type CreatePropertyInput = {
+  propertyName: Scalars['String']['input'];
 };
 
 export type CreateUserInput = {
@@ -62,6 +82,27 @@ export type DeleteS3ObjectResponse = {
   status: Scalars['Int']['output'];
 };
 
+export type HouseRules = {
+  __typename?: 'HouseRules';
+  Pets?: Maybe<Scalars['String']['output']>;
+  Smoking?: Maybe<Scalars['String']['output']>;
+  additional?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  children?: Maybe<Scalars['String']['output']>;
+  damages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  events?: Maybe<Scalars['String']['output']>;
+  general?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type HouseRulesInput = {
+  additional?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  children?: InputMaybe<Scalars['String']['input']>;
+  damages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  events?: InputMaybe<Scalars['String']['input']>;
+  general?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  pets?: InputMaybe<Scalars['String']['input']>;
+  smoking?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type LoginUserInput = {
   userPassword: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -70,17 +111,33 @@ export type LoginUserInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBooking: Array<Maybe<Booking>>;
+  createProperty: Property;
   createUser: Auth;
   deleteS3Objects: DeleteS3ObjectResponse;
   loginUser: Auth;
   removeBooking: RemoveBookingResponse;
+  removeProperty: Property;
   removeUser: Auth;
+  updatePropertyAmenities: Property;
+  updatePropertyDescription: Property;
+  updatePropertyHeaderImg: Property;
+  updatePropertyHouseRules: Property;
+  updatePropertyImportantInfo: Property;
   updatePropertyInfo: Property;
+  updatePropertyName: Property;
+  updatePropertyOverviewItems: Property;
+  updatePropertyRoomsAndBeds: Property;
+  updatePropertySpaces: Property;
 };
 
 
 export type MutationCreateBookingArgs = {
   input: CreateBookingInput;
+};
+
+
+export type MutationCreatePropertyArgs = {
+  input: CreatePropertyInput;
 };
 
 
@@ -104,13 +161,63 @@ export type MutationRemoveBookingArgs = {
 };
 
 
+export type MutationRemovePropertyArgs = {
+  _id: Scalars['ID']['input'];
+};
+
+
 export type MutationRemoveUserArgs = {
   input: RemoveUserInput;
 };
 
 
+export type MutationUpdatePropertyAmenitiesArgs = {
+  input: UpdatePropertyAmenitiesInput;
+};
+
+
+export type MutationUpdatePropertyDescriptionArgs = {
+  input: UpdatePropertyDescriptionInput;
+};
+
+
+export type MutationUpdatePropertyHeaderImgArgs = {
+  input: UpdatePropertyHeaderImgInput;
+};
+
+
+export type MutationUpdatePropertyHouseRulesArgs = {
+  input: UpdatePropertyHouseRulesInput;
+};
+
+
+export type MutationUpdatePropertyImportantInfoArgs = {
+  input: UpdatePropertyImportantInfoInput;
+};
+
+
 export type MutationUpdatePropertyInfoArgs = {
   input: UpdatePropertyInput;
+};
+
+
+export type MutationUpdatePropertyNameArgs = {
+  input: UpdatePropertyNameInput;
+};
+
+
+export type MutationUpdatePropertyOverviewItemsArgs = {
+  input: UpdatePropertyOverviewItemsInput;
+};
+
+
+export type MutationUpdatePropertyRoomsAndBedsArgs = {
+  input: UpdatePropertyRoomsAndBedsInput;
+};
+
+
+export type MutationUpdatePropertySpacesArgs = {
+  input: UpdatePropertySpacesInput;
 };
 
 export type NewBookingInput = {
@@ -121,11 +228,16 @@ export type NewBookingInput = {
 export type Property = {
   __typename?: 'Property';
   _id: Scalars['ID']['output'];
-  amenities: Array<Amenity>;
+  amenities?: Maybe<Array<Maybe<Amenity>>>;
   bookings?: Maybe<Array<Booking>>;
-  headerImgKey: Scalars['String']['output'];
-  propertyDescription: Scalars['String']['output'];
+  headerImgKey?: Maybe<Scalars['String']['output']>;
+  houseRules?: Maybe<HouseRules>;
+  importantInfo?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  overviewItems?: Maybe<Array<Maybe<Amenity>>>;
+  propertyDescription?: Maybe<Scalars['String']['output']>;
   propertyName: Scalars['String']['output'];
+  roomsAndBeds?: Maybe<Array<Maybe<RoomBed>>>;
+  spacesItems?: Maybe<Array<Maybe<Space>>>;
 };
 
 export type Query = {
@@ -172,6 +284,29 @@ export type RemoveUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type RoomBed = {
+  __typename?: 'RoomBed';
+  beds?: Maybe<Array<Maybe<Bed>>>;
+  name: Scalars['String']['output'];
+};
+
+export type RoomBedInput = {
+  beds?: InputMaybe<Array<InputMaybe<BedInput>>>;
+  name: Scalars['String']['input'];
+};
+
+export type Space = {
+  __typename?: 'Space';
+  _id: Scalars['ID']['output'];
+  icon?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
+export type SpaceInput = {
+  icon?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type Update = {
   amenities?: InputMaybe<Array<AmenityInput>>;
   headerImgKey: Scalars['String']['input'];
@@ -179,9 +314,54 @@ export type Update = {
   propertyName: Scalars['String']['input'];
 };
 
+export type UpdatePropertyAmenitiesInput = {
+  _id: Scalars['ID']['input'];
+  amenities?: InputMaybe<Array<AmenityInput>>;
+};
+
+export type UpdatePropertyDescriptionInput = {
+  _id: Scalars['ID']['input'];
+  propertyDescription: Scalars['String']['input'];
+};
+
+export type UpdatePropertyHeaderImgInput = {
+  _id: Scalars['ID']['input'];
+  headerImgKey: Scalars['String']['input'];
+};
+
+export type UpdatePropertyHouseRulesInput = {
+  _id: Scalars['ID']['input'];
+  houseRules?: InputMaybe<HouseRulesInput>;
+};
+
+export type UpdatePropertyImportantInfoInput = {
+  _id: Scalars['ID']['input'];
+  importantInfo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type UpdatePropertyInput = {
   _id: Scalars['ID']['input'];
   update: Update;
+};
+
+export type UpdatePropertyNameInput = {
+  _id: Scalars['ID']['input'];
+  propertyName: Scalars['String']['input'];
+};
+
+export type UpdatePropertyOverviewItemsInput = {
+  _id: Scalars['ID']['input'];
+  overviewItems?: InputMaybe<Array<AmenityInput>>;
+};
+
+export type UpdatePropertyRoomsAndBedsInput = {
+  _id: Scalars['ID']['input'];
+  roomsAndBeds?: InputMaybe<Array<InputMaybe<RoomBedInput>>>;
+};
+
+export type UpdatePropertySpacesInput = {
+  _id: Scalars['ID']['input'];
+  spacesItems?: InputMaybe<Array<InputMaybe<SpaceInput>>>;
 };
 
 export type User = {
@@ -295,12 +475,17 @@ export type ResolversTypes = {
   Amenity: ResolverTypeWrapper<Amenity>;
   AmenityInput: AmenityInput;
   Auth: ResolverTypeWrapper<Auth>;
+  Bed: ResolverTypeWrapper<Bed>;
+  BedInput: BedInput;
   Booking: ResolverTypeWrapper<Booking>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateBookingInput: CreateBookingInput;
+  CreatePropertyInput: CreatePropertyInput;
   CreateUserInput: CreateUserInput;
   DeleteS3ObjectInput: DeleteS3ObjectInput;
   DeleteS3ObjectResponse: ResolverTypeWrapper<DeleteS3ObjectResponse>;
+  HouseRules: ResolverTypeWrapper<HouseRules>;
+  HouseRulesInput: HouseRulesInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   LoginUserInput: LoginUserInput;
@@ -311,9 +496,22 @@ export type ResolversTypes = {
   RemoveBookingInput: RemoveBookingInput;
   RemoveBookingResponse: ResolverTypeWrapper<RemoveBookingResponse>;
   RemoveUserInput: RemoveUserInput;
+  RoomBed: ResolverTypeWrapper<RoomBed>;
+  RoomBedInput: RoomBedInput;
+  Space: ResolverTypeWrapper<Space>;
+  SpaceInput: SpaceInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Update: Update;
+  UpdatePropertyAmenitiesInput: UpdatePropertyAmenitiesInput;
+  UpdatePropertyDescriptionInput: UpdatePropertyDescriptionInput;
+  UpdatePropertyHeaderImgInput: UpdatePropertyHeaderImgInput;
+  UpdatePropertyHouseRulesInput: UpdatePropertyHouseRulesInput;
+  UpdatePropertyImportantInfoInput: UpdatePropertyImportantInfoInput;
   UpdatePropertyInput: UpdatePropertyInput;
+  UpdatePropertyNameInput: UpdatePropertyNameInput;
+  UpdatePropertyOverviewItemsInput: UpdatePropertyOverviewItemsInput;
+  UpdatePropertyRoomsAndBedsInput: UpdatePropertyRoomsAndBedsInput;
+  UpdatePropertySpacesInput: UpdatePropertySpacesInput;
   User: ResolverTypeWrapper<User>;
   cottageImgPack: ResolverTypeWrapper<CottageImgPack>;
   hideawayImgPack: ResolverTypeWrapper<HideawayImgPack>;
@@ -326,12 +524,17 @@ export type ResolversParentTypes = {
   Amenity: Amenity;
   AmenityInput: AmenityInput;
   Auth: Auth;
+  Bed: Bed;
+  BedInput: BedInput;
   Booking: Booking;
   Boolean: Scalars['Boolean']['output'];
   CreateBookingInput: CreateBookingInput;
+  CreatePropertyInput: CreatePropertyInput;
   CreateUserInput: CreateUserInput;
   DeleteS3ObjectInput: DeleteS3ObjectInput;
   DeleteS3ObjectResponse: DeleteS3ObjectResponse;
+  HouseRules: HouseRules;
+  HouseRulesInput: HouseRulesInput;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   LoginUserInput: LoginUserInput;
@@ -342,9 +545,22 @@ export type ResolversParentTypes = {
   RemoveBookingInput: RemoveBookingInput;
   RemoveBookingResponse: RemoveBookingResponse;
   RemoveUserInput: RemoveUserInput;
+  RoomBed: RoomBed;
+  RoomBedInput: RoomBedInput;
+  Space: Space;
+  SpaceInput: SpaceInput;
   String: Scalars['String']['output'];
   Update: Update;
+  UpdatePropertyAmenitiesInput: UpdatePropertyAmenitiesInput;
+  UpdatePropertyDescriptionInput: UpdatePropertyDescriptionInput;
+  UpdatePropertyHeaderImgInput: UpdatePropertyHeaderImgInput;
+  UpdatePropertyHouseRulesInput: UpdatePropertyHouseRulesInput;
+  UpdatePropertyImportantInfoInput: UpdatePropertyImportantInfoInput;
   UpdatePropertyInput: UpdatePropertyInput;
+  UpdatePropertyNameInput: UpdatePropertyNameInput;
+  UpdatePropertyOverviewItemsInput: UpdatePropertyOverviewItemsInput;
+  UpdatePropertyRoomsAndBedsInput: UpdatePropertyRoomsAndBedsInput;
+  UpdatePropertySpacesInput: UpdatePropertySpacesInput;
   User: User;
   cottageImgPack: CottageImgPack;
   hideawayImgPack: HideawayImgPack;
@@ -353,14 +569,23 @@ export type ResolversParentTypes = {
 };
 
 export type AmenityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   amenityName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   amenityType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['Auth'] = ResolversParentTypes['Auth']> = {
   token?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BedResolvers<ContextType = any, ParentType extends ResolversParentTypes['Bed'] = ResolversParentTypes['Bed']> = {
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -377,23 +602,50 @@ export type DeleteS3ObjectResponseResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type HouseRulesResolvers<ContextType = any, ParentType extends ResolversParentTypes['HouseRules'] = ResolversParentTypes['HouseRules']> = {
+  Pets?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  Smoking?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  additional?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  children?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  damages?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  events?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  general?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createBooking?: Resolver<Array<Maybe<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
+  createProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   deleteS3Objects?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectsArgs, 'input'>>;
   loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
   removeBooking?: Resolver<ResolversTypes['RemoveBookingResponse'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
+  removeProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationRemovePropertyArgs, '_id'>>;
   removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;
+  updatePropertyAmenities?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyAmenitiesArgs, 'input'>>;
+  updatePropertyDescription?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyDescriptionArgs, 'input'>>;
+  updatePropertyHeaderImg?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyHeaderImgArgs, 'input'>>;
+  updatePropertyHouseRules?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyHouseRulesArgs, 'input'>>;
+  updatePropertyImportantInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyImportantInfoArgs, 'input'>>;
   updatePropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyInfoArgs, 'input'>>;
+  updatePropertyName?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyNameArgs, 'input'>>;
+  updatePropertyOverviewItems?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyOverviewItemsArgs, 'input'>>;
+  updatePropertyRoomsAndBeds?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyRoomsAndBedsArgs, 'input'>>;
+  updatePropertySpaces?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertySpacesArgs, 'input'>>;
 };
 
 export type PropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  amenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
+  amenities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Amenity']>>>, ParentType, ContextType>;
   bookings?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType>;
-  headerImgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  propertyDescription?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  headerImgKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  houseRules?: Resolver<Maybe<ResolversTypes['HouseRules']>, ParentType, ContextType>;
+  importantInfo?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  overviewItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['Amenity']>>>, ParentType, ContextType>;
+  propertyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   propertyName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  roomsAndBeds?: Resolver<Maybe<Array<Maybe<ResolversTypes['RoomBed']>>>, ParentType, ContextType>;
+  spacesItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['Space']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -411,6 +663,19 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type RemoveBookingResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RemoveBookingResponse'] = ResolversParentTypes['RemoveBookingResponse']> = {
   deletedCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RoomBedResolvers<ContextType = any, ParentType extends ResolversParentTypes['RoomBed'] = ResolversParentTypes['RoomBed']> = {
+  beds?: Resolver<Maybe<Array<Maybe<ResolversTypes['Bed']>>>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SpaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Space'] = ResolversParentTypes['Space']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -454,12 +719,16 @@ export type ImageObjectResolvers<ContextType = any, ParentType extends Resolvers
 export type Resolvers<ContextType = any> = {
   Amenity?: AmenityResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
+  Bed?: BedResolvers<ContextType>;
   Booking?: BookingResolvers<ContextType>;
   DeleteS3ObjectResponse?: DeleteS3ObjectResponseResolvers<ContextType>;
+  HouseRules?: HouseRulesResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RemoveBookingResponse?: RemoveBookingResponseResolvers<ContextType>;
+  RoomBed?: RoomBedResolvers<ContextType>;
+  Space?: SpaceResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   cottageImgPack?: CottageImgPackResolvers<ContextType>;
   hideawayImgPack?: HideawayImgPackResolvers<ContextType>;

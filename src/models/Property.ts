@@ -1,7 +1,7 @@
 import { model, Schema, Types } from 'mongoose';
-import { Amenity, Property } from '../generated/graphql';
+import { Amenity as AmenityType, Property as PropertyType } from '../generated/graphql';
 
-const amenitiesSchema: Schema<Amenity> = new Schema<Amenity>({
+const amenitiesSchema: Schema<AmenityType> = new Schema<AmenityType>({
 	amenityName: {
 		type: String,
 	},
@@ -10,16 +10,77 @@ const amenitiesSchema: Schema<Amenity> = new Schema<Amenity>({
 	},
 });
 
-const propertySchema: Schema<Property> = new Schema<Property>({
+const propertySchema: Schema<PropertyType> = new Schema<PropertyType>({
 	propertyName: {
 		type: String,
+	},
+	overviewItems: {
+		type: [amenitiesSchema],
 	},
 	propertyDescription: {
 		type: String,
 	},
+	roomsAndBeds: [
+		{
+			name: {
+				type: String,
+			},
+			beds: [
+				{
+					name: {
+						type: String,
+					},
+					quantity: {
+						type: Number,
+					},
+					icon: {
+						type: String,
+					},
+				},
+			],
+		},
+	],
+	spacesItems: [
+		{
+			type: Types.ObjectId,
+			ref: 'Space',
+		},
+	],
 	amenities: {
-		type: [amenitiesSchema],
+		type: [
+			{
+				type: Types.ObjectId,
+				ref: 'Amenity',
+			},
+		],
 	},
+	importantInfo: {
+		type: [String],
+	},
+	houseRules: {
+		general: {
+			type: [String],
+		},
+		children: {
+			type: String,
+		},
+		events: {
+			type: String,
+		},
+		pets: {
+			type: String,
+		},
+		smoking: {
+			type: String,
+		},
+		additional: {
+			type: [String],
+		},
+		damages: {
+			type: [String],
+		},
+	},
+
 	headerImgKey: {
 		type: String,
 	},
@@ -31,6 +92,6 @@ const propertySchema: Schema<Property> = new Schema<Property>({
 	],
 });
 
-const Property = model<Property>('Property', propertySchema);
+const Property = model<PropertyType>('Property', propertySchema);
 
 export default Property;
