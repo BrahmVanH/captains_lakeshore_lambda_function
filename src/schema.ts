@@ -236,6 +236,8 @@ input DeleteS3ObjectInput {
 	imgKeys: [String!]!
 }
 
+	
+
 
 
 type Query {
@@ -269,6 +271,12 @@ type Mutation {
 	deleteS3Objects(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
 	removeProperty(_id: ID!): Property!
 	createProperty(input: CreatePropertyInput!): Property!
+	createAmenity(input: AmenityInput!): Amenity!
+	updateAmenity(_id: ID!, input: AmenityInput!): Amenity!
+	removeAmenity(_id: ID!): Amenity!
+	createSpace(input: SpaceInput!): Space!
+	updateSpace(_id: ID!, input: SpaceInput!): Space!
+	removeSpace(_id: ID!): Space!
 }
 
 `;

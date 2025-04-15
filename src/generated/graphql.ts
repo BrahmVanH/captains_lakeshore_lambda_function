@@ -110,14 +110,19 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAmenity: Amenity;
   createBooking: Array<Maybe<Booking>>;
   createProperty: Property;
+  createSpace: Space;
   createUser: Auth;
   deleteS3Objects: DeleteS3ObjectResponse;
   loginUser: Auth;
+  removeAmenity: Amenity;
   removeBooking: RemoveBookingResponse;
   removeProperty: Property;
+  removeSpace: Space;
   removeUser: Auth;
+  updateAmenity: Amenity;
   updatePropertyAmenities: Property;
   updatePropertyDescription: Property;
   updatePropertyHeaderImg: Property;
@@ -128,6 +133,12 @@ export type Mutation = {
   updatePropertyOverviewItems: Property;
   updatePropertyRoomsAndBeds: Property;
   updatePropertySpaces: Property;
+  updateSpace: Space;
+};
+
+
+export type MutationCreateAmenityArgs = {
+  input: AmenityInput;
 };
 
 
@@ -138,6 +149,11 @@ export type MutationCreateBookingArgs = {
 
 export type MutationCreatePropertyArgs = {
   input: CreatePropertyInput;
+};
+
+
+export type MutationCreateSpaceArgs = {
+  input: SpaceInput;
 };
 
 
@@ -156,6 +172,11 @@ export type MutationLoginUserArgs = {
 };
 
 
+export type MutationRemoveAmenityArgs = {
+  _id: Scalars['ID']['input'];
+};
+
+
 export type MutationRemoveBookingArgs = {
   input: RemoveBookingInput;
 };
@@ -166,8 +187,19 @@ export type MutationRemovePropertyArgs = {
 };
 
 
+export type MutationRemoveSpaceArgs = {
+  _id: Scalars['ID']['input'];
+};
+
+
 export type MutationRemoveUserArgs = {
   input: RemoveUserInput;
+};
+
+
+export type MutationUpdateAmenityArgs = {
+  _id: Scalars['ID']['input'];
+  input: AmenityInput;
 };
 
 
@@ -218,6 +250,12 @@ export type MutationUpdatePropertyRoomsAndBedsArgs = {
 
 export type MutationUpdatePropertySpacesArgs = {
   input: UpdatePropertySpacesInput;
+};
+
+
+export type MutationUpdateSpaceArgs = {
+  _id: Scalars['ID']['input'];
+  input: SpaceInput;
 };
 
 export type NewBookingInput = {
@@ -614,14 +652,19 @@ export type HouseRulesResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationCreateAmenityArgs, 'input'>>;
   createBooking?: Resolver<Array<Maybe<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'input'>>;
+  createSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationCreateSpaceArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   deleteS3Objects?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectsArgs, 'input'>>;
   loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
+  removeAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationRemoveAmenityArgs, '_id'>>;
   removeBooking?: Resolver<ResolversTypes['RemoveBookingResponse'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
   removeProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationRemovePropertyArgs, '_id'>>;
+  removeSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationRemoveSpaceArgs, '_id'>>;
   removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;
+  updateAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationUpdateAmenityArgs, '_id' | 'input'>>;
   updatePropertyAmenities?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyAmenitiesArgs, 'input'>>;
   updatePropertyDescription?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyDescriptionArgs, 'input'>>;
   updatePropertyHeaderImg?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyHeaderImgArgs, 'input'>>;
@@ -632,6 +675,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updatePropertyOverviewItems?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyOverviewItemsArgs, 'input'>>;
   updatePropertyRoomsAndBeds?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyRoomsAndBedsArgs, 'input'>>;
   updatePropertySpaces?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertySpacesArgs, 'input'>>;
+  updateSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationUpdateSpaceArgs, '_id' | 'input'>>;
 };
 
 export type PropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = {
