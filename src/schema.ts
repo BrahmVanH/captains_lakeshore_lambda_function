@@ -17,6 +17,11 @@ type Booking {
 	dateValue: String!
 }
 
+type OverviewItem {
+	name: String!
+	icon: String
+}
+
 type Amenity {
 	_id: ID!
 	amenityName: String!
@@ -54,7 +59,7 @@ type HouseRules {
 type Property {
 	_id: ID!
 	propertyName: String!
-	overviewItems: [Amenity]
+	overviewItems: [OverviewItem]
 	propertyDescription: String
 	roomsAndBeds: [RoomBed]
 	spacesItems: [Space]
@@ -174,7 +179,7 @@ input UpdatePropertyDescriptionInput {
 
 input UpdatePropertyAmenitiesInput {
 	_id: ID!
-	amenities: [AmenityInput!]
+	amenities: [ID!]
 }
 
 input UpdatePropertyHeaderImgInput {
@@ -182,9 +187,14 @@ input UpdatePropertyHeaderImgInput {
 	headerImgKey: String!
 }
 
+input OverviewInput {
+	name: String!
+	icon: String
+}
+
 input UpdatePropertyOverviewItemsInput {
 	_id: ID!
-	overviewItems: [AmenityInput!]
+	overviewItems: [OverviewInput!]
 }
 
 input BedInput {
@@ -250,6 +260,8 @@ type Query {
 	getPresignedS3Url(imgKey: String!, commandType: String!, altTag: String!): String!
 	getPropertyInfo(_id: ID!): Property!
 	getProperties: [Property!]!
+	getAmenities: [Amenity!]!
+	getSpaces: [Space!]!
 
 }
 type Mutation {
@@ -277,6 +289,8 @@ type Mutation {
 	createSpace(input: SpaceInput!): Space!
 	updateSpace(_id: ID!, input: SpaceInput!): Space!
 	removeSpace(_id: ID!): Space!
+	createSeedAmenities: [Amenity!]!
+	createSeedSpaces: [Space!]!
 }
 
 `;

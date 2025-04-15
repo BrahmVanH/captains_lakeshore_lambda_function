@@ -113,6 +113,8 @@ export type Mutation = {
   createAmenity: Amenity;
   createBooking: Array<Maybe<Booking>>;
   createProperty: Property;
+  createSeedAmenities: Array<Amenity>;
+  createSeedSpaces: Array<Space>;
   createSpace: Space;
   createUser: Auth;
   deleteS3Objects: DeleteS3ObjectResponse;
@@ -263,6 +265,17 @@ export type NewBookingInput = {
   propertyId: Scalars['ID']['input'];
 };
 
+export type OverviewInput = {
+  icon?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+export type OverviewItem = {
+  __typename?: 'OverviewItem';
+  icon?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
 export type Property = {
   __typename?: 'Property';
   _id: Scalars['ID']['output'];
@@ -271,7 +284,7 @@ export type Property = {
   headerImgKey?: Maybe<Scalars['String']['output']>;
   houseRules?: Maybe<HouseRules>;
   importantInfo?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  overviewItems?: Maybe<Array<Maybe<Amenity>>>;
+  overviewItems?: Maybe<Array<Maybe<OverviewItem>>>;
   propertyDescription?: Maybe<Scalars['String']['output']>;
   propertyName: Scalars['String']['output'];
   roomsAndBeds?: Maybe<Array<Maybe<RoomBed>>>;
@@ -282,12 +295,14 @@ export type Query = {
   __typename?: 'Query';
   getAboutPgImg: Scalars['String']['output'];
   getAllUsers?: Maybe<Array<User>>;
+  getAmenities: Array<Amenity>;
   getCottageImgs: CottageImgPack;
   getHideawayImgs: HideawayImgPack;
   getHomePgImgs: HomePgImgPack;
   getPresignedS3Url: Scalars['String']['output'];
   getProperties: Array<Property>;
   getPropertyInfo: Property;
+  getSpaces: Array<Space>;
   queryBookingsByProperty?: Maybe<Array<Booking>>;
 };
 
@@ -354,7 +369,7 @@ export type Update = {
 
 export type UpdatePropertyAmenitiesInput = {
   _id: Scalars['ID']['input'];
-  amenities?: InputMaybe<Array<AmenityInput>>;
+  amenities?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 export type UpdatePropertyDescriptionInput = {
@@ -389,7 +404,7 @@ export type UpdatePropertyNameInput = {
 
 export type UpdatePropertyOverviewItemsInput = {
   _id: Scalars['ID']['input'];
-  overviewItems?: InputMaybe<Array<AmenityInput>>;
+  overviewItems?: InputMaybe<Array<OverviewInput>>;
 };
 
 export type UpdatePropertyRoomsAndBedsInput = {
@@ -529,6 +544,8 @@ export type ResolversTypes = {
   LoginUserInput: LoginUserInput;
   Mutation: ResolverTypeWrapper<{}>;
   NewBookingInput: NewBookingInput;
+  OverviewInput: OverviewInput;
+  OverviewItem: ResolverTypeWrapper<OverviewItem>;
   Property: ResolverTypeWrapper<Property>;
   Query: ResolverTypeWrapper<{}>;
   RemoveBookingInput: RemoveBookingInput;
@@ -578,6 +595,8 @@ export type ResolversParentTypes = {
   LoginUserInput: LoginUserInput;
   Mutation: {};
   NewBookingInput: NewBookingInput;
+  OverviewInput: OverviewInput;
+  OverviewItem: OverviewItem;
   Property: Property;
   Query: {};
   RemoveBookingInput: RemoveBookingInput;
@@ -655,6 +674,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationCreateAmenityArgs, 'input'>>;
   createBooking?: Resolver<Array<Maybe<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'input'>>;
+  createSeedAmenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
+  createSeedSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
   createSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationCreateSpaceArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   deleteS3Objects?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectsArgs, 'input'>>;
@@ -678,6 +699,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationUpdateSpaceArgs, '_id' | 'input'>>;
 };
 
+export type OverviewItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['OverviewItem'] = ResolversParentTypes['OverviewItem']> = {
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   amenities?: Resolver<Maybe<Array<Maybe<ResolversTypes['Amenity']>>>, ParentType, ContextType>;
@@ -685,7 +712,7 @@ export type PropertyResolvers<ContextType = any, ParentType extends ResolversPar
   headerImgKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   houseRules?: Resolver<Maybe<ResolversTypes['HouseRules']>, ParentType, ContextType>;
   importantInfo?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  overviewItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['Amenity']>>>, ParentType, ContextType>;
+  overviewItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['OverviewItem']>>>, ParentType, ContextType>;
   propertyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   propertyName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   roomsAndBeds?: Resolver<Maybe<Array<Maybe<ResolversTypes['RoomBed']>>>, ParentType, ContextType>;
@@ -696,12 +723,14 @@ export type PropertyResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAboutPgImg?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
+  getAmenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
   getCottageImgs?: Resolver<ResolversTypes['cottageImgPack'], ParentType, ContextType>;
   getHideawayImgs?: Resolver<ResolversTypes['hideawayImgPack'], ParentType, ContextType>;
   getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
   getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'altTag' | 'commandType' | 'imgKey'>>;
   getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
   getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, '_id'>>;
+  getSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
   queryBookingsByProperty?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyId'>>;
 };
 
@@ -768,6 +797,7 @@ export type Resolvers<ContextType = any> = {
   DeleteS3ObjectResponse?: DeleteS3ObjectResponseResolvers<ContextType>;
   HouseRules?: HouseRulesResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  OverviewItem?: OverviewItemResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RemoveBookingResponse?: RemoveBookingResponseResolvers<ContextType>;

@@ -33,9 +33,11 @@ import {
 	MutationCreateSpaceArgs,
 	MutationUpdateSpaceArgs,
 	MutationRemoveSpaceArgs,
+	Space as SpaceType,
+	Amenity,
 } from './generated/graphql';
 import { getPresignedUrl, deleteS3Objects } from './utils/s3Upload';
-import Amenity from './models/Amenity';
+import AmenityModel from './models/Amenity';
 import Space from './models/Space';
 
 const resolvers: Resolvers = {
@@ -71,6 +73,35 @@ const resolvers: Resolvers = {
 			} catch (err: any) {
 				console.error({ message: 'error in finding bookings', details: err });
 				throw new Error('Error in finding dates: ' + err.message);
+			}
+		},
+		getSpaces: async () => {
+			try {
+				await connectToDb();
+
+				const spaces: SpaceType[] = await Space.find();
+
+				if (!spaces) {
+					throw new Error('Error fetching all spaces from database');
+				}
+
+				return spaces;
+			} catch (err: any) {
+				console.error({ message: 'error in finding spaces', details: err });
+				throw new Error('Error in finding spaces: ' + err.message);
+			}
+		},
+		getAmenities: async () => {
+			try {
+				await connectToDb();
+				const amenities: Amenity[] = await AmenityModel.find();
+				if (!amenities) {
+					throw new Error('Error fetching all amenities from database');
+				}
+				return amenities;
+			} catch (err: any) {
+				console.error({ message: 'error in finding amenities', details: err });
+				throw new Error('Error in finding amenities: ' + err.message);
 			}
 		},
 		getHomePgImgs: async () => {
@@ -165,7 +196,7 @@ const resolvers: Resolvers = {
 			try {
 				await connectToDb();
 
-				const properties: IProperty[] = await Property.find().populate('bookings');
+				const properties: IProperty[] = await Property.find().populate('bookings').populate('amenities').populate('spacesItems');
 
 				if (!properties) {
 					throw new Error('Error fetching all properties from database');
@@ -328,7 +359,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: amenities });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { amenities } }, { new: true }).populate('amenities');
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -571,7 +602,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const amenity = await Amenity.create(args.input);
+				const amenity = await AmenityModel.create(args.input);
 				if (!amenity) {
 					throw new Error('Could not create amenity');
 				}
@@ -595,7 +626,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const amenity = await Amenity.findOneAndUpdate({ _id }, { $set: args.input });
+				const amenity = await AmenityModel.findOneAndUpdate({ _id }, { $set: args.input });
 				if (!amenity) {
 					throw new Error('Could not find amenity with that name');
 				}
@@ -618,7 +649,7 @@ const resolvers: Resolvers = {
 				if (properties.length > 0) {
 					await Property.updateMany({ amenities: _id }, { $pull: { amenities: _id } });
 				}
-				const amenity = await Amenity.findOneAndDelete({ _id });
+				const amenity = await AmenityModel.findOneAndDelete({ _id });
 				if (!amenity) {
 					throw new Error('Could not find amenity with that name');
 				}
@@ -709,6 +740,41 @@ const resolvers: Resolvers = {
 				return response;
 			} catch (err: any) {
 				throw new Error('Error in deleting object from s3: ' + err.message);
+			}
+		},
+		createSeedAmenities: async (_: {}, __: any) => {
+			const amenitiesSeedData = await import('./seed/amenities.json');
+			try {
+				await connectToDb();
+				if (!amenitiesSeedData) {
+					throw new Error('No seed data was presented for creating amenities');
+				}
+				// const amenities = await Amenity.insertMany(amenitiesSeedData);
+				const amenities = await AmenityModel.create(amenitiesSeedData.default);
+
+				if (!amenities) {
+					throw new Error('Could not create amenities');
+				}
+				return amenities;
+			} catch (err: any) {
+				throw new Error('Error in creating seed amenities' + err.message);
+			}
+		},
+		createSeedSpaces: async (_: {}, __: any) => {
+			const spacesSeedData = await import('./seed/spaces.json');
+			try {
+				await connectToDb();
+				if (!spacesSeedData) {
+					throw new Error('No seed data was presented for creating spaces');
+				}
+				const spaces = await Space.create(spacesSeedData.default);
+
+				if (!spaces) {
+					throw new Error('Could not create spaces');
+				}
+				return spaces;
+			} catch (err: any) {
+				throw new Error('Error in creating seed spaces' + err.message);
 			}
 		},
 	},
