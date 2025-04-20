@@ -196,7 +196,7 @@ const resolvers: Resolvers = {
 			try {
 				await connectToDb();
 
-				const properties: IProperty[] = await Property.find().populate('bookings').populate('amenities').populate('spacesItems');
+				const properties: IProperty[] = await Property.find().populate('bookings').populate('amenities').populate('spacesItems').populate('overviewItems');
 
 				if (!properties) {
 					throw new Error('Error fetching all properties from database');
@@ -206,6 +206,38 @@ const resolvers: Resolvers = {
 			} catch (err: any) {
 				console.error({ message: 'error in finding properties', details: err });
 				throw new Error('Error in finding properties: ' + err.message);
+			}
+		},
+		getPropertiesLite: async () => {
+			try {
+				await connectToDb();
+
+				const properties: IProperty[] = await Property.find();
+
+				if (!properties) {
+					throw new Error('Error fetching all properties from database');
+				}
+
+				return properties.map(({ _id, propertyName }) => ({ _id, propertyName }));
+			} catch (err: any) {
+				console.error({ message: 'error in finding properties', details: err });
+				throw new Error('Error in finding properties: ' + err.message);
+			}
+		},
+		getPropertyById: async (_: {}, { _id }: { _id: string }, __: any) => {
+			try {
+				await connectToDb();
+				if (!_id) {
+					throw new Error('No ID was presented for querying property');
+				}
+				const property: IProperty | null = await Property.findOne({ _id }).populate('bookings').populate('amenities').populate('spacesItems').populate('overviewItems');
+				if (!property) {
+					throw new Error('Could not find property with that name');
+				}
+				return property;
+			} catch (err: any) {
+				console.error('Error in getting property info', err);
+				throw new Error('Error in getting property info: ' + err.message);
 			}
 		},
 	},
@@ -423,9 +455,10 @@ const resolvers: Resolvers = {
 			if (!overviewItems) {
 				throw new Error('Update object is undefined');
 			}
+			console.log('overviewItems', overviewItems);
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: { overviewItems } });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { overviewItems: overviewItems } }, { new: true });
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -447,7 +480,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: { roomsAndBeds } });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { roomsAndBeds } }, { new: true });
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -469,7 +502,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: { propertyName } });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { propertyName } }, { new: true });
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -491,7 +524,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: { houseRules } });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { houseRules } }, { new: true });
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -513,7 +546,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: { importantInfo } });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { importantInfo } }, { new: true });
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -535,7 +568,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const property = await Property.findOneAndUpdate({ _id }, { $set: { spacesItems } });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: { spacesItems } }, { new: true }).populate('spacesItems');
 				if (!property) {
 					throw new Error('Could not find property with that name');
 				}
@@ -581,7 +614,7 @@ const resolvers: Resolvers = {
 			try {
 				await connectToDb();
 
-				const property = await Property.findOneAndUpdate({ _id }, { $set: update });
+				const property = await Property.findOneAndUpdate({ _id }, { $set: update }, { new: true });
 
 				if (!property) {
 					throw new Error('Could not find property with that name');
@@ -626,7 +659,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const amenity = await AmenityModel.findOneAndUpdate({ _id }, { $set: args.input });
+				const amenity = await AmenityModel.findOneAndUpdate({ _id }, { $set: args.input }, { new: true }).populate('amenities');
 				if (!amenity) {
 					throw new Error('Could not find amenity with that name');
 				}
@@ -692,7 +725,7 @@ const resolvers: Resolvers = {
 			}
 			try {
 				await connectToDb();
-				const space = await Space.findOneAndUpdate({ _id }, { $set: args.input });
+				const space = await Space.findOneAndUpdate({ _id }, { $set: args.input }, { new: true });
 				if (!space) {
 					throw new Error('Could not find space with that name');
 				}

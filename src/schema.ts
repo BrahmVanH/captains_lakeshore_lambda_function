@@ -49,8 +49,8 @@ type HouseRules {
 	general: [String]
 	children: String
 	events: String
-	Pets: String
-	Smoking: String
+	pets: String
+	smoking: String
 	additional: [String]	
 	damages: [String]
 }
@@ -68,6 +68,11 @@ type Property {
 	houseRules: HouseRules
 	headerImgKey: String
 	bookings: [Booking!]
+}
+
+type PropertyLite {
+	_id: ID!
+	propertyName: String!
 }
 
 type Auth {
@@ -219,7 +224,7 @@ input SpaceInput {
 
 input UpdatePropertySpacesInput {
 	_id: ID!
-	spacesItems: [SpaceInput]
+	spacesItems: [ID!]
 }
 
 input UpdatePropertyImportantInfoInput {
@@ -246,6 +251,8 @@ input DeleteS3ObjectInput {
 	imgKeys: [String!]!
 }
 
+
+
 	
 
 
@@ -260,6 +267,8 @@ type Query {
 	getPresignedS3Url(imgKey: String!, commandType: String!, altTag: String!): String!
 	getPropertyInfo(_id: ID!): Property!
 	getProperties: [Property!]!
+	getPropertiesLite: [PropertyLite]
+	getPropertyById(_id: ID!): Property!
 	getAmenities: [Amenity!]!
 	getSpaces: [Space!]!
 

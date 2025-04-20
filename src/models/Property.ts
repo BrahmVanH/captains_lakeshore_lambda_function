@@ -15,7 +15,16 @@ const propertySchema: Schema<PropertyType> = new Schema<PropertyType>({
 		type: String,
 	},
 	overviewItems: {
-		type: [amenitiesSchema],
+		type: [
+			{
+				name: {
+					type: String,
+				},
+				icon: {
+					type: String,
+				},
+			},
+		],
 	},
 	propertyDescription: {
 		type: String,

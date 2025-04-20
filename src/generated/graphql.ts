@@ -84,13 +84,13 @@ export type DeleteS3ObjectResponse = {
 
 export type HouseRules = {
   __typename?: 'HouseRules';
-  Pets?: Maybe<Scalars['String']['output']>;
-  Smoking?: Maybe<Scalars['String']['output']>;
   additional?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   children?: Maybe<Scalars['String']['output']>;
   damages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   events?: Maybe<Scalars['String']['output']>;
   general?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  pets?: Maybe<Scalars['String']['output']>;
+  smoking?: Maybe<Scalars['String']['output']>;
 };
 
 export type HouseRulesInput = {
@@ -291,6 +291,12 @@ export type Property = {
   spacesItems?: Maybe<Array<Maybe<Space>>>;
 };
 
+export type PropertyLite = {
+  __typename?: 'PropertyLite';
+  _id: Scalars['ID']['output'];
+  propertyName: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   getAboutPgImg: Scalars['String']['output'];
@@ -301,6 +307,8 @@ export type Query = {
   getHomePgImgs: HomePgImgPack;
   getPresignedS3Url: Scalars['String']['output'];
   getProperties: Array<Property>;
+  getPropertiesLite?: Maybe<Array<Maybe<PropertyLite>>>;
+  getPropertyById: Property;
   getPropertyInfo: Property;
   getSpaces: Array<Space>;
   queryBookingsByProperty?: Maybe<Array<Booking>>;
@@ -311,6 +319,11 @@ export type QueryGetPresignedS3UrlArgs = {
   altTag: Scalars['String']['input'];
   commandType: Scalars['String']['input'];
   imgKey: Scalars['String']['input'];
+};
+
+
+export type QueryGetPropertyByIdArgs = {
+  _id: Scalars['ID']['input'];
 };
 
 
@@ -414,7 +427,7 @@ export type UpdatePropertyRoomsAndBedsInput = {
 
 export type UpdatePropertySpacesInput = {
   _id: Scalars['ID']['input'];
-  spacesItems?: InputMaybe<Array<InputMaybe<SpaceInput>>>;
+  spacesItems?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 export type User = {
@@ -547,6 +560,7 @@ export type ResolversTypes = {
   OverviewInput: OverviewInput;
   OverviewItem: ResolverTypeWrapper<OverviewItem>;
   Property: ResolverTypeWrapper<Property>;
+  PropertyLite: ResolverTypeWrapper<PropertyLite>;
   Query: ResolverTypeWrapper<{}>;
   RemoveBookingInput: RemoveBookingInput;
   RemoveBookingResponse: ResolverTypeWrapper<RemoveBookingResponse>;
@@ -598,6 +612,7 @@ export type ResolversParentTypes = {
   OverviewInput: OverviewInput;
   OverviewItem: OverviewItem;
   Property: Property;
+  PropertyLite: PropertyLite;
   Query: {};
   RemoveBookingInput: RemoveBookingInput;
   RemoveBookingResponse: RemoveBookingResponse;
@@ -660,13 +675,13 @@ export type DeleteS3ObjectResponseResolvers<ContextType = any, ParentType extend
 };
 
 export type HouseRulesResolvers<ContextType = any, ParentType extends ResolversParentTypes['HouseRules'] = ResolversParentTypes['HouseRules']> = {
-  Pets?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  Smoking?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   additional?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   children?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   damages?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   events?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   general?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  pets?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  smoking?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -720,6 +735,12 @@ export type PropertyResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PropertyLiteResolvers<ContextType = any, ParentType extends ResolversParentTypes['PropertyLite'] = ResolversParentTypes['PropertyLite']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  propertyName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAboutPgImg?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
@@ -729,6 +750,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
   getPresignedS3Url?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlArgs, 'altTag' | 'commandType' | 'imgKey'>>;
   getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
+  getPropertiesLite?: Resolver<Maybe<Array<Maybe<ResolversTypes['PropertyLite']>>>, ParentType, ContextType>;
+  getPropertyById?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyByIdArgs, '_id'>>;
   getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, '_id'>>;
   getSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
   queryBookingsByProperty?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyId'>>;
@@ -799,6 +822,7 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   OverviewItem?: OverviewItemResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
+  PropertyLite?: PropertyLiteResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RemoveBookingResponse?: RemoveBookingResponseResolvers<ContextType>;
   RoomBed?: RoomBedResolvers<ContextType>;
