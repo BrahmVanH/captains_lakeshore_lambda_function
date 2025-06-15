@@ -1,5 +1,5 @@
 import { ApolloServer, BaseContext } from '@apollo/server';
-import typeDefs from './schema';
+import typeDefs from './graphql/schema/';
 import resolvers from './resolvers';
 import { startServerAndCreateLambdaHandler, handlers, middleware } from '@as-integrations/aws-lambda';
 import dotenv from 'dotenv';
@@ -27,14 +27,12 @@ const corsMiddleware: middleware.MiddlewareFn<typeof requestHandler> = async (ev
 			};
 			return Promise.resolve();
 		};
-		console.log('origin is allowed', origin);
 	} else {
 		return (result) => {
 			result.statusCode = 403;
 			result.body = 'Origin not allowed' + origin;
 			return Promise.resolve();
 		};
-		console.log('origin is not allowed', origin);
 	}
 };
 

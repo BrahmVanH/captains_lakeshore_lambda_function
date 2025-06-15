@@ -56,7 +56,8 @@ const findImgIndex = (data: ListObjectsV2CommandOutput, imgKey: string) => {
 	return foundIndex;
 };
 
-const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) => {
+export const handleSignUrl = async (imageItem: S3Object | string) => {
+	const bucketName = process.env.S3_BUCKET_NAME;
 	const s3 = new S3Client({
 		region: process.env.S3_REGION ?? '',
 		credentials: {
@@ -65,14 +66,14 @@ const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) 
 		},
 	});
 	try {
-		if (!imageItem || !imageBucket) {
+		if (!imageItem || !bucketName) {
 			return '';
 		}
 		if (typeof imageItem === 'object') {
 			return await getSignedUrl(
 				s3,
 				new GetObjectCommand({
-					Bucket: imageBucket,
+					Bucket: bucketName,
 					Key: imageItem?.Key,
 				}),
 				{
@@ -83,7 +84,7 @@ const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) 
 		return await getSignedUrl(
 			s3,
 			new GetObjectCommand({
-				Bucket: imageBucket,
+				Bucket: bucketName,
 				Key: imageItem,
 			}),
 			{
@@ -96,7 +97,9 @@ const handleSignUrl = async (imageBucket: string, imageItem: S3Object | string) 
 	}
 };
 
-const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
+
+export const getImgTag = async (imageItem: S3Object | string) => {
+	const bucketName = process.env.S3_BUCKET_NAME;
 	const s3 = new S3Client({
 		region: process.env.S3_REGION ?? '',
 		credentials: {
@@ -108,14 +111,23 @@ const getImgTag = async (imageBucket: string, imageItem: S3Object) => {
 		console.error('Error in retrieving image tags');
 		throw new Error('Error in retrieving image tags');
 	}
+	let command;
 
-	const altTag = new GetObjectTaggingCommand({
-		Bucket: imageBucket,
-		Key: imageItem?.Key,
-	});
+	if (typeof imageItem === 'object') {
+
+		command = new GetObjectTaggingCommand({
+			Bucket: bucketName,
+			Key: imageItem?.Key,
+		});
+	} else {
+		command = new GetObjectTaggingCommand({
+			Bucket: bucketName,
+			Key: imageItem,
+		});
+	}
 
 	try {
-		const response = await s3.send(altTag);
+		const response = await s3.send(command);
 
 		if (!response?.TagSet) {
 			console.error('Error in retrieving image tags');
@@ -158,19 +170,70 @@ export const getS3HomePageImgs = async () => {
 			throw new Error('Error in querying s3 for homepage images');
 		}
 		const headerImgIndex = findImgIndex(data, homeHeaderImgKey);
-		const headerImgUrl = await handleSignUrl(homePageParams.Bucket, s3Objects[headerImgIndex]);
+		const headerImgUrl = await handleSignUrl(s3Objects[headerImgIndex]);
 
 		const hideawayImgIndex = findImgIndex(data, homePgHideawayImgKey);
-		const hideawayImgUrl = await handleSignUrl(homePageParams.Bucket, s3Objects[hideawayImgIndex]);
+		const hideawayImgUrl = await handleSignUrl(s3Objects[hideawayImgIndex]);
 
 		const cottageImgIndex = findImgIndex(data, homePgCottageImgKey);
-		const cottageImgUrl = await handleSignUrl(homePageParams.Bucket, s3Objects[cottageImgIndex]);
+		const cottageImgUrl = await handleSignUrl(s3Objects[cottageImgIndex]);
 
 		return { headerImgUrl, hideawayImgUrl, cottageImgUrl } as IHomePgImgPack;
 	} catch (err: any) {
 		return [{ message: 'Error in querying s3 for homepage images', details: err.message }];
 	}
 };
+
+// export const getS3Img = async (key: string) => {
+// 	if (key === '') {
+// 		console.error('Error in querying s3 for homepage image');
+// 		throw new Error('Error in querying s3 for homepage image');
+// 	}
+
+// 	const bucket = process.env.S3_BUCKET_NAME ?? '';
+
+// 	const s3 = new S3Client({
+// 		region: process.env.S3_REGION ?? '',
+// 		credentials: {
+// 			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+// 			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+// 		},
+// 	});
+
+// 	if (bucket === '' || key === '') {
+// 		console.error('Error in querying s3 for homepage images');
+// 		throw new Error('Error in querying s3 for homepage images');
+// 	}
+
+// 	const homePageParams = {
+// 		Bucket: bucket,
+// 		Prefix: 'home_page/',
+// 	};
+
+// 	try {
+// 		const data = await s3.send(new ListObjectsV2Command(homePageParams));
+// 		const s3Objects = data?.Contents as S3Object[];
+
+// 		if (!data?.Contents) {
+// 			console.error('Error in querying s3 for homepage images');
+// 			throw new Error('Error in querying s3 for homepage images');
+// 		}
+// 		const headerImgIndex = findImgIndex(data, homeHeaderImgKey);
+// 		const headerImgUrl = await handleSignUrl(s3Objects[headerImgIndex]);
+
+// 		const hideawayImgIndex = findImgIndex(data, homePgHideawayImgKey);
+// 		const hideawayImgUrl = await handleSignUrl(s3Objects[hideawayImgIndex]);
+
+// 		const cottageImgIndex = findImgIndex(data, homePgCottageImgKey);
+// 		const cottageImgUrl = await handleSignUrl(s3Objects[cottageImgIndex]);
+
+// 		return { headerImgUrl, hideawayImgUrl, cottageImgUrl } as IHomePgImgPack;
+// 	} catch (err: any) {
+// 		return [{ message: 'Error in querying s3 for homepage images', details: err.message }];
+// 	}
+
+// };
+
 
 export const getS3HideawayPgImgs = async () => {
 	const bucket = process.env.S3_BUCKET_NAME ?? '';
@@ -183,7 +246,7 @@ export const getS3HideawayPgImgs = async () => {
 			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
 		},
 	});
-	
+
 	if (bucket === '' || hideawayHeaderImgKey === '') {
 		console.error('Error in querying s3 for hideaway images');
 		throw new Error('Error in querying s3 for hideaway images');
@@ -202,13 +265,13 @@ export const getS3HideawayPgImgs = async () => {
 		}
 
 		const headerImgIndex = findImgIndex(data, hideawayHeaderImgKey);
-		const headerUrl = await handleSignUrl(hideawayParams.Bucket, s3Objects[headerImgIndex]);
+		const headerUrl = await handleSignUrl(s3Objects[headerImgIndex]);
 		const hideawayGalleryObjects = await Promise.all(
 			s3Objects
 				.filter((s3Object) => s3Object.Key !== 'captains_hideaway_png/')
 				.map(async (s3Object) => {
-					const altTag = await getImgTag(hideawayParams.Bucket, s3Object);
-					const signedUrl = await handleSignUrl(hideawayParams.Bucket, s3Object);
+					const altTag = await getImgTag(s3Object);
+					const signedUrl = await handleSignUrl(s3Object);
 					if (!altTag || !signedUrl) {
 						throw new Error('Error in querying s3 for hideaway images');
 					}
@@ -243,24 +306,23 @@ export const getS3CottagePgImgs = async () => {
 	const bucketName = process.env.S3_BUCKET_NAME ?? '';
 	const cottageHeaderImgKey = process.env.COTTAGE_HEADER_IMG_KEY ?? '';
 	const cottageParams = {
-			Bucket: bucketName,
-			Prefix: 'captains_cottage_png/',
-		};
+		Bucket: bucketName,
+		Prefix: 'captains_cottage_png/',
+	};
 
-		const s3 = new S3Client({
-			region: process.env.S3_REGION ?? '',
-			credentials: {
-				accessKeyId: process.env.S3_ACCESS_KEY ?? '',
-				secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
-			},
-		});
-		
-		if (cottageHeaderImgKey === '') {
-			console.error('Error in querying s3 for cottage images');
-			throw new Error('Error in querying s3 for cottage images');
-		}
-		try {
+	const s3 = new S3Client({
+		region: process.env.S3_REGION ?? '',
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? '',
+		},
+	});
 
+	if (cottageHeaderImgKey === '') {
+		console.error('Error in querying s3 for cottage images');
+		throw new Error('Error in querying s3 for cottage images');
+	}
+	try {
 		const data = await s3.send(new ListObjectsV2Command(cottageParams));
 		const s3Objects = data?.Contents as S3Object[];
 
@@ -270,7 +332,7 @@ export const getS3CottagePgImgs = async () => {
 		}
 
 		const headerImgIndex = findImgIndex(data, cottageHeaderImgKey);
-		const headerUrl = await handleSignUrl(cottageParams.Bucket, s3Objects[headerImgIndex]);
+		const headerUrl = await handleSignUrl(s3Objects[headerImgIndex]);
 
 		if (!headerUrl) {
 			console.error('Error in querying s3 for cottage images');
@@ -282,8 +344,8 @@ export const getS3CottagePgImgs = async () => {
 				.filter((s3Object) => s3Object.Key !== cottageHeaderImgKey.split('/')[0] + '/')
 				.filter((s3Object) => s3Object.Key !== cottageHeaderImgKey)
 				.map(async (s3Object) => {
-					const altTag = await getImgTag(cottageParams.Bucket, s3Object);
-					const signedUrl = await handleSignUrl(cottageParams.Bucket, s3Object);
+					const altTag = await getImgTag(s3Object);
+					const signedUrl = await handleSignUrl(s3Object);
 					if (!altTag || !signedUrl) {
 						throw new Error('Error in querying s3 for cottage images');
 					}
@@ -316,14 +378,13 @@ export const getS3CottagePgImgs = async () => {
 
 export const getS3AboutPgImgs = async () => {
 	try {
-		const bucketName = process.env.S3_BUCKET_NAME ?? '';
 		const aboutImgKey = process.env.ABOUT_IMG_KEY ?? '';
 
-		if (bucketName === '' || aboutImgKey === '') {
+		if (aboutImgKey === '') {
 			console.error('Error in querying s3 for about page images');
 			throw new Error('Error in querying s3 for about page images');
 		}
-		const imgUrl = await handleSignUrl(bucketName, aboutImgKey);
+		const imgUrl = await handleSignUrl(aboutImgKey);
 		if (!imgUrl) {
 			console.error('Error in querying s3 for homepage images');
 			throw new Error('Error in querying s3 for homepage images');

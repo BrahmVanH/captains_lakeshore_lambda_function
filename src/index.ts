@@ -1,6 +1,8 @@
+import 'tsconfig-paths/register';
+
 import dotenv from 'dotenv';
-import typeDefs from './schema';
-import resolvers from './resolvers';
+import typeDefs from './graphql/schema/';
+import resolvers from './graphql/resolvers/';
 import { ApolloServer as ApolloDServerDev, BaseContext } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { expressMiddleware } from '@apollo/server/express4';

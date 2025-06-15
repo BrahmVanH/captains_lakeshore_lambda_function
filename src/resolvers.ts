@@ -1,6 +1,6 @@
-import { Booking, User, Property } from './models';
+import { Booking, User, Property } from '@/models';
 import { signToken } from './utils/auth';
-import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs } from './utils/s3Query';
+import { getS3HomePageImgs, getS3HideawayPgImgs, getS3CottagePgImgs, getS3AboutPgImgs, handleSignUrl, getImgTag } from './utils/s3Query';
 import { connectToDb } from './connection/db';
 import { IQueryBookingsArgs, ILoginUserArgs, IRemoveUserArgs, ICreateBookingArgs, IRemoveBookingArgs, IUser, IUpdatePropertyArgs } from './types';
 import {
@@ -160,18 +160,56 @@ const resolvers: Resolvers = {
 				throw new Error('Error in querying s3 for about page image: ' + err.message);
 			}
 		},
-		getPresignedS3Url: async (_: {}, { imgKey, commandType, altTag }: { imgKey: string; commandType: string; altTag: string }, __: any) => {
+		getImg: async (_: {}, { imgKey }: { imgKey: string; }, __: any) => {
 			try {
-				const preSignedUrl = await getPresignedUrl(imgKey, commandType, altTag);
+				const preSignedUrl = await handleSignUrl(imgKey)
 				if (!preSignedUrl) {
 					console.error('Error in getting presigned URL');
 					throw new Error('Error in getting presigned URL');
 				}
-				return preSignedUrl;
+				const alt = await getImgTag(imgKey);
+				if (!alt) {
+					console.error('Error in getting alt tag');
+					throw new Error('Error in getting alt tag');
+				}
+				return { url: preSignedUrl, alt };
 			} catch (err: any) {
 				throw new Error('Error in getting upload url for s3: ' + err.message);
 			}
 		},
+		getImgs: async (_: {}, { imgKeys }: { imgKeys: string[]; }, __: any) => {
+			try {
+
+				const preSignedUrls = await Promise.all(imgKeys.map(async (key: string, i: number) =>
+					await handleSignUrl(key)
+				)).catch(e => {
+					throw new Error(`Error in presigning urls for imgs: ${e}`)
+				})
+
+				const filteredUrls = preSignedUrls.filter((url) => url !== undefined)
+
+				if (!filteredUrls) {
+					console.error('Error in getting presigned URL');
+					throw new Error('Error in getting presigned URL');
+				}
+
+				const altTags = await Promise.all(imgKeys.map(async (key: string, i: number) =>
+					await getImgTag(key)
+				)).catch(e => {
+					throw new Error(`Error in getting alt tags for imgs: ${e}`)
+				})
+
+				console.log("altTags: ", altTags)
+
+				const correctedAltTags = altTags.map(t => t ?? "placeholder");
+				const imgs = filteredUrls.map((url, i) => ({ url, alt: correctedAltTags[i] ?? "" }))
+
+				return imgs;
+			} catch (err: any) {
+				throw new Error('Error in getting upload url for s3: ' + err.message);
+			}
+		},
+
 		getPropertyInfo: async (_: {}, { _id }: { _id: string }, __: any) => {
 			try {
 				await connectToDb();
@@ -218,7 +256,12 @@ const resolvers: Resolvers = {
 					throw new Error('Error fetching all properties from database');
 				}
 
-				return properties.map(({ _id, propertyName }) => ({ _id, propertyName }));
+				return properties.map(({ _id, propertyName, propertyDescription, headerImgKey }) => ({
+					_id,
+					propertyName,
+					propertyDescription: propertyDescription ?? '',
+					headerImgKey: headerImgKey ?? '',
+				}));
 			} catch (err: any) {
 				console.error({ message: 'error in finding properties', details: err });
 				throw new Error('Error in finding properties: ' + err.message);
@@ -226,6 +269,7 @@ const resolvers: Resolvers = {
 		},
 		getPropertyById: async (_: {}, { _id }: { _id: string }, __: any) => {
 			try {
+				console.log('getting property by id');
 				await connectToDb();
 				if (!_id) {
 					throw new Error('No ID was presented for querying property');

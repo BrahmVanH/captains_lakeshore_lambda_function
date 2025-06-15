@@ -1,0 +1,6 @@
+
+type Booking {
+	_id: ID!
+	propertyId: ID!
+	dateValue: String!
+}

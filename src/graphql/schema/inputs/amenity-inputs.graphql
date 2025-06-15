@@ -1,0 +1,6 @@
+
+input AmenityInput {
+	amenityName: String!
+	amenityType: String!
+	icon: String
+}
