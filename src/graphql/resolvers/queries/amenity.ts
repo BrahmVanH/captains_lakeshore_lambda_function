@@ -1,6 +1,6 @@
-import { connectToDb } from "@/connection/db";
-import { Amenity, QueryResolvers } from "@/generated/graphql";
-import AmenityModel from "@/models/Amenity";
+import { connectToDb } from "../../../connection/db";
+import { Amenity, QueryResolvers } from "../../../generated/graphql";
+import AmenityModel from "../../../models/Amenity";
 
 export const amenityQueries: QueryResolvers = {
   getAmenities: async () => {

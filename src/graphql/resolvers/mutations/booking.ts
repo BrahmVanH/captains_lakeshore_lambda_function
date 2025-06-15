@@ -1,6 +1,6 @@
-import { connectToDb } from "@/connection/db";
-import { MutationCreateBookingArgs, MutationRemoveBookingArgs, MutationResolvers } from "@/generated/graphql";
-import { Booking } from "@/models";
+import { connectToDb } from "../../../connection/db";
+import { MutationCreateBookingArgs, MutationRemoveBookingArgs, MutationResolvers } from "../../../generated/graphql";
+import { Booking } from "../../../models";
 
 export const bookingMutations: MutationResolvers = {
   createBooking: async (_: {}, args: MutationCreateBookingArgs, __: any) => {

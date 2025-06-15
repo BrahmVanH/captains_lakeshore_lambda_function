@@ -2,7 +2,7 @@ service: captains-lakefront-rentals-api
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs18.x
   httpApi:
     cors: true
 
@@ -19,7 +19,6 @@ package:
     - '!.env*'
     - '!tsconfig.json'
     - '!codegen.yml'
-    - '!schema.graphql'
     - '!.gitignore'
     
 plugins:

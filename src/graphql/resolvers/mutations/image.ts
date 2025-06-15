@@ -1,6 +1,6 @@
-import { connectToDb } from "@/connection/db";
-import { MutationDeleteS3ObjectsArgs, MutationResolvers } from "@/generated/graphql";
-import { deleteS3Objects } from "@/utils/s3Upload";
+import { connectToDb } from "../../../connection/db";
+import { MutationDeleteS3ObjectsArgs, MutationResolvers } from "../../../generated/graphql";
+import { deleteS3Objects } from "../../../utils/s3Upload";
 
 export const imageMutations: MutationResolvers = {
   deleteS3Objects: async (_: {}, args: MutationDeleteS3ObjectsArgs, __: any) => {

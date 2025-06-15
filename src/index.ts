@@ -1,4 +1,3 @@
-import 'tsconfig-paths/register';
 
 import dotenv from 'dotenv';
 import typeDefs from './graphql/schema/';

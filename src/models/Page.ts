@@ -1,4 +1,4 @@
-import { Page } from "@/generated/graphql";
+import { Page } from "../generated/graphql";
 import { model, Schema } from "mongoose";
 
 const pageSchema: Schema<Page> = new Schema<Page>({

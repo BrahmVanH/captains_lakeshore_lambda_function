@@ -1,6 +1,6 @@
-import { connectToDb } from "@/connection/db";
-import { QueryResolvers, Space as SpaceType } from "@/generated/graphql";
-import Space from "@/models/Space";
+import { connectToDb } from "../../../connection/db";
+import { QueryResolvers, Space as SpaceType } from "../../../generated/graphql";
+import Space from "../../../models/Space";
 
 export const spaceQueries: QueryResolvers = {
   getSpaces: async () => {

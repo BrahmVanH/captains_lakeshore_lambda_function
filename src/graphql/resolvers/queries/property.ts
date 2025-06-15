@@ -1,9 +1,9 @@
-import { Property } from '@/models';
-import { connectToDb } from '@/connection/db';
+import { Property } from '../../../models';
+import { connectToDb } from '../../../connection/db';
 import {
   Property as IProperty,
   QueryResolvers,
-} from '@/generated/graphql';
+} from '../../../generated/graphql';
 
 
 export const propertyQueries: QueryResolvers = {
@@ -67,7 +67,6 @@ export const propertyQueries: QueryResolvers = {
   },
   getPropertyById: async (_: {}, { _id }: { _id: string }, __: any) => {
     try {
-      console.log('getting property by id');
       await connectToDb();
       if (!_id) {
         throw new Error('No ID was presented for querying property');

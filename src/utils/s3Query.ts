@@ -136,6 +136,7 @@ export const getImgTag = async (imageItem: S3Object | string) => {
 		return response.TagSet[0]?.Value;
 	} catch (err) {
 		console.error('there was an error in retrieving image tags', err);
+		return ""
 	}
 };
 

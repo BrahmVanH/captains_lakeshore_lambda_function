@@ -1,6 +1,6 @@
-import { connectToDb } from "@/connection/db";
-import { QueryQueryBookingsByPropertyArgs, QueryResolvers } from "@/generated/graphql";
-import { Booking } from "@/models";
+import { connectToDb } from "../../../connection/db";
+import { QueryQueryBookingsByPropertyArgs, QueryResolvers } from "../../../generated/graphql";
+import { Booking } from "../../../models";
 
 export const bookingQueries: QueryResolvers = {
   queryBookingsByProperty: async (_: {}, { propertyId }: QueryQueryBookingsByPropertyArgs, __: any) => {

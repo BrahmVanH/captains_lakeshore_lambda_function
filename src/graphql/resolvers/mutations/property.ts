@@ -1,5 +1,5 @@
-import { connectToDb } from "@/connection/db";
-import { Property } from "@/models";
+import { connectToDb } from "../../../connection/db";
+import { Property } from "../../../models";
 
 import {
   MutationCreatePropertyArgs, MutationResolvers, MutationUpdatePropertyAmenitiesArgs,
@@ -13,7 +13,7 @@ import {
   MutationUpdatePropertyHouseRulesArgs,
   MutationUpdatePropertyImportantInfoArgs,
   MutationUpdatePropertySpacesArgs,
-} from '@/generated/graphql';
+} from '../../../generated/graphql';
 
 export const propertyMutations: MutationResolvers = {
 
@@ -113,7 +113,6 @@ export const propertyMutations: MutationResolvers = {
     if (!overviewItems) {
       throw new Error('Update object is undefined');
     }
-    console.log('overviewItems', overviewItems);
     try {
       await connectToDb();
       const property = await Property.findOneAndUpdate({ _id }, { $set: { overviewItems: overviewItems } }, { new: true });

@@ -1,7 +1,7 @@
-import { User } from '@/models';
-import { connectToDb } from '@/connection/db';
-import { IUser } from '@/types';
-import { QueryResolvers } from '@/generated/graphql';
+import { User } from '../../../models';
+import { connectToDb } from '../../../connection/db';
+import { IUser } from '../../../types';
+import { QueryResolvers } from '../../../generated/graphql';
 
 
 export const userQueries: QueryResolvers = {

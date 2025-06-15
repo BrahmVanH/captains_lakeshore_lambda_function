@@ -1,8 +1,8 @@
-import { connectToDb } from "@/connection/db";
-import { MutationCreateUserArgs, MutationLoginUserArgs, MutationRemoveUserArgs, MutationResolvers } from "@/generated/graphql";
-import { User } from "@/models";
-import { ILoginUserArgs, IRemoveUserArgs, IUser } from "@/types";
-import { signToken } from "@/utils/auth";
+import { connectToDb } from "../../../connection/db";
+import { MutationCreateUserArgs, MutationLoginUserArgs, MutationRemoveUserArgs, MutationResolvers } from "../../../generated/graphql";
+import { User } from "../../../models";
+import { ILoginUserArgs, IRemoveUserArgs, IUser } from "../../../types";
+import { signToken } from "../../../utils/auth";
 
 export const userMutations: MutationResolvers = {
   createUser: async (_: {}, args: MutationCreateUserArgs, __: any) => {

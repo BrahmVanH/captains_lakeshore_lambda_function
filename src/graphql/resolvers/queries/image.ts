@@ -1,5 +1,5 @@
-import { QueryResolvers } from "@/generated/graphql";
-import { getImgTag, getS3AboutPgImgs, getS3CottagePgImgs, getS3HideawayPgImgs, getS3HomePageImgs, handleSignUrl } from "@/utils/s3Query";
+import { QueryResolvers } from "../../../generated/graphql";
+import { getImgTag, getS3AboutPgImgs, getS3CottagePgImgs, getS3HideawayPgImgs, getS3HomePageImgs, handleSignUrl } from "../../../utils/s3Query";
 
 export const imageQueries: QueryResolvers = {
 
@@ -68,8 +68,9 @@ export const imageQueries: QueryResolvers = {
       }
       const alt = await getImgTag(imgKey);
       if (!alt) {
-        console.error('Error in getting alt tag');
-        throw new Error('Error in getting alt tag');
+        console.warn('Error in getting alt tag');
+        return { url: preSignedUrl, alt: "placeholder" };
+
       }
       return { url: preSignedUrl, alt };
     } catch (err: any) {
@@ -98,7 +99,6 @@ export const imageQueries: QueryResolvers = {
         throw new Error(`Error in getting alt tags for imgs: ${e}`)
       })
 
-      console.log("altTags: ", altTags)
 
       const correctedAltTags = altTags.map(t => t ?? "placeholder");
       const imgs = filteredUrls.map((url, i) => ({ url, alt: correctedAltTags[i] ?? "" }))

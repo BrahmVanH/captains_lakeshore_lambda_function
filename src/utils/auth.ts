@@ -1,9 +1,9 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
 import { IUser } from '../types.d';
 
 export const signToken = ({ username, _id }: IUser) => {
-	const expiration = process.env.AUTH_EXPIRATION ?? '';
+	const expiration = process.env.AUTH_EXPIRATION ?? '2h';
 	const secret: jwt.Secret = process.env.AUTH_SECRET ?? '';
 
 	if (secret === '' || expiration === '') {
@@ -11,7 +11,7 @@ export const signToken = ({ username, _id }: IUser) => {
 		return '';
 	}
 	const payload = { username, _id };
-	const token = jwt.sign({ data: payload }, secret, { expiresIn: expiration });
+	const token = jwt.sign({ data: payload }, secret, { expiresIn: expiration } as SignOptions);
 
 	if (!token || token === '') {
 		console.error('Error in signToken: token is not defined');

@@ -1,7 +1,7 @@
-import { connectToDb } from '@/connection/db';
-import { MutationCreateSpaceArgs, MutationResolvers, MutationUpdateSpaceArgs, MutationRemoveSpaceArgs } from '@/generated/graphql';
-import { Property } from '@/models';
-import Space from '@/models/Space';
+import { connectToDb } from '../../../connection/db';
+import { MutationCreateSpaceArgs, MutationResolvers, MutationUpdateSpaceArgs, MutationRemoveSpaceArgs } from '../../../generated/graphql';
+import { Property } from '../../../models';
+import Space from '../../../models/Space';
 
 
 export const spaceMutations: MutationResolvers = {
@@ -73,7 +73,7 @@ export const spaceMutations: MutationResolvers = {
     }
   },
   createSeedSpaces: async (_: {}, __: any) => {
-    const spacesSeedData = await import('@/seed/spaces.json');
+    const spacesSeedData = await import('../../../seed/spaces.json');
     try {
       await connectToDb();
       if (!spacesSeedData) {

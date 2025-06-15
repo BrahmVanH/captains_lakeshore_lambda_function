@@ -1,7 +1,7 @@
-import { connectToDb } from "@/connection/db";
-import { MutationCreateAmenityArgs, MutationRemoveAmenityArgs, MutationResolvers, MutationUpdateAmenityArgs } from "@/generated/graphql";
-import { Property } from "@/models";
-import Amenity from "@/models/Amenity";
+import { connectToDb } from "../../../connection/db";
+import { MutationCreateAmenityArgs, MutationRemoveAmenityArgs, MutationResolvers, MutationUpdateAmenityArgs } from "../../../generated/graphql";
+import { Property } from "../../../models";
+import Amenity from "../../../models/Amenity";
 
 export const amenityMutations: MutationResolvers = {
   createAmenity: async (_: {}, args: MutationCreateAmenityArgs, __: any) => {
