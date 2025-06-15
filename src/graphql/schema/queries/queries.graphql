@@ -13,4 +13,5 @@ type Query {
 	getPropertyById(_id: ID!): Property!
 	getAmenities: [Amenity!]!
 	getSpaces: [Space!]!
+	getPageBySlug(slug: String!): Page!
 }

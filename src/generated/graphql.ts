@@ -116,6 +116,9 @@ export type LoginUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  UpdatePageHeading: Page;
+  UpdatePageHeroImgKey: Page;
+  UpdatePageText: Page;
   createAmenity: Amenity;
   createBooking: Array<Maybe<Booking>>;
   createProperty: Property;
@@ -142,6 +145,24 @@ export type Mutation = {
   updatePropertyRoomsAndBeds: Property;
   updatePropertySpaces: Property;
   updateSpace: Space;
+};
+
+
+export type MutationUpdatePageHeadingArgs = {
+  heading: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+};
+
+
+export type MutationUpdatePageHeroImgKeyArgs = {
+  imgKey: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+};
+
+
+export type MutationUpdatePageTextArgs = {
+  slug: Scalars['String']['input'];
+  text: Scalars['String']['input'];
 };
 
 
@@ -282,6 +303,14 @@ export type OverviewItem = {
   name: Scalars['String']['output'];
 };
 
+export type Page = {
+  __typename?: 'Page';
+  heading: Scalars['String']['output'];
+  heroImgKey: Scalars['String']['output'];
+  slug: Scalars['String']['output'];
+  text?: Maybe<Scalars['String']['output']>;
+};
+
 export type Property = {
   __typename?: 'Property';
   _id: Scalars['ID']['output'];
@@ -315,6 +344,7 @@ export type Query = {
   getHomePgImgs: HomePgImgPack;
   getImg: Image;
   getImgs: Array<Image>;
+  getPageBySlug: Page;
   getProperties: Array<Property>;
   getPropertiesLite?: Maybe<Array<Maybe<PropertyLite>>>;
   getPropertyById: Property;
@@ -331,6 +361,11 @@ export type QueryGetImgArgs = {
 
 export type QueryGetImgsArgs = {
   imgKeys: Array<Scalars['String']['input']>;
+};
+
+
+export type QueryGetPageBySlugArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -390,6 +425,21 @@ export type Update = {
   headerImgKey: Scalars['String']['input'];
   propertyDescription: Scalars['String']['input'];
   propertyName: Scalars['String']['input'];
+};
+
+export type UpdatePageHeading = {
+  heading: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+};
+
+export type UpdatePageHeroImgKey = {
+  imgKey: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+};
+
+export type UpdatePageText = {
+  slug: Scalars['String']['input'];
+  text: Scalars['String']['input'];
 };
 
 export type UpdatePropertyAmenitiesInput = {
@@ -572,6 +622,7 @@ export type ResolversTypes = {
   NewBookingInput: NewBookingInput;
   OverviewInput: OverviewInput;
   OverviewItem: ResolverTypeWrapper<OverviewItem>;
+  Page: ResolverTypeWrapper<Page>;
   Property: ResolverTypeWrapper<Property>;
   PropertyLite: ResolverTypeWrapper<PropertyLite>;
   Query: ResolverTypeWrapper<{}>;
@@ -584,6 +635,9 @@ export type ResolversTypes = {
   SpaceInput: SpaceInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Update: Update;
+  UpdatePageHeading: UpdatePageHeading;
+  UpdatePageHeroImgKey: UpdatePageHeroImgKey;
+  UpdatePageText: UpdatePageText;
   UpdatePropertyAmenitiesInput: UpdatePropertyAmenitiesInput;
   UpdatePropertyDescriptionInput: UpdatePropertyDescriptionInput;
   UpdatePropertyHeaderImgInput: UpdatePropertyHeaderImgInput;
@@ -625,6 +679,7 @@ export type ResolversParentTypes = {
   NewBookingInput: NewBookingInput;
   OverviewInput: OverviewInput;
   OverviewItem: OverviewItem;
+  Page: Page;
   Property: Property;
   PropertyLite: PropertyLite;
   Query: {};
@@ -637,6 +692,9 @@ export type ResolversParentTypes = {
   SpaceInput: SpaceInput;
   String: Scalars['String']['output'];
   Update: Update;
+  UpdatePageHeading: UpdatePageHeading;
+  UpdatePageHeroImgKey: UpdatePageHeroImgKey;
+  UpdatePageText: UpdatePageText;
   UpdatePropertyAmenitiesInput: UpdatePropertyAmenitiesInput;
   UpdatePropertyDescriptionInput: UpdatePropertyDescriptionInput;
   UpdatePropertyHeaderImgInput: UpdatePropertyHeaderImgInput;
@@ -706,6 +764,9 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  UpdatePageHeading?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageHeadingArgs, 'heading' | 'slug'>>;
+  UpdatePageHeroImgKey?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageHeroImgKeyArgs, 'imgKey' | 'slug'>>;
+  UpdatePageText?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageTextArgs, 'slug' | 'text'>>;
   createAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationCreateAmenityArgs, 'input'>>;
   createBooking?: Resolver<Array<Maybe<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'input'>>;
@@ -737,6 +798,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type OverviewItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['OverviewItem'] = ResolversParentTypes['OverviewItem']> = {
   icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page']> = {
+  heading?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  heroImgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -772,6 +841,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
   getImg?: Resolver<ResolversTypes['Image'], ParentType, ContextType, RequireFields<QueryGetImgArgs, 'imgKey'>>;
   getImgs?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<QueryGetImgsArgs, 'imgKeys'>>;
+  getPageBySlug?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<QueryGetPageBySlugArgs, 'slug'>>;
   getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
   getPropertiesLite?: Resolver<Maybe<Array<Maybe<ResolversTypes['PropertyLite']>>>, ParentType, ContextType>;
   getPropertyById?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyByIdArgs, '_id'>>;
@@ -845,6 +915,7 @@ export type Resolvers<ContextType = any> = {
   Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   OverviewItem?: OverviewItemResolvers<ContextType>;
+  Page?: PageResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
   PropertyLite?: PropertyLiteResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
