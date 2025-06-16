@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.queries = void 0;
+exports.queries = `
+    type Query {
+        getAllUsers: [User!]
+        queryBookingsByProperty(propertyId: ID!): [Booking!]
+        getHomePgImgs: homePgImgPack!
+        getHideawayImgs: hideawayImgPack!
+        getCottageImgs: cottageImgPack!
+        getAboutPgImg: String!
+        getImg(imgKey: String!): Image!
+        getImgs(imgKeys: [String!]!): [Image!]!
+        getPropertyInfo(_id: ID!): Property!
+        getProperties: [Property!]!
+        getPropertiesLite: [PropertyLite]
+        getPropertyById(_id: ID!): Property!
+        getAmenities: [Amenity!]!
+        getSpaces: [Space!]!
+        getPageBySlug(slug: String!): Page!
+    }
+`;
+//# sourceMappingURL=queries.js.map

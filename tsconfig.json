@@ -9,6 +9,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 	},
+	"files": ["src/@types/graphql.d.ts"],
 	"include": ["src/*.ts", "src/**/*.ts", "src/**/*.js"],
 	"exclude": ["node_modules", "src/generated/*.ts", "src/seed/*.ts", "src/**/*.d.ts"]
 }
