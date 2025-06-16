@@ -3,6 +3,7 @@ service: captains-lakefront-rentals-api
 provider:
   name: aws
   runtime: nodejs18.x
+  
   httpApi:
     cors: true
 
