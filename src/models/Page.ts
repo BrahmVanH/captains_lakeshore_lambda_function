@@ -1,24 +1,52 @@
 import { Page } from "../generated/graphql";
 import { model, Schema } from "mongoose";
 
-const pageSchema: Schema<Page> = new Schema<Page>({
+const pageSchema = new Schema<Page>({
   slug: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    index: true
   },
-  heroImgKey: {
+  title: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
-  heading: {
+  metaDescription: {
     type: String,
-    required: true
+    maxLength: 160
   },
-  text: {
+  metaKeywords: [String],
+  layoutTemplate: {
     type: String,
-    required: false
-  }
-})
+    default: 'default',
+    enum: ['default', 'property', 'landing', 'contact']
+  },
+  status: {
+    type: String,
+    enum: ['draft', 'published', 'archived'],
+    default: 'draft',
+    index: true
+  },
+  featuredImage: {
+    url: String,
+    alt: String,
+    width: Number,
+    height: Number
+  },
+  publishedAt: Date,
+  components: [{
+    type: Schema.Types.ObjectId,
+    ref: 'PageComponent'
+  }]
+}, {
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
 const PageModel = model<Page>('Page', pageSchema);
 

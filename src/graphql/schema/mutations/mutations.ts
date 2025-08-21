@@ -29,5 +29,25 @@ export const mutations = /* GraphQL */ `
         UpdatePageHeroImgKey(slug: String!, imgKey: String!): Page!
         UpdatePageHeading(slug: String!, heading: String!): Page!
         UpdatePageText(slug: String!, text: String!): Page!
+            # Pages
+        createPage(input: CreatePageInput!): Page!
+        updatePage(id: ID!, input: UpdatePageInput!): Page!
+        deletePage(id: ID!): Boolean!
+        publishPage(id: ID!): Page!
+
+        # Components
+        # addComponentToPage(input: AddComponentInput!): PageComponent!
+        # updateComponent(id: ID!, input: UpdateComponentInput!): PageComponent!
+        # deleteComponent(id: ID!): Boolean!
+        # reorderComponents(pageId: ID!, componentIds: [ID!]!): [PageComponent!]!
+
+        # # Component Types
+        # createComponentType(input: CreateComponentTypeInput!): ComponentType!
+        # updateComponentType(id: ID!, input: UpdateComponentTypeInput!): ComponentType!
+
+        # # Media
+        # uploadMedia(file: Upload!): MediaAsset!
+        # updateMediaAsset(id: ID!, input: UpdateMediaInput!): MediaAsset!
+        # deleteMediaAsset(id: ID!): Boolean!
     }
 `;

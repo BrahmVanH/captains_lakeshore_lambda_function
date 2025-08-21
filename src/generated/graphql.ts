@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,6 +14,16 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  JSON: { input: any; output: any; }
+};
+
+export type AddComponentInput = {
+  componentData: Scalars['JSON']['input'];
+  componentTypeId: Scalars['ID']['input'];
+  pageId: Scalars['ID']['input'];
+  section?: InputMaybe<ComponentSection>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Amenity = {
@@ -56,8 +66,52 @@ export type Booking = {
   propertyId: Scalars['ID']['output'];
 };
 
+export enum ComponentSection {
+  Footer = 'FOOTER',
+  Header = 'HEADER',
+  Hero = 'HERO',
+  Main = 'MAIN',
+  Sidebar = 'SIDEBAR'
+}
+
+export type ComponentType = {
+  __typename?: 'ComponentType';
+  category: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  defaultData?: Maybe<Scalars['JSON']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  displayName: Scalars['String']['output'];
+  icon?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  previewTemplate?: Maybe<Scalars['String']['output']>;
+  schema: Scalars['JSON']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type CreateBookingInput = {
   bookings?: InputMaybe<Array<NewBookingInput>>;
+};
+
+export type CreateComponentTypeInput = {
+  category: Scalars['String']['input'];
+  defaultData?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  displayName: Scalars['String']['input'];
+  icon?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  previewTemplate?: InputMaybe<Scalars['String']['input']>;
+  schema: Scalars['JSON']['input'];
+};
+
+export type CreatePageInput = {
+  featuredImage?: InputMaybe<FeaturedImageInput>;
+  layoutTemplate?: InputMaybe<Scalars['String']['input']>;
+  metaDescription?: InputMaybe<Scalars['String']['input']>;
+  metaKeywords?: InputMaybe<Array<Scalars['String']['input']>>;
+  slug: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type CreatePropertyInput = {
@@ -80,6 +134,21 @@ export type DeleteS3ObjectResponse = {
   __typename?: 'DeleteS3ObjectResponse';
   message: Scalars['String']['output'];
   status: Scalars['Int']['output'];
+};
+
+export type FeaturedImage = {
+  __typename?: 'FeaturedImage';
+  alt?: Maybe<Scalars['String']['output']>;
+  height?: Maybe<Scalars['Int']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  width?: Maybe<Scalars['Int']['output']>;
+};
+
+export type FeaturedImageInput = {
+  alt?: InputMaybe<Scalars['String']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  url: Scalars['String']['input'];
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type HouseRules = {
@@ -114,6 +183,24 @@ export type LoginUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type MediaAsset = {
+  __typename?: 'MediaAsset';
+  altText?: Maybe<Scalars['String']['output']>;
+  caption?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  dimensions?: Maybe<Scalars['JSON']['output']>;
+  filename: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  mimeType: Scalars['String']['output'];
+  originalName: Scalars['String']['output'];
+  size: Scalars['Int']['output'];
+  tags?: Maybe<Array<Scalars['String']['output']>>;
+  thumbnailUrl?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  usedIn?: Maybe<Array<Scalars['JSON']['output']>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   UpdatePageHeading: Page;
@@ -121,19 +208,23 @@ export type Mutation = {
   UpdatePageText: Page;
   createAmenity: Amenity;
   createBooking: Array<Maybe<Booking>>;
+  createPage: Page;
   createProperty: Property;
   createSeedAmenities: Array<Amenity>;
   createSeedSpaces: Array<Space>;
   createSpace: Space;
   createUser: Auth;
+  deletePage: Scalars['Boolean']['output'];
   deleteS3Objects: DeleteS3ObjectResponse;
   loginUser: Auth;
+  publishPage: Page;
   removeAmenity: Amenity;
   removeBooking: RemoveBookingResponse;
   removeProperty: Property;
   removeSpace: Space;
   removeUser: Auth;
   updateAmenity: Amenity;
+  updatePage: Page;
   updatePropertyAmenities: Property;
   updatePropertyDescription: Property;
   updatePropertyHeaderImg: Property;
@@ -176,6 +267,11 @@ export type MutationCreateBookingArgs = {
 };
 
 
+export type MutationCreatePageArgs = {
+  input: CreatePageInput;
+};
+
+
 export type MutationCreatePropertyArgs = {
   input: CreatePropertyInput;
 };
@@ -191,6 +287,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationDeletePageArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteS3ObjectsArgs = {
   input: DeleteS3ObjectInput;
 };
@@ -198,6 +299,11 @@ export type MutationDeleteS3ObjectsArgs = {
 
 export type MutationLoginUserArgs = {
   input: LoginUserInput;
+};
+
+
+export type MutationPublishPageArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -229,6 +335,12 @@ export type MutationRemoveUserArgs = {
 export type MutationUpdateAmenityArgs = {
   _id: Scalars['ID']['input'];
   input: AmenityInput;
+};
+
+
+export type MutationUpdatePageArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdatePageInput;
 };
 
 
@@ -305,11 +417,41 @@ export type OverviewItem = {
 
 export type Page = {
   __typename?: 'Page';
-  heading: Scalars['String']['output'];
-  heroImgKey: Scalars['String']['output'];
+  components: Array<PageComponent>;
+  createdAt: Scalars['DateTime']['output'];
+  featuredImage?: Maybe<FeaturedImage>;
+  id: Scalars['ID']['output'];
+  layoutTemplate: Scalars['String']['output'];
+  metaDescription?: Maybe<Scalars['String']['output']>;
+  metaKeywords?: Maybe<Array<Scalars['String']['output']>>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
   slug: Scalars['String']['output'];
-  text?: Maybe<Scalars['String']['output']>;
+  status: PageStatus;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
 };
+
+export type PageComponent = {
+  __typename?: 'PageComponent';
+  componentData: Scalars['JSON']['output'];
+  componentType: ComponentType;
+  createdAt: Scalars['DateTime']['output'];
+  customCSS?: Maybe<Scalars['String']['output']>;
+  customClasses?: Maybe<Array<Scalars['String']['output']>>;
+  id: Scalars['ID']['output'];
+  isVisible: Scalars['Boolean']['output'];
+  page: Page;
+  section: ComponentSection;
+  sortOrder: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum PageStatus {
+  Archived = 'ARCHIVED',
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED'
+}
 
 export type Property = {
   __typename?: 'Property';
@@ -336,6 +478,8 @@ export type PropertyLite = {
 
 export type Query = {
   __typename?: 'Query';
+  componentType?: Maybe<ComponentType>;
+  componentTypes: Array<ComponentType>;
   getAboutPgImg: Scalars['String']['output'];
   getAllUsers?: Maybe<Array<User>>;
   getAmenities: Array<Amenity>;
@@ -350,7 +494,22 @@ export type Query = {
   getPropertyById: Property;
   getPropertyInfo: Property;
   getSpaces: Array<Space>;
+  mediaAsset?: Maybe<MediaAsset>;
+  mediaAssets: Array<MediaAsset>;
+  page?: Maybe<Page>;
+  pageComponents: Array<PageComponent>;
+  pages: Array<Page>;
   queryBookingsByProperty?: Maybe<Array<Booking>>;
+};
+
+
+export type QueryComponentTypeArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryComponentTypesArgs = {
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -376,6 +535,37 @@ export type QueryGetPropertyByIdArgs = {
 
 export type QueryGetPropertyInfoArgs = {
   _id: Scalars['ID']['input'];
+};
+
+
+export type QueryMediaAssetArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryMediaAssetsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryPageArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryPageComponentsArgs = {
+  pageId: Scalars['ID']['input'];
+  section?: InputMaybe<ComponentSection>;
+};
+
+
+export type QueryPagesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<PageStatus>;
 };
 
 
@@ -427,6 +617,31 @@ export type Update = {
   propertyName: Scalars['String']['input'];
 };
 
+export type UpdateComponentInput = {
+  componentData?: InputMaybe<Scalars['JSON']['input']>;
+  customCSS?: InputMaybe<Scalars['String']['input']>;
+  customClasses?: InputMaybe<Array<Scalars['String']['input']>>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  section?: InputMaybe<ComponentSection>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateComponentTypeInput = {
+  defaultData?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  displayName?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  previewTemplate?: InputMaybe<Scalars['String']['input']>;
+  schema?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type UpdateMediaInput = {
+  altText?: InputMaybe<Scalars['String']['input']>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type UpdatePageHeading = {
   heading: Scalars['String']['input'];
   slug: Scalars['String']['input'];
@@ -435,6 +650,16 @@ export type UpdatePageHeading = {
 export type UpdatePageHeroImgKey = {
   imgKey: Scalars['String']['input'];
   slug: Scalars['String']['input'];
+};
+
+export type UpdatePageInput = {
+  featuredImage?: InputMaybe<FeaturedImageInput>;
+  layoutTemplate?: InputMaybe<Scalars['String']['input']>;
+  metaDescription?: InputMaybe<Scalars['String']['input']>;
+  metaKeywords?: InputMaybe<Array<Scalars['String']['input']>>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<PageStatus>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdatePageText = {
@@ -600,6 +825,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AddComponentInput: AddComponentInput;
   Amenity: ResolverTypeWrapper<Amenity>;
   AmenityInput: AmenityInput;
   Auth: ResolverTypeWrapper<Auth>;
@@ -607,22 +833,33 @@ export type ResolversTypes = {
   BedInput: BedInput;
   Booking: ResolverTypeWrapper<Booking>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  ComponentSection: ComponentSection;
+  ComponentType: ResolverTypeWrapper<ComponentType>;
   CreateBookingInput: CreateBookingInput;
+  CreateComponentTypeInput: CreateComponentTypeInput;
+  CreatePageInput: CreatePageInput;
   CreatePropertyInput: CreatePropertyInput;
   CreateUserInput: CreateUserInput;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   DeleteS3ObjectInput: DeleteS3ObjectInput;
   DeleteS3ObjectResponse: ResolverTypeWrapper<DeleteS3ObjectResponse>;
+  FeaturedImage: ResolverTypeWrapper<FeaturedImage>;
+  FeaturedImageInput: FeaturedImageInput;
   HouseRules: ResolverTypeWrapper<HouseRules>;
   HouseRulesInput: HouseRulesInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   LoginUserInput: LoginUserInput;
+  MediaAsset: ResolverTypeWrapper<MediaAsset>;
   Mutation: ResolverTypeWrapper<{}>;
   NewBookingInput: NewBookingInput;
   OverviewInput: OverviewInput;
   OverviewItem: ResolverTypeWrapper<OverviewItem>;
   Page: ResolverTypeWrapper<Page>;
+  PageComponent: ResolverTypeWrapper<PageComponent>;
+  PageStatus: PageStatus;
   Property: ResolverTypeWrapper<Property>;
   PropertyLite: ResolverTypeWrapper<PropertyLite>;
   Query: ResolverTypeWrapper<{}>;
@@ -635,8 +872,12 @@ export type ResolversTypes = {
   SpaceInput: SpaceInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Update: Update;
+  UpdateComponentInput: UpdateComponentInput;
+  UpdateComponentTypeInput: UpdateComponentTypeInput;
+  UpdateMediaInput: UpdateMediaInput;
   UpdatePageHeading: UpdatePageHeading;
   UpdatePageHeroImgKey: UpdatePageHeroImgKey;
+  UpdatePageInput: UpdatePageInput;
   UpdatePageText: UpdatePageText;
   UpdatePropertyAmenitiesInput: UpdatePropertyAmenitiesInput;
   UpdatePropertyDescriptionInput: UpdatePropertyDescriptionInput;
@@ -657,6 +898,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AddComponentInput: AddComponentInput;
   Amenity: Amenity;
   AmenityInput: AmenityInput;
   Auth: Auth;
@@ -664,22 +906,31 @@ export type ResolversParentTypes = {
   BedInput: BedInput;
   Booking: Booking;
   Boolean: Scalars['Boolean']['output'];
+  ComponentType: ComponentType;
   CreateBookingInput: CreateBookingInput;
+  CreateComponentTypeInput: CreateComponentTypeInput;
+  CreatePageInput: CreatePageInput;
   CreatePropertyInput: CreatePropertyInput;
   CreateUserInput: CreateUserInput;
+  DateTime: Scalars['DateTime']['output'];
   DeleteS3ObjectInput: DeleteS3ObjectInput;
   DeleteS3ObjectResponse: DeleteS3ObjectResponse;
+  FeaturedImage: FeaturedImage;
+  FeaturedImageInput: FeaturedImageInput;
   HouseRules: HouseRules;
   HouseRulesInput: HouseRulesInput;
   ID: Scalars['ID']['output'];
   Image: Image;
   Int: Scalars['Int']['output'];
+  JSON: Scalars['JSON']['output'];
   LoginUserInput: LoginUserInput;
+  MediaAsset: MediaAsset;
   Mutation: {};
   NewBookingInput: NewBookingInput;
   OverviewInput: OverviewInput;
   OverviewItem: OverviewItem;
   Page: Page;
+  PageComponent: PageComponent;
   Property: Property;
   PropertyLite: PropertyLite;
   Query: {};
@@ -692,8 +943,12 @@ export type ResolversParentTypes = {
   SpaceInput: SpaceInput;
   String: Scalars['String']['output'];
   Update: Update;
+  UpdateComponentInput: UpdateComponentInput;
+  UpdateComponentTypeInput: UpdateComponentTypeInput;
+  UpdateMediaInput: UpdateMediaInput;
   UpdatePageHeading: UpdatePageHeading;
   UpdatePageHeroImgKey: UpdatePageHeroImgKey;
+  UpdatePageInput: UpdatePageInput;
   UpdatePageText: UpdatePageText;
   UpdatePropertyAmenitiesInput: UpdatePropertyAmenitiesInput;
   UpdatePropertyDescriptionInput: UpdatePropertyDescriptionInput;
@@ -740,9 +995,37 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ComponentTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ComponentType'] = ResolversParentTypes['ComponentType']> = {
+  category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  defaultData?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isActive?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  previewTemplate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  schema?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
 export type DeleteS3ObjectResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteS3ObjectResponse'] = ResolversParentTypes['DeleteS3ObjectResponse']> = {
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FeaturedImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['FeaturedImage'] = ResolversParentTypes['FeaturedImage']> = {
+  alt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  height?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  width?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -763,25 +1046,51 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
+
+export type MediaAssetResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAsset'] = ResolversParentTypes['MediaAsset']> = {
+  altText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  caption?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  dimensions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  mimeType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  originalName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  size?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  tags?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  thumbnailUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  usedIn?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   UpdatePageHeading?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageHeadingArgs, 'heading' | 'slug'>>;
   UpdatePageHeroImgKey?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageHeroImgKeyArgs, 'imgKey' | 'slug'>>;
   UpdatePageText?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageTextArgs, 'slug' | 'text'>>;
   createAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationCreateAmenityArgs, 'input'>>;
   createBooking?: Resolver<Array<Maybe<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
+  createPage?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationCreatePageArgs, 'input'>>;
   createProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationCreatePropertyArgs, 'input'>>;
   createSeedAmenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
   createSeedSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
   createSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationCreateSpaceArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
+  deletePage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeletePageArgs, 'id'>>;
   deleteS3Objects?: Resolver<ResolversTypes['DeleteS3ObjectResponse'], ParentType, ContextType, RequireFields<MutationDeleteS3ObjectsArgs, 'input'>>;
   loginUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
+  publishPage?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationPublishPageArgs, 'id'>>;
   removeAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationRemoveAmenityArgs, '_id'>>;
   removeBooking?: Resolver<ResolversTypes['RemoveBookingResponse'], ParentType, ContextType, RequireFields<MutationRemoveBookingArgs, 'input'>>;
   removeProperty?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationRemovePropertyArgs, '_id'>>;
   removeSpace?: Resolver<ResolversTypes['Space'], ParentType, ContextType, RequireFields<MutationRemoveSpaceArgs, '_id'>>;
   removeUser?: Resolver<ResolversTypes['Auth'], ParentType, ContextType, RequireFields<MutationRemoveUserArgs, 'input'>>;
   updateAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationUpdateAmenityArgs, '_id' | 'input'>>;
+  updatePage?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageArgs, 'id' | 'input'>>;
   updatePropertyAmenities?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyAmenitiesArgs, 'input'>>;
   updatePropertyDescription?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyDescriptionArgs, 'input'>>;
   updatePropertyHeaderImg?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyHeaderImgArgs, 'input'>>;
@@ -802,10 +1111,34 @@ export type OverviewItemResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type PageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Page'] = ResolversParentTypes['Page']> = {
-  heading?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  heroImgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  components?: Resolver<Array<ResolversTypes['PageComponent']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  featuredImage?: Resolver<Maybe<ResolversTypes['FeaturedImage']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  layoutTemplate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  metaDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  metaKeywords?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  publishedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['PageStatus'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PageComponentResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageComponent'] = ResolversParentTypes['PageComponent']> = {
+  componentData?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  componentType?: Resolver<ResolversTypes['ComponentType'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  customCSS?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  customClasses?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isVisible?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes['Page'], ParentType, ContextType>;
+  section?: Resolver<ResolversTypes['ComponentSection'], ParentType, ContextType>;
+  sortOrder?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -833,6 +1166,8 @@ export type PropertyLiteResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  componentType?: Resolver<Maybe<ResolversTypes['ComponentType']>, ParentType, ContextType, RequireFields<QueryComponentTypeArgs, 'id'>>;
+  componentTypes?: Resolver<Array<ResolversTypes['ComponentType']>, ParentType, ContextType, Partial<QueryComponentTypesArgs>>;
   getAboutPgImg?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
   getAmenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
@@ -847,6 +1182,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPropertyById?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyByIdArgs, '_id'>>;
   getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, '_id'>>;
   getSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
+  mediaAsset?: Resolver<Maybe<ResolversTypes['MediaAsset']>, ParentType, ContextType, RequireFields<QueryMediaAssetArgs, 'id'>>;
+  mediaAssets?: Resolver<Array<ResolversTypes['MediaAsset']>, ParentType, ContextType, Partial<QueryMediaAssetsArgs>>;
+  page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType, Partial<QueryPageArgs>>;
+  pageComponents?: Resolver<Array<ResolversTypes['PageComponent']>, ParentType, ContextType, RequireFields<QueryPageComponentsArgs, 'pageId'>>;
+  pages?: Resolver<Array<ResolversTypes['Page']>, ParentType, ContextType, Partial<QueryPagesArgs>>;
   queryBookingsByProperty?: Resolver<Maybe<Array<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<QueryQueryBookingsByPropertyArgs, 'propertyId'>>;
 };
 
@@ -910,12 +1250,18 @@ export type Resolvers<ContextType = any> = {
   Auth?: AuthResolvers<ContextType>;
   Bed?: BedResolvers<ContextType>;
   Booking?: BookingResolvers<ContextType>;
+  ComponentType?: ComponentTypeResolvers<ContextType>;
+  DateTime?: GraphQLScalarType;
   DeleteS3ObjectResponse?: DeleteS3ObjectResponseResolvers<ContextType>;
+  FeaturedImage?: FeaturedImageResolvers<ContextType>;
   HouseRules?: HouseRulesResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
+  JSON?: GraphQLScalarType;
+  MediaAsset?: MediaAssetResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   OverviewItem?: OverviewItemResolvers<ContextType>;
   Page?: PageResolvers<ContextType>;
+  PageComponent?: PageComponentResolvers<ContextType>;
   Property?: PropertyResolvers<ContextType>;
   PropertyLite?: PropertyLiteResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

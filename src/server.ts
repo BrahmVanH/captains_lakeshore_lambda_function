@@ -31,7 +31,7 @@ const corsMiddleware: middleware.MiddlewareFn<typeof requestHandler> = async (ev
 	} else {
 		return (result) => {
 			result.statusCode = 403;
-			result.body = 'Origin not allowed' + origin;
+			result.body = 'Forbidden';
 			return Promise.resolve();
 		};
 	}
