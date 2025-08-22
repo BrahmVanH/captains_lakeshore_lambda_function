@@ -29,8 +29,6 @@ const allowedOrigins = ((_a = process.env.ALLOWED_ORIGINS) === null || _a === vo
 const requestHandler = aws_lambda_1.handlers.createAPIGatewayProxyEventV2RequestHandler();
 const corsMiddleware = (event) => __awaiter(void 0, void 0, void 0, function* () {
     const origin = event.headers.origin;
-    console.log("headers: ", event);
-    console.log('origin is', origin);
     if (origin && allowedOrigins.includes(origin)) {
         return (result) => {
             result.headers = Object.assign(Object.assign({}, result.headers), { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' });
@@ -40,7 +38,7 @@ const corsMiddleware = (event) => __awaiter(void 0, void 0, void 0, function* ()
     else {
         return (result) => {
             result.statusCode = 403;
-            result.body = 'Origin not allowed' + origin;
+            result.body = 'Forbidden';
             return Promise.resolve();
         };
     }

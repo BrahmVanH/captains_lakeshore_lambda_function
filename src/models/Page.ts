@@ -1,4 +1,4 @@
-import { Page } from "../generated/graphql";
+import { Page, PageStatus } from "../generated/graphql";
 import { model, Schema } from "mongoose";
 
 const pageSchema = new Schema<Page>({
@@ -27,8 +27,8 @@ const pageSchema = new Schema<Page>({
   },
   status: {
     type: String,
-    enum: ['draft', 'published', 'archived'],
-    default: 'draft',
+    enum: Object.values(PageStatus),
+    default: PageStatus.Draft,
     index: true
   },
   featuredImage: {

@@ -18,6 +18,21 @@ exports.queries = `
         getAmenities: [Amenity!]!
         getSpaces: [Space!]!
         getPageBySlug(slug: String!): Page!
+
+      # Pages
+      pages(status: PageStatus, limit: Int, offset: Int): [Page!]!
+    page(id: ID, slug: String): Page
+
+    # Component Types
+    componentTypes(isActive: Boolean): [ComponentType!]!
+    componentType(id: ID!): ComponentType
+
+    # Components
+    pageComponents(pageId: ID!, section: ComponentSection): [PageComponent!]!
+
+    # Media
+    mediaAssets(tags: [String!], limit: Int, offset: Int): [MediaAsset!]!
+    mediaAsset(id: ID!): MediaAsset
     }
 `;
 //# sourceMappingURL=queries.js.map

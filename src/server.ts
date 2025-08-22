@@ -6,7 +6,7 @@ import resolvers from './graphql/resolvers/';
 import { startServerAndCreateLambdaHandler, handlers, middleware } from '@as-integrations/aws-lambda';
 import dotenv from 'dotenv';
 
-dotenv.config();
+process.loadEnvFile();
 
 const server = new ApolloServer<BaseContext>({
 	typeDefs,

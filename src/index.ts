@@ -9,7 +9,7 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 
-dotenv.config();
+process.loadEnvFile();
 
 const app = express();
 const httpServer = http.createServer(app);

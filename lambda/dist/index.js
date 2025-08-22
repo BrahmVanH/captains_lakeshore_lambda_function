@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-const schema_1 = __importDefault(require("./graphql/schema/"));
-const resolvers_1 = __importDefault(require("./graphql/resolvers/"));
+const schema_1 = __importDefault(require("./graphql/schema"));
+const resolvers_1 = __importDefault(require("./graphql/resolvers"));
 const server_1 = require("@apollo/server");
 const drainHttpServer_1 = require("@apollo/server/plugin/drainHttpServer");
 const express4_1 = require("@apollo/server/express4");
