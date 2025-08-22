@@ -178,7 +178,7 @@
                   "S3Bucket": {
                     "Ref": "ServerlessDeploymentBucket"
                   },
-                  "S3Key": "serverless/captains-lakefront-rentals-api/dev/1755822190168-2025-08-22T00:23:10.168Z/captains-lakefront-rentals-api.zip"
+                  "S3Key": "serverless/captains-lakefront-rentals-api/dev/1755829236597-2025-08-22T02:20:36.597Z/captains-lakefront-rentals-api.zip"
                 },
                 "Handler": "lambda/dist/server.handler",
                 "Runtime": "nodejs22.x",
@@ -500,7 +500,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/captains-lakefront-rentals-api/dev/code-artifacts",
         "artifact": "C:\\Users\\Brahm\\Dev-Stuff\\Apps\\captains_lakefront_rentals\\lambda_function\\.serverless\\captains-lakefront-rentals-api.zip",
-        "artifactDirectoryName": "serverless/captains-lakefront-rentals-api/dev/1755822190168-2025-08-22T00:23:10.168Z"
+        "artifactDirectoryName": "serverless/captains-lakefront-rentals-api/dev/1755829236597-2025-08-22T02:20:36.597Z"
       },
       "plugins": [
         "serverless-offline"
@@ -709,7 +709,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/captains-lakefront-rentals-api/dev/1755822190168-2025-08-22T00:23:10.168Z/captains-lakefront-rentals-api.zip"
+                "S3Key": "serverless/captains-lakefront-rentals-api/dev/1755829236597-2025-08-22T02:20:36.597Z/captains-lakefront-rentals-api.zip"
               },
               "Handler": "lambda/dist/server.handler",
               "Runtime": "nodejs22.x",
@@ -1034,12 +1034,12 @@
     "serviceProviderAwsCfStackName": "captains-lakefront-rentals-api-dev",
     "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:245496214032:stack/captains-lakefront-rentals-api-dev/79819ac0-ead3-11ee-80c8-0affe8ccf291",
     "serviceProviderAwsCfStackCreated": "2024-03-25T18:14:09.333Z",
-    "serviceProviderAwsCfStackUpdated": "2025-08-21T23:52:41.843Z",
+    "serviceProviderAwsCfStackUpdated": "2025-08-22T00:23:33.299Z",
     "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
         "OutputKey": "GraphqlLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:us-east-1:245496214032:function:captains-lakefront-rentals-api-dev-graphql:12",
+        "OutputValue": "arn:aws:lambda:us-east-1:245496214032:function:captains-lakefront-rentals-api-dev-graphql:13",
         "Description": "Current Lambda function version",
         "ExportName": "sls-captains-lakefront-rentals-api-dev-GraphqlLambdaFunctionQualifiedArn"
       },
@@ -1225,7 +1225,7 @@
               "S3Bucket": {
                 "Ref": "ServerlessDeploymentBucket"
               },
-              "S3Key": "serverless/captains-lakefront-rentals-api/dev/1755822190168-2025-08-22T00:23:10.168Z/captains-lakefront-rentals-api.zip"
+              "S3Key": "serverless/captains-lakefront-rentals-api/dev/1755829236597-2025-08-22T02:20:36.597Z/captains-lakefront-rentals-api.zip"
             },
             "Handler": "lambda/dist/server.handler",
             "Runtime": "nodejs22.x",

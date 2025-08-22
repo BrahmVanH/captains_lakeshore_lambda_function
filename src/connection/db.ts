@@ -1,8 +1,7 @@
 import { set, connect } from 'mongoose';
-import dotenv from 'dotenv';
 
 export const connectToDb = async () => {
-	dotenv.config();
+	process.loadEnvFile();
 	const MONGODB_URI = process.env.MONGODB_URI ?? '';
 
 	try {

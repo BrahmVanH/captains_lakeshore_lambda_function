@@ -1,5 +1,4 @@
 
-import dotenv from 'dotenv';
 import typeDefs from './graphql/schema';
 import resolvers from './graphql/resolvers';
 import { ApolloServer as ApolloDServerDev, BaseContext } from '@apollo/server';
