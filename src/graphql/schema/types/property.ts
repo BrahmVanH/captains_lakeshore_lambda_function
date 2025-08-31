@@ -10,6 +10,7 @@ export const propertyTypes = /* GraphQL */ `
         importantInfo: [String]
         houseRules: HouseRules
         headerImgKey: String
+        s3DirectoryPrefix: String
         bookings: [Booking!]
     }
 

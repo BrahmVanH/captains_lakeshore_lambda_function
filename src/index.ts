@@ -7,8 +7,10 @@ import { expressMiddleware } from '@apollo/server/express4';
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
+import dotenv from 'dotenv';
 
-process.loadEnvFile();
+dotenv.config({ quiet: true });
+
 
 const app = express();
 const httpServer = http.createServer(app);

@@ -5,6 +5,7 @@ export const queries = /* GraphQL */ `
         getHomePgImgs: homePgImgPack!
         getHideawayImgs: hideawayImgPack!
         getCottageImgs: cottageImgPack!
+        getPropertyImgs(_id: ID!): [ImageObject]!
         getAboutPgImg: String!
         getImg(imgKey: String!): Image!
         getImgs(imgKeys: [String!]!): [Image!]!

@@ -178,6 +178,15 @@ export type Image = {
   url: Scalars['String']['output'];
 };
 
+export type ImageObject = {
+  __typename?: 'ImageObject';
+  imgKey: Scalars['String']['output'];
+  original: Scalars['String']['output'];
+  originalAlt: Scalars['String']['output'];
+  thumbnail: Scalars['String']['output'];
+  thumbnailAlt: Scalars['String']['output'];
+};
+
 export type LoginUserInput = {
   userPassword: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -206,6 +215,7 @@ export type Mutation = {
   UpdatePageHeading: Page;
   UpdatePageHeroImgKey: Page;
   UpdatePageText: Page;
+  UpdatePropertyS3DirectoryPrefix: Property;
   createAmenity: Amenity;
   createBooking: Array<Maybe<Booking>>;
   createPage: Page;
@@ -254,6 +264,11 @@ export type MutationUpdatePageHeroImgKeyArgs = {
 export type MutationUpdatePageTextArgs = {
   slug: Scalars['String']['input'];
   text: Scalars['String']['input'];
+};
+
+
+export type MutationUpdatePropertyS3DirectoryPrefixArgs = {
+  input: UpdatePropertyS3DirectoryPrefixInput;
 };
 
 
@@ -465,6 +480,7 @@ export type Property = {
   propertyDescription?: Maybe<Scalars['String']['output']>;
   propertyName: Scalars['String']['output'];
   roomsAndBeds?: Maybe<Array<Maybe<RoomBed>>>;
+  s3DirectoryPrefix?: Maybe<Scalars['String']['output']>;
   spacesItems?: Maybe<Array<Maybe<Space>>>;
 };
 
@@ -492,6 +508,7 @@ export type Query = {
   getProperties: Array<Property>;
   getPropertiesLite?: Maybe<Array<Maybe<PropertyLite>>>;
   getPropertyById: Property;
+  getPropertyImgs: Array<Maybe<ImageObject>>;
   getPropertyInfo: Property;
   getSpaces: Array<Space>;
   mediaAsset?: Maybe<MediaAsset>;
@@ -529,6 +546,11 @@ export type QueryGetPageBySlugArgs = {
 
 
 export type QueryGetPropertyByIdArgs = {
+  _id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetPropertyImgsArgs = {
   _id: Scalars['ID']['input'];
 };
 
@@ -712,6 +734,11 @@ export type UpdatePropertyRoomsAndBedsInput = {
   roomsAndBeds?: InputMaybe<Array<InputMaybe<RoomBedInput>>>;
 };
 
+export type UpdatePropertyS3DirectoryPrefixInput = {
+  _id: Scalars['ID']['input'];
+  s3DirectoryPrefix?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdatePropertySpacesInput = {
   _id: Scalars['ID']['input'];
   spacesItems?: InputMaybe<Array<Scalars['ID']['input']>>;
@@ -743,15 +770,6 @@ export type HomePgImgPack = {
   cottageImgUrl: Scalars['String']['output'];
   headerImgUrl: Scalars['String']['output'];
   hideawayImgUrl: Scalars['String']['output'];
-};
-
-export type ImageObject = {
-  __typename?: 'imageObject';
-  imgKey: Scalars['String']['output'];
-  original: Scalars['String']['output'];
-  originalAlt: Scalars['String']['output'];
-  thumbnail: Scalars['String']['output'];
-  thumbnailAlt: Scalars['String']['output'];
 };
 
 
@@ -849,6 +867,7 @@ export type ResolversTypes = {
   HouseRulesInput: HouseRulesInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Image: ResolverTypeWrapper<Image>;
+  ImageObject: ResolverTypeWrapper<ImageObject>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   LoginUserInput: LoginUserInput;
@@ -888,12 +907,12 @@ export type ResolversTypes = {
   UpdatePropertyNameInput: UpdatePropertyNameInput;
   UpdatePropertyOverviewItemsInput: UpdatePropertyOverviewItemsInput;
   UpdatePropertyRoomsAndBedsInput: UpdatePropertyRoomsAndBedsInput;
+  UpdatePropertyS3DirectoryPrefixInput: UpdatePropertyS3DirectoryPrefixInput;
   UpdatePropertySpacesInput: UpdatePropertySpacesInput;
   User: ResolverTypeWrapper<User>;
   cottageImgPack: ResolverTypeWrapper<CottageImgPack>;
   hideawayImgPack: ResolverTypeWrapper<HideawayImgPack>;
   homePgImgPack: ResolverTypeWrapper<HomePgImgPack>;
-  imageObject: ResolverTypeWrapper<ImageObject>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -921,6 +940,7 @@ export type ResolversParentTypes = {
   HouseRulesInput: HouseRulesInput;
   ID: Scalars['ID']['output'];
   Image: Image;
+  ImageObject: ImageObject;
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
   LoginUserInput: LoginUserInput;
@@ -959,12 +979,12 @@ export type ResolversParentTypes = {
   UpdatePropertyNameInput: UpdatePropertyNameInput;
   UpdatePropertyOverviewItemsInput: UpdatePropertyOverviewItemsInput;
   UpdatePropertyRoomsAndBedsInput: UpdatePropertyRoomsAndBedsInput;
+  UpdatePropertyS3DirectoryPrefixInput: UpdatePropertyS3DirectoryPrefixInput;
   UpdatePropertySpacesInput: UpdatePropertySpacesInput;
   User: User;
   cottageImgPack: CottageImgPack;
   hideawayImgPack: HideawayImgPack;
   homePgImgPack: HomePgImgPack;
-  imageObject: ImageObject;
 };
 
 export type AmenityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity']> = {
@@ -1046,6 +1066,15 @@ export type ImageResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ImageObjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImageObject'] = ResolversParentTypes['ImageObject']> = {
+  imgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  original?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  originalAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  thumbnailAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
@@ -1072,6 +1101,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   UpdatePageHeading?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageHeadingArgs, 'heading' | 'slug'>>;
   UpdatePageHeroImgKey?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageHeroImgKeyArgs, 'imgKey' | 'slug'>>;
   UpdatePageText?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationUpdatePageTextArgs, 'slug' | 'text'>>;
+  UpdatePropertyS3DirectoryPrefix?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<MutationUpdatePropertyS3DirectoryPrefixArgs, 'input'>>;
   createAmenity?: Resolver<ResolversTypes['Amenity'], ParentType, ContextType, RequireFields<MutationCreateAmenityArgs, 'input'>>;
   createBooking?: Resolver<Array<Maybe<ResolversTypes['Booking']>>, ParentType, ContextType, RequireFields<MutationCreateBookingArgs, 'input'>>;
   createPage?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<MutationCreatePageArgs, 'input'>>;
@@ -1153,6 +1183,7 @@ export type PropertyResolvers<ContextType = any, ParentType extends ResolversPar
   propertyDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   propertyName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   roomsAndBeds?: Resolver<Maybe<Array<Maybe<ResolversTypes['RoomBed']>>>, ParentType, ContextType>;
+  s3DirectoryPrefix?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   spacesItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['Space']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1180,6 +1211,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
   getPropertiesLite?: Resolver<Maybe<Array<Maybe<ResolversTypes['PropertyLite']>>>, ParentType, ContextType>;
   getPropertyById?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyByIdArgs, '_id'>>;
+  getPropertyImgs?: Resolver<Array<Maybe<ResolversTypes['ImageObject']>>, ParentType, ContextType, RequireFields<QueryGetPropertyImgsArgs, '_id'>>;
   getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, '_id'>>;
   getSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
   mediaAsset?: Resolver<Maybe<ResolversTypes['MediaAsset']>, ParentType, ContextType, RequireFields<QueryMediaAssetArgs, 'id'>>;
@@ -1218,13 +1250,13 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type CottageImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['cottageImgPack'] = ResolversParentTypes['cottageImgPack']> = {
-  galleryArray?: Resolver<Array<ResolversTypes['imageObject']>, ParentType, ContextType>;
+  galleryArray?: Resolver<Array<ResolversTypes['ImageObject']>, ParentType, ContextType>;
   headerUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type HideawayImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['hideawayImgPack'] = ResolversParentTypes['hideawayImgPack']> = {
-  galleryArray?: Resolver<Array<ResolversTypes['imageObject']>, ParentType, ContextType>;
+  galleryArray?: Resolver<Array<ResolversTypes['ImageObject']>, ParentType, ContextType>;
   headerUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1233,15 +1265,6 @@ export type HomePgImgPackResolvers<ContextType = any, ParentType extends Resolve
   cottageImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   headerImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   hideawayImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ImageObjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['imageObject'] = ResolversParentTypes['imageObject']> = {
-  imgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  original?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  originalAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  thumbnailAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1256,6 +1279,7 @@ export type Resolvers<ContextType = any> = {
   FeaturedImage?: FeaturedImageResolvers<ContextType>;
   HouseRules?: HouseRulesResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
+  ImageObject?: ImageObjectResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   MediaAsset?: MediaAssetResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -1272,6 +1296,5 @@ export type Resolvers<ContextType = any> = {
   cottageImgPack?: CottageImgPackResolvers<ContextType>;
   hideawayImgPack?: HideawayImgPackResolvers<ContextType>;
   homePgImgPack?: HomePgImgPackResolvers<ContextType>;
-  imageObject?: ImageObjectResolvers<ContextType>;
 };
 

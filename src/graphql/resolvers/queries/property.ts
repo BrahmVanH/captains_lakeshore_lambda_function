@@ -81,4 +81,20 @@ export const propertyQueries: QueryResolvers = {
       throw new Error('Error in getting property info: ' + err.message);
     }
   },
+  getPropertyImgs: async (_: {}, { _id }: { _id: string }, __: any) => {
+    try {
+      await connectToDb();
+      if (!_id) {
+        console.error("No id parameter present in getPropertyImgs");
+        throw new Error('Invalid ID');
+      }
+      const property: IProperty | null = await Property.findOne({ _id }).populate('bookings').populate('amenities').populate('spacesItems').populate('overviewItems');
+      if (!property) {
+        throw new Error('Could not find property with that name');
+      }
+
+      
+
+    }
+  }
 }

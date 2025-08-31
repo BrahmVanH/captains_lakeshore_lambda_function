@@ -1,7 +1,11 @@
 import { set, connect } from 'mongoose';
+import dotenv from 'dotenv';
 
 export const connectToDb = async () => {
-	process.loadEnvFile();
+
+	dotenv.config({ quiet: true });
+
+
 	const MONGODB_URI = process.env.MONGODB_URI ?? '';
 
 	try {

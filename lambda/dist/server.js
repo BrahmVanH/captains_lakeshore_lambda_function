@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 const server_1 = require("@apollo/server");
@@ -25,9 +24,10 @@ const server = new server_1.ApolloServer({
     resolvers: resolvers_1.default,
     introspection: true,
 });
-const allowedOrigins = ((_a = process.env.ALLOWED_ORIGINS) === null || _a === void 0 ? void 0 : _a.split(',')) || [];
 const requestHandler = aws_lambda_1.handlers.createAPIGatewayProxyEventV2RequestHandler();
 const corsMiddleware = (event) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const allowedOrigins = ((_a = process.env.ALLOWED_ORIGINS) === null || _a === void 0 ? void 0 : _a.split(',')) || [];
     const origin = event.headers.origin;
     if (origin && allowedOrigins.includes(origin)) {
         return (result) => {

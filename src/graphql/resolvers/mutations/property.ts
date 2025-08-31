@@ -13,6 +13,7 @@ import {
   MutationUpdatePropertyHouseRulesArgs,
   MutationUpdatePropertyImportantInfoArgs,
   MutationUpdatePropertySpacesArgs,
+  MutationUpdatePropertyS3DirectoryPrefixArgs,
 } from '../../../generated/graphql';
 
 export const propertyMutations: MutationResolvers = {
@@ -94,6 +95,28 @@ export const propertyMutations: MutationResolvers = {
     try {
       await connectToDb();
       const property = await Property.findOneAndUpdate({ _id }, { $set: { headerImgKey } });
+      if (!property) {
+        throw new Error('Could not find property with that name');
+      }
+      return property;
+    } catch (err: any) {
+      throw new Error('Error in updating property: ' + err.message);
+    }
+  },
+  UpdatePropertyS3DirectoryPrefix: async (_: {}, args: MutationUpdatePropertyS3DirectoryPrefixArgs, __: any) => {
+    if (!args.input) {
+      throw new Error('No input object was presented for updating property');
+    }
+    const { _id, s3DirectoryPrefix } = args.input;
+    if (!_id) {
+      throw new Error('Property name is undefined');
+    }
+    if (!s3DirectoryPrefix) {
+      throw new Error('Update object is undefined');
+    }
+    try {
+      await connectToDb();
+      const property = await Property.findOneAndUpdate({ _id }, { $set: { s3DirectoryPrefix } });
       if (!property) {
         throw new Error('Could not find property with that name');
       }

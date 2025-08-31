@@ -1,5 +1,5 @@
 export const imageTypes = /* GraphQL */ `
-    type imageObject {
+    type ImageObject {
         imgKey: String!
         original: String!
         thumbnail: String!
@@ -25,11 +25,11 @@ export const imageTypes = /* GraphQL */ `
 
     type hideawayImgPack {
         headerUrl: String!
-        galleryArray: [imageObject!]!
+        galleryArray: [ImageObject!]!
     }
 
     type cottageImgPack {
         headerUrl: String!
-        galleryArray: [imageObject!]!
+        galleryArray: [ImageObject!]!
     }
 `;

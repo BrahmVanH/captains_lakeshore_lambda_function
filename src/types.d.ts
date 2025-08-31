@@ -90,3 +90,8 @@ export type S3Object = {
 	Size: number;
 	StorageClass: string;
 };
+
+export enum S3ImagePrefixOptions {
+captains_hideaway_png", "captains_mackinac_lookout", "captains_cottage_png"]
+
+}

@@ -93,6 +93,9 @@ const propertySchema: Schema<PropertyType> = new Schema<PropertyType>({
 	headerImgKey: {
 		type: String,
 	},
+	s3DirectoryPrefix: {
+		type: String,
+	},
 	bookings: [
 		{
 			type: Types.ObjectId,

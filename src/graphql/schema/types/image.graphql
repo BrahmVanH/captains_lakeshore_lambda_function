@@ -1,5 +1,5 @@
 
-type imageObject {
+type ImageObject {
 	imgKey: String!
 	original: String!
 	thumbnail: String!
@@ -27,10 +27,10 @@ type homePgImgPack {
 
 type hideawayImgPack {
 	headerUrl: String!
-	galleryArray: [imageObject!]!
+	galleryArray: [ImageObject!]!
 }
 
 type cottageImgPack {
 	headerUrl: String!
-	galleryArray: [imageObject!]!
+	galleryArray: [ImageObject!]!
 }

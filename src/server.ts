@@ -4,8 +4,10 @@ import { ApolloServer, BaseContext } from '@apollo/server';
 import typeDefs from './graphql/schema/';
 import resolvers from './graphql/resolvers/';
 import { startServerAndCreateLambdaHandler, handlers, middleware } from '@as-integrations/aws-lambda';
+import dotenv from 'dotenv';
 
-process.loadEnvFile();
+dotenv.config({ quiet: true });
+
 
 const server = new ApolloServer<BaseContext>({
 	typeDefs,

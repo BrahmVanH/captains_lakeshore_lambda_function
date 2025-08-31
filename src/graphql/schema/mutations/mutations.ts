@@ -15,6 +15,7 @@ export const mutations = /* GraphQL */ `
         updatePropertyImportantInfo(input: UpdatePropertyImportantInfoInput!): Property!
         updatePropertyHouseRules(input: UpdatePropertyHouseRulesInput!): Property!
         updatePropertyHeaderImg(input: UpdatePropertyHeaderImgInput!): Property!
+        UpdatePropertyS3DirectoryPrefix(input: UpdatePropertyS3DirectoryPrefixInput!): Property!
         deleteS3Objects(input: DeleteS3ObjectInput!): DeleteS3ObjectResponse!
         removeProperty(_id: ID!): Property!
         createProperty(input: CreatePropertyInput!): Property!

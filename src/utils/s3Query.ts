@@ -396,3 +396,15 @@ export const getS3AboutPgImgs = async () => {
 		throw new Error('Error in querying s3 for about page images');
 	}
 };
+
+
+export const getS3ImagesByDirectoryPrefix = async (directoryPrefix: string) => {
+
+	const listObjectsCommandParams = {
+		Bucket: bucketName,
+		Prefix: directoryPrefix
+	}
+	try {
+
+	}
+}

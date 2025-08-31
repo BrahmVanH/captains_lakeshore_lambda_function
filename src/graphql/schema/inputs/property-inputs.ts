@@ -90,4 +90,10 @@ export const propertyInputs = /* GraphQL */ `
         _id: ID!
         houseRules: HouseRulesInput
     }
+
+    input UpdatePropertyS3DirectoryPrefixInput {
+        _id: ID!
+        s3DirectoryPrefix: String
+
+    }
 `;
