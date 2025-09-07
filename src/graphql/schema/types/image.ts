@@ -10,6 +10,7 @@ export const imageTypes = /* GraphQL */ `
     type Image {
         url: String!
         alt: String!
+        key: String!
     }
 
     type DeleteS3ObjectResponse {
@@ -17,19 +18,7 @@ export const imageTypes = /* GraphQL */ `
         message: String!
     }
 
-    type homePgImgPack {
-        headerImgUrl: String!
-        hideawayImgUrl: String!
-        cottageImgUrl: String!
-    }
 
-    type hideawayImgPack {
-        headerUrl: String!
-        galleryArray: [ImageObject!]!
-    }
 
-    type cottageImgPack {
-        headerUrl: String!
-        galleryArray: [ImageObject!]!
-    }
+  
 `;

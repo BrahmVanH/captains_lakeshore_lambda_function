@@ -26,8 +26,7 @@
 		"mongodb": "^6.18.0",
 		"mongoose": "^8.17.2",
 		"multer": "^2.0.2",
-		"ncp": "^2.0.0",
-		"typescript": "^5.9.2"
+		"ncp": "^2.0.0"
 	},
 	"devDependencies": {
 		"@graphql-codegen/cli": "^5.0.2",
@@ -44,7 +43,8 @@
 		"serverless-offline": "^13.3.3",
 		"serverless-plugin-typescript": "^2.1.5",
 		"ts-node": "^10.9.2",
-		"tsconfig-paths": "^4.2.0"
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.9.2"
 	},
 	"author": "Brahm Van Houzen",
 	"license": "MIT"

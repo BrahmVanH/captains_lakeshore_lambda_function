@@ -288,9 +288,7 @@ export const propertyMutations: MutationResolvers = {
       throw new Error('Property name is undefined');
     }
 
-    if (!update?.propertyDescription || !update?.amenities || !update?.headerImgKey) {
-      throw new Error('Update object is undefined');
-    }
+
     try {
       await connectToDb();
 

@@ -86,12 +86,12 @@ export type S3Object = {
 	Key: string;
 	LastModified: Date;
 	ETag: string;
-	ChecksumAlgorithm: string[]; // You might want to specify the actual type here
+	ChecksumAlgorithm?: string[]; // You might want to specify the actual type here
 	Size: number;
 	StorageClass: string;
 };
 
-export enum S3ImagePrefixOptions {
-captains_hideaway_png", "captains_mackinac_lookout", "captains_cottage_png"]
+// export enum S3ImagePrefixOptions {
+// 	captains_hideaway_png", "captains_mackinac_lookout", "captains_cottage_png"
 
-}
+// }

@@ -175,6 +175,7 @@ export type HouseRulesInput = {
 export type Image = {
   __typename?: 'Image';
   alt: Scalars['String']['output'];
+  key: Scalars['String']['output'];
   url: Scalars['String']['output'];
 };
 
@@ -496,19 +497,15 @@ export type Query = {
   __typename?: 'Query';
   componentType?: Maybe<ComponentType>;
   componentTypes: Array<ComponentType>;
-  getAboutPgImg: Scalars['String']['output'];
   getAllUsers?: Maybe<Array<User>>;
   getAmenities: Array<Amenity>;
-  getCottageImgs: CottageImgPack;
-  getHideawayImgs: HideawayImgPack;
-  getHomePgImgs: HomePgImgPack;
   getImg: Image;
   getImgs: Array<Image>;
   getPageBySlug: Page;
   getProperties: Array<Property>;
   getPropertiesLite?: Maybe<Array<Maybe<PropertyLite>>>;
   getPropertyById: Property;
-  getPropertyImgs: Array<Maybe<ImageObject>>;
+  getPropertyImgs: Array<Maybe<Image>>;
   getPropertyInfo: Property;
   getSpaces: Array<Space>;
   mediaAsset?: Maybe<MediaAsset>;
@@ -633,10 +630,11 @@ export type SpaceInput = {
 };
 
 export type Update = {
-  amenities?: InputMaybe<Array<AmenityInput>>;
-  headerImgKey: Scalars['String']['input'];
-  propertyDescription: Scalars['String']['input'];
-  propertyName: Scalars['String']['input'];
+  amenities?: InputMaybe<Array<InputMaybe<AmenityInput>>>;
+  headerImgKey?: InputMaybe<Scalars['String']['input']>;
+  propertyDescription?: InputMaybe<Scalars['String']['input']>;
+  propertyName?: InputMaybe<Scalars['String']['input']>;
+  s3DirectoryPrefix?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateComponentInput = {
@@ -751,25 +749,6 @@ export type User = {
   lastName: Scalars['String']['output'];
   password?: Maybe<Scalars['String']['output']>;
   username: Scalars['String']['output'];
-};
-
-export type CottageImgPack = {
-  __typename?: 'cottageImgPack';
-  galleryArray: Array<ImageObject>;
-  headerUrl: Scalars['String']['output'];
-};
-
-export type HideawayImgPack = {
-  __typename?: 'hideawayImgPack';
-  galleryArray: Array<ImageObject>;
-  headerUrl: Scalars['String']['output'];
-};
-
-export type HomePgImgPack = {
-  __typename?: 'homePgImgPack';
-  cottageImgUrl: Scalars['String']['output'];
-  headerImgUrl: Scalars['String']['output'];
-  hideawayImgUrl: Scalars['String']['output'];
 };
 
 
@@ -910,9 +889,6 @@ export type ResolversTypes = {
   UpdatePropertyS3DirectoryPrefixInput: UpdatePropertyS3DirectoryPrefixInput;
   UpdatePropertySpacesInput: UpdatePropertySpacesInput;
   User: ResolverTypeWrapper<User>;
-  cottageImgPack: ResolverTypeWrapper<CottageImgPack>;
-  hideawayImgPack: ResolverTypeWrapper<HideawayImgPack>;
-  homePgImgPack: ResolverTypeWrapper<HomePgImgPack>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -982,9 +958,6 @@ export type ResolversParentTypes = {
   UpdatePropertyS3DirectoryPrefixInput: UpdatePropertyS3DirectoryPrefixInput;
   UpdatePropertySpacesInput: UpdatePropertySpacesInput;
   User: User;
-  cottageImgPack: CottageImgPack;
-  hideawayImgPack: HideawayImgPack;
-  homePgImgPack: HomePgImgPack;
 };
 
 export type AmenityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity']> = {
@@ -1062,6 +1035,7 @@ export type HouseRulesResolvers<ContextType = any, ParentType extends ResolversP
 
 export type ImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
   alt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1199,19 +1173,15 @@ export type PropertyLiteResolvers<ContextType = any, ParentType extends Resolver
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   componentType?: Resolver<Maybe<ResolversTypes['ComponentType']>, ParentType, ContextType, RequireFields<QueryComponentTypeArgs, 'id'>>;
   componentTypes?: Resolver<Array<ResolversTypes['ComponentType']>, ParentType, ContextType, Partial<QueryComponentTypesArgs>>;
-  getAboutPgImg?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
   getAmenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
-  getCottageImgs?: Resolver<ResolversTypes['cottageImgPack'], ParentType, ContextType>;
-  getHideawayImgs?: Resolver<ResolversTypes['hideawayImgPack'], ParentType, ContextType>;
-  getHomePgImgs?: Resolver<ResolversTypes['homePgImgPack'], ParentType, ContextType>;
   getImg?: Resolver<ResolversTypes['Image'], ParentType, ContextType, RequireFields<QueryGetImgArgs, 'imgKey'>>;
   getImgs?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<QueryGetImgsArgs, 'imgKeys'>>;
   getPageBySlug?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<QueryGetPageBySlugArgs, 'slug'>>;
   getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
   getPropertiesLite?: Resolver<Maybe<Array<Maybe<ResolversTypes['PropertyLite']>>>, ParentType, ContextType>;
   getPropertyById?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyByIdArgs, '_id'>>;
-  getPropertyImgs?: Resolver<Array<Maybe<ResolversTypes['ImageObject']>>, ParentType, ContextType, RequireFields<QueryGetPropertyImgsArgs, '_id'>>;
+  getPropertyImgs?: Resolver<Array<Maybe<ResolversTypes['Image']>>, ParentType, ContextType, RequireFields<QueryGetPropertyImgsArgs, '_id'>>;
   getPropertyInfo?: Resolver<ResolversTypes['Property'], ParentType, ContextType, RequireFields<QueryGetPropertyInfoArgs, '_id'>>;
   getSpaces?: Resolver<Array<ResolversTypes['Space']>, ParentType, ContextType>;
   mediaAsset?: Resolver<Maybe<ResolversTypes['MediaAsset']>, ParentType, ContextType, RequireFields<QueryMediaAssetArgs, 'id'>>;
@@ -1249,25 +1219,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CottageImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['cottageImgPack'] = ResolversParentTypes['cottageImgPack']> = {
-  galleryArray?: Resolver<Array<ResolversTypes['ImageObject']>, ParentType, ContextType>;
-  headerUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type HideawayImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['hideawayImgPack'] = ResolversParentTypes['hideawayImgPack']> = {
-  galleryArray?: Resolver<Array<ResolversTypes['ImageObject']>, ParentType, ContextType>;
-  headerUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type HomePgImgPackResolvers<ContextType = any, ParentType extends ResolversParentTypes['homePgImgPack'] = ResolversParentTypes['homePgImgPack']> = {
-  cottageImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  headerImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  hideawayImgUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = any> = {
   Amenity?: AmenityResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
@@ -1293,8 +1244,5 @@ export type Resolvers<ContextType = any> = {
   RoomBed?: RoomBedResolvers<ContextType>;
   Space?: SpaceResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  cottageImgPack?: CottageImgPackResolvers<ContextType>;
-  hideawayImgPack?: HideawayImgPackResolvers<ContextType>;
-  homePgImgPack?: HomePgImgPackResolvers<ContextType>;
 };
 

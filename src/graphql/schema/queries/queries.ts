@@ -2,11 +2,7 @@ export const queries = /* GraphQL */ `
     type Query {
         getAllUsers: [User!]
         queryBookingsByProperty(propertyId: ID!): [Booking!]
-        getHomePgImgs: homePgImgPack!
-        getHideawayImgs: hideawayImgPack!
-        getCottageImgs: cottageImgPack!
-        getPropertyImgs(_id: ID!): [ImageObject]!
-        getAboutPgImg: String!
+        getPropertyImgs(_id: ID!): [Image]!
         getImg(imgKey: String!): Image!
         getImgs(imgKeys: [String!]!): [Image!]!
         getPropertyInfo(_id: ID!): Property!

@@ -1,64 +1,10 @@
 import { QueryResolvers } from "../../../generated/graphql";
-import { getImgTag, getS3AboutPgImgs, getS3CottagePgImgs, getS3HideawayPgImgs, getS3HomePageImgs, handleSignUrl } from "../../../utils/s3Query";
+import { getImgTag, handleSignUrl } from "../../../utils/s3Query";
 
 export const imageQueries: QueryResolvers = {
 
-  getHomePgImgs: async () => {
-    try {
-      const homePgImgs = await getS3HomePageImgs();
-      if (homePgImgs instanceof Array) {
-        console.error('Error in querying s3 for homepage images', homePgImgs);
-        throw new Error('Error in querying s3 for homepage images');
-      }
 
-      if (!homePgImgs?.headerImgUrl || !homePgImgs?.hideawayImgUrl || !homePgImgs?.cottageImgUrl) {
-        console.error('Error in querying s3 for homepage images');
-        throw new Error('Something went wrong in fetching object from s3');
-      }
-      return homePgImgs;
-    } catch (err: any) {
-      console.error('Error in querying s3 for homepage images', err);
-      throw new Error('Error in querying s3 for homepage images: ' + err.message);
-    }
-  },
-  getHideawayImgs: async () => {
-    try {
-      const hideawayImgs = await getS3HideawayPgImgs();
 
-      if (!hideawayImgs) {
-        throw new Error('Something went wrong in fetching hideaway object from S3');
-      }
-      return hideawayImgs;
-    } catch (err: any) {
-      console.error('Error in getHideawayImgs...', err);
-      throw new Error('Error in getting hideaway images from s3: ' + err.message);
-    }
-  },
-  getCottageImgs: async () => {
-    try {
-      const cottageImgs = await getS3CottagePgImgs();
-
-      if (!cottageImgs) {
-        throw new Error('Something went wrong in fetching cottage object from S3');
-      }
-      return cottageImgs;
-    } catch (err: any) {
-      console.error('Error in getCottageImgs...', err);
-      throw new Error('Error in getting cottage images from s3: ' + err.message);
-    }
-  },
-  getAboutPgImg: async () => {
-    try {
-      const aboutPgImgs = await getS3AboutPgImgs();
-      if (!aboutPgImgs) {
-        throw new Error('Something went wrong in fetching object from s3');
-      }
-      return aboutPgImgs;
-    } catch (err: any) {
-      console.error('Error in querying s3 for about page image', err);
-      throw new Error('Error in querying s3 for about page image: ' + err.message);
-    }
-  },
   getImg: async (_: {}, { imgKey }: { imgKey: string; }, __: any) => {
     try {
       const preSignedUrl = await handleSignUrl(imgKey)
@@ -69,10 +15,10 @@ export const imageQueries: QueryResolvers = {
       const alt = await getImgTag(imgKey);
       if (!alt) {
         console.warn('Error in getting alt tag');
-        return { url: preSignedUrl, alt: "placeholder" };
+        return { url: preSignedUrl, alt: "placeholder", key: imgKey };
 
       }
-      return { url: preSignedUrl, alt };
+      return { url: preSignedUrl, alt, key: imgKey };
     } catch (err: any) {
       throw new Error('Error in getting upload url for s3: ' + err.message);
     }
@@ -101,7 +47,7 @@ export const imageQueries: QueryResolvers = {
 
 
       const correctedAltTags = altTags.map(t => t ?? "placeholder");
-      const imgs = filteredUrls.map((url, i) => ({ url, alt: correctedAltTags[i] ?? "" }))
+      const imgs = filteredUrls.map((url, i) => ({ url, alt: correctedAltTags[i] ?? "", key: imgKeys[i] }))
 
       return imgs;
     } catch (err: any) {

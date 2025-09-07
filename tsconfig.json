@@ -8,8 +8,13 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+
+		}
 	},
-	"files": ["src/@types/graphql.d.ts"],
+	"files": ["src/types/graphql.d.ts"],
 	"include": ["src/*.ts", "src/**/*.ts", "src/**/*.js"],
 	"exclude": ["node_modules", "src/generated/*.ts", "src/seed/*.ts", "src/**/*.d.ts"]
 }
