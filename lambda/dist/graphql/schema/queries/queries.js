@@ -1,6 +1,4 @@
 "use strict";
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="abab4be9-d0ee-5b93-895e-563cde6c0a69")}catch(e){}}();
-
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.queries = void 0;
 exports.queries = `
@@ -35,4 +33,3 @@ exports.queries = `
     }
 `;
 //# sourceMappingURL=queries.js.map
-//# debugId=abab4be9-d0ee-5b93-895e-563cde6c0a69

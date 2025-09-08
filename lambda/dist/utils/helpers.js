@@ -1,6 +1,4 @@
 "use strict";
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="dc0646e1-4df8-5668-b644-3a78aacfc991")}catch(e){}}();
-
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createImgGalArr = void 0;
 // Takes in alt tags, gallery image urls and header url from property pages and
@@ -42,4 +40,3 @@ exports.createImgGalArr = createImgGalArr;
 // 	}
 // };
 //# sourceMappingURL=helpers.js.map
-//# debugId=dc0646e1-4df8-5668-b644-3a78aacfc991

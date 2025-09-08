@@ -1,6 +1,4 @@
 "use strict";
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="7811707d-aa5b-58f9-a412-5873a89d2389")}catch(e){}}();
-
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18,7 +16,6 @@ const s3Query_1 = require("../../../utils/s3Query");
 exports.propertyQueries = {
     getPropertyInfo: (_1, _a, __1) => __awaiter(void 0, [_1, _a, __1], void 0, function* (_, { _id }, __) {
         try {
-            throw new Error("This should show up in Sentry!");
             yield (0, db_1.connectToDb)();
             if (!_id) {
                 throw new Error('No ID was presented for querying property info');
@@ -52,6 +49,9 @@ exports.propertyQueries = {
         try {
             yield (0, db_1.connectToDb)();
             const properties = yield models_1.Property.find();
+            if (true) {
+                throw new Error("This should show up in Sentry!");
+            }
             if (!properties) {
                 throw new Error('Error fetching all properties from database');
             }
@@ -110,4 +110,3 @@ exports.propertyQueries = {
     })
 };
 //# sourceMappingURL=property.js.map
-//# debugId=7811707d-aa5b-58f9-a412-5873a89d2389

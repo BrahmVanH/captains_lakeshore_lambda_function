@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/captains-lakefront-rentals-api/dev/1757294993356-2025-09-08T01:29:53.356Z/captains-lakefront-rentals-api.zip"
+          "S3Key": "serverless/captains-lakefront-rentals-api/dev/1757297303271-2025-09-08T02:08:23.271Z/captains-lakefront-rentals-api.zip"
         },
         "Handler": "lambda/dist/server.handler",
         "Runtime": "nodejs22.x",
@@ -180,14 +180,14 @@
         "GraphqlLogGroup"
       ]
     },
-    "GraphqlLambdaVersionZ2iODyAMDprTQdDXxZ15gFXpDzoJ6rzA2v23YeFJ4": {
+    "GraphqlLambdaVersionb4jhJZVo4qmcsWUDhQNhUByz6CpLEreN9UQqK8FKkH8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GraphqlLambdaFunction"
         },
-        "CodeSha256": "itAd79Rn04+3krrlVN8eL+WG1W7MPx2hA8iTyLoe038="
+        "CodeSha256": "ddBm/iZ1ti+nueXLv8q3q0g5kZxdsbGR3Gi2qU1HYdc="
       }
     },
     "HttpApi": {
@@ -338,7 +338,7 @@
     "GraphqlLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GraphqlLambdaVersionZ2iODyAMDprTQdDXxZ15gFXpDzoJ6rzA2v23YeFJ4"
+        "Ref": "GraphqlLambdaVersionb4jhJZVo4qmcsWUDhQNhUByz6CpLEreN9UQqK8FKkH8"
       },
       "Export": {
         "Name": "sls-captains-lakefront-rentals-api-dev-GraphqlLambdaFunctionQualifiedArn"

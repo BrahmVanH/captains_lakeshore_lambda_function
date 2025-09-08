@@ -1,6 +1,4 @@
 "use strict";
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ca152487-2163-5346-9316-3a9d54bd1ca1")}catch(e){}}();
-
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -32,4 +30,3 @@ const connectToDb = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.connectToDb = connectToDb;
 //# sourceMappingURL=db.js.map
-//# debugId=ca152487-2163-5346-9316-3a9d54bd1ca1

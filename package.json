@@ -10,7 +10,7 @@
     "build:lambda": "npm run bundle && tsc -p lambda/tsconfig.json && npm run sentry:sourcemaps",
     "codegen": "graphql-codegen --config codegen.yml",
     "bundle": "ncp ./src ./lambda/bundle",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org brahm-van-houzen-studio --project lake-superior-captains-lambda ./lambda/dist && sentry-cli sourcemaps upload --org brahm-van-houzen-studio --project lake-superior-captains-lambda ./lambda/dist"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org brahm-van-houzen-studio --project lake-superior-captains-lambda ./lambda/bundle && sentry-cli sourcemaps upload --org brahm-van-houzen-studio --project lake-superior-captains-lambda ./lambda/bundle"
   },
   "dependencies": {
     "@apollo/server": "^4.12.2",

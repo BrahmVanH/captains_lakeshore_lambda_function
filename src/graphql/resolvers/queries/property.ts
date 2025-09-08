@@ -2,7 +2,6 @@ import { Property } from '../../../models';
 import { connectToDb } from '../../../connection/db';
 import {
   Image,
-  ImageObject,
   Property as IProperty,
   QueryResolvers,
 } from '../../../generated/graphql';
@@ -13,6 +12,8 @@ export const propertyQueries: QueryResolvers = {
 
   getPropertyInfo: async (_: {}, { _id }: { _id: string }, __: any) => {
     try {
+
+
       await connectToDb();
 
       if (!_id) {
@@ -52,6 +53,8 @@ export const propertyQueries: QueryResolvers = {
       await connectToDb();
 
       const properties: IProperty[] = await Property.find();
+
+
 
       if (!properties) {
         throw new Error('Error fetching all properties from database');

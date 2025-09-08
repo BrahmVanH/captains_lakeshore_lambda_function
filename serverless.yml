@@ -3,6 +3,8 @@ service: captains-lakefront-rentals-api
 provider:
   name: aws
   runtime: nodejs22.x
+  stage: prod
+  profile: production
   
   httpApi:
     cors: true
@@ -16,6 +18,8 @@ package:
   patterns:
     - 'lambda/dist/**'
     - 'node_modules/**'
+    - '!node_modules/.cache/**'
+    - '!node_modules/aws-sdk/**' 
     - '!src/**'
     - '!.env*'
     - '!tsconfig.json'

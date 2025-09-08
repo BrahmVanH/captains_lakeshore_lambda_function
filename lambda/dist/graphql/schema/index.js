@@ -1,6 +1,4 @@
 "use strict";
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="98ec0ea3-ce18-53ae-a6eb-0ace332f064a")}catch(e){}}();
-
 // import { readFileSync } from 'fs';
 // import { join } from 'path';
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -50,4 +48,3 @@ const typeDefs = [
 ].join('\n');
 exports.default = typeDefs;
 //# sourceMappingURL=index.js.map
-//# debugId=98ec0ea3-ce18-53ae-a6eb-0ace332f064a

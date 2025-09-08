@@ -1,6 +1,4 @@
 "use strict";
-!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="f61b91b7-b565-5fcb-9eb4-533fe0ae5737")}catch(e){}}();
-
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -139,4 +137,3 @@ exports.spaceMutations = {
     }),
 };
 //# sourceMappingURL=space.js.map
-//# debugId=f61b91b7-b565-5fcb-9eb4-533fe0ae5737
