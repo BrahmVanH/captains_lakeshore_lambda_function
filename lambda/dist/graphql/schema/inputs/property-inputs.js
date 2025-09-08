@@ -7,10 +7,11 @@ exports.propertyInputs = `
     }
 
     input Update {
-        propertyName: String!
-        propertyDescription: String!
-        amenities: [AmenityInput!]
-        headerImgKey: String!
+        propertyName: String
+        propertyDescription: String
+        amenities: [AmenityInput]
+        headerImgKey: String
+        s3DirectoryPrefix: String
     }
 
     input UpdatePropertyNameInput {
@@ -92,6 +93,12 @@ exports.propertyInputs = `
     input UpdatePropertyHouseRulesInput {
         _id: ID!
         houseRules: HouseRulesInput
+    }
+
+    input UpdatePropertyS3DirectoryPrefixInput {
+        _id: ID!
+        s3DirectoryPrefix: String
+
     }
 `;
 //# sourceMappingURL=property-inputs.js.map

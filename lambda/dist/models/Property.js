@@ -91,6 +91,9 @@ const propertySchema = new mongoose_1.Schema({
     headerImgKey: {
         type: String,
     },
+    s3DirectoryPrefix: {
+        type: String,
+    },
     bookings: [
         {
             type: mongoose_1.Types.ObjectId,

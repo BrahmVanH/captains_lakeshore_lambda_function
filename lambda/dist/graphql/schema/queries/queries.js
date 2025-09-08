@@ -5,10 +5,7 @@ exports.queries = `
     type Query {
         getAllUsers: [User!]
         queryBookingsByProperty(propertyId: ID!): [Booking!]
-        getHomePgImgs: homePgImgPack!
-        getHideawayImgs: hideawayImgPack!
-        getCottageImgs: cottageImgPack!
-        getAboutPgImg: String!
+        getPropertyImgs(_id: ID!): [Image]!
         getImg(imgKey: String!): Image!
         getImgs(imgKeys: [String!]!): [Image!]!
         getPropertyInfo(_id: ID!): Property!

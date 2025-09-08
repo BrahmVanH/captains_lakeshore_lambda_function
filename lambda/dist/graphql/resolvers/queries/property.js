@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.propertyQueries = void 0;
 const models_1 = require("../../../models");
 const db_1 = require("../../../connection/db");
+const s3Query_1 = require("../../../utils/s3Query");
 exports.propertyQueries = {
     getPropertyInfo: (_1, _a, __1) => __awaiter(void 0, [_1, _a, __1], void 0, function* (_, { _id }, __) {
         try {
@@ -19,7 +20,7 @@ exports.propertyQueries = {
             if (!_id) {
                 throw new Error('No ID was presented for querying property info');
             }
-            const propertyInfo = yield models_1.Property.findOne({ _id }).populate('bookings');
+            const propertyInfo = yield models_1.Property.findOne({ _id }).populate('bookings').populate('amenities').populate('spacesItems').populate('overviewItems');
             if (!propertyInfo) {
                 throw new Error('Could not find property with that name');
             }
@@ -80,5 +81,29 @@ exports.propertyQueries = {
             throw new Error('Error in getting property info: ' + err.message);
         }
     }),
+    getPropertyImgs: (_1, _a, __1) => __awaiter(void 0, [_1, _a, __1], void 0, function* (_, { _id }, __) {
+        try {
+            yield (0, db_1.connectToDb)();
+            if (!_id) {
+                console.error("No id parameter present in getPropertyImgs");
+                throw new Error('Invalid ID');
+            }
+            const property = yield models_1.Property.findOne({ _id });
+            if (!property) {
+                console.error("Could not find property with that name");
+                throw new Error('Could not find property with that name');
+            }
+            const { s3DirectoryPrefix } = property;
+            if (!s3DirectoryPrefix) {
+                return [];
+            }
+            const images = yield (0, s3Query_1.getS3ImagesByDirectoryPrefix)(s3DirectoryPrefix);
+            return images;
+        }
+        catch (err) {
+            console.error('Error in getting property info', err);
+            throw new Error('Error in getting property info: ' + err.message);
+        }
+    })
 };
 //# sourceMappingURL=property.js.map

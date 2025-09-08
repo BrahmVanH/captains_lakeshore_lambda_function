@@ -102,6 +102,29 @@ exports.propertyMutations = {
             throw new Error('Error in updating property: ' + err.message);
         }
     }),
+    UpdatePropertyS3DirectoryPrefix: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
+        if (!args.input) {
+            throw new Error('No input object was presented for updating property');
+        }
+        const { _id, s3DirectoryPrefix } = args.input;
+        if (!_id) {
+            throw new Error('Property name is undefined');
+        }
+        if (!s3DirectoryPrefix) {
+            throw new Error('Update object is undefined');
+        }
+        try {
+            yield (0, db_1.connectToDb)();
+            const property = yield models_1.Property.findOneAndUpdate({ _id }, { $set: { s3DirectoryPrefix } });
+            if (!property) {
+                throw new Error('Could not find property with that name');
+            }
+            return property;
+        }
+        catch (err) {
+            throw new Error('Error in updating property: ' + err.message);
+        }
+    }),
     updatePropertyOverviewItems: (_, args, __) => __awaiter(void 0, void 0, void 0, function* () {
         if (!args.input) {
             throw new Error('No input object was presented for updating property');
@@ -267,9 +290,6 @@ exports.propertyMutations = {
         const { _id, update } = args.input;
         if (!_id) {
             throw new Error('Property name is undefined');
-        }
-        if (!(update === null || update === void 0 ? void 0 : update.propertyDescription) || !(update === null || update === void 0 ? void 0 : update.amenities) || !(update === null || update === void 0 ? void 0 : update.headerImgKey)) {
-            throw new Error('Update object is undefined');
         }
         try {
             yield (0, db_1.connectToDb)();

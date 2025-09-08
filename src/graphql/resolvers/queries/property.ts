@@ -1,12 +1,12 @@
-import { Property } from '@/models';
-import { connectToDb } from '@/connection/db';
+import { Property } from '../../../models';
+import { connectToDb } from '../../../connection/db';
 import {
   Image,
   ImageObject,
   Property as IProperty,
   QueryResolvers,
-} from '@/generated/graphql';
-import { getS3ImagesByDirectoryPrefix } from '@/utils/s3Query';
+} from '../../../generated/graphql';
+import { getS3ImagesByDirectoryPrefix } from '../../../utils/s3Query';
 
 
 export const propertyQueries: QueryResolvers = {

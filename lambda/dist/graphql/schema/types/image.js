@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.imageTypes = void 0;
 exports.imageTypes = `
-    type imageObject {
+    type ImageObject {
         imgKey: String!
         original: String!
         thumbnail: String!
@@ -13,6 +13,7 @@ exports.imageTypes = `
     type Image {
         url: String!
         alt: String!
+        key: String!
     }
 
     type DeleteS3ObjectResponse {
@@ -20,20 +21,8 @@ exports.imageTypes = `
         message: String!
     }
 
-    type homePgImgPack {
-        headerImgUrl: String!
-        hideawayImgUrl: String!
-        cottageImgUrl: String!
-    }
 
-    type hideawayImgPack {
-        headerUrl: String!
-        galleryArray: [imageObject!]!
-    }
 
-    type cottageImgPack {
-        headerUrl: String!
-        galleryArray: [imageObject!]!
-    }
+  
 `;
 //# sourceMappingURL=image.js.map

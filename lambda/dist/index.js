@@ -22,7 +22,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+dotenv_1.default.config({ quiet: true });
 const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
 const port = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 4000;

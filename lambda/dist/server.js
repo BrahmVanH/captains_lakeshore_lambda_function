@@ -18,7 +18,7 @@ const schema_1 = __importDefault(require("./graphql/schema/"));
 const resolvers_1 = __importDefault(require("./graphql/resolvers/"));
 const aws_lambda_1 = require("@as-integrations/aws-lambda");
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+dotenv_1.default.config({ quiet: true });
 const server = new server_1.ApolloServer({
     typeDefs: schema_1.default,
     resolvers: resolvers_1.default,

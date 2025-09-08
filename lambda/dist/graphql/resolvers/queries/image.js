@@ -12,63 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.imageQueries = void 0;
 const s3Query_1 = require("../../../utils/s3Query");
 exports.imageQueries = {
-    getHomePgImgs: () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const homePgImgs = yield (0, s3Query_1.getS3HomePageImgs)();
-            if (homePgImgs instanceof Array) {
-                console.error('Error in querying s3 for homepage images', homePgImgs);
-                throw new Error('Error in querying s3 for homepage images');
-            }
-            if (!(homePgImgs === null || homePgImgs === void 0 ? void 0 : homePgImgs.headerImgUrl) || !(homePgImgs === null || homePgImgs === void 0 ? void 0 : homePgImgs.hideawayImgUrl) || !(homePgImgs === null || homePgImgs === void 0 ? void 0 : homePgImgs.cottageImgUrl)) {
-                console.error('Error in querying s3 for homepage images');
-                throw new Error('Something went wrong in fetching object from s3');
-            }
-            return homePgImgs;
-        }
-        catch (err) {
-            console.error('Error in querying s3 for homepage images', err);
-            throw new Error('Error in querying s3 for homepage images: ' + err.message);
-        }
-    }),
-    getHideawayImgs: () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const hideawayImgs = yield (0, s3Query_1.getS3HideawayPgImgs)();
-            if (!hideawayImgs) {
-                throw new Error('Something went wrong in fetching hideaway object from S3');
-            }
-            return hideawayImgs;
-        }
-        catch (err) {
-            console.error('Error in getHideawayImgs...', err);
-            throw new Error('Error in getting hideaway images from s3: ' + err.message);
-        }
-    }),
-    getCottageImgs: () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const cottageImgs = yield (0, s3Query_1.getS3CottagePgImgs)();
-            if (!cottageImgs) {
-                throw new Error('Something went wrong in fetching cottage object from S3');
-            }
-            return cottageImgs;
-        }
-        catch (err) {
-            console.error('Error in getCottageImgs...', err);
-            throw new Error('Error in getting cottage images from s3: ' + err.message);
-        }
-    }),
-    getAboutPgImg: () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const aboutPgImgs = yield (0, s3Query_1.getS3AboutPgImgs)();
-            if (!aboutPgImgs) {
-                throw new Error('Something went wrong in fetching object from s3');
-            }
-            return aboutPgImgs;
-        }
-        catch (err) {
-            console.error('Error in querying s3 for about page image', err);
-            throw new Error('Error in querying s3 for about page image: ' + err.message);
-        }
-    }),
     getImg: (_1, _a, __1) => __awaiter(void 0, [_1, _a, __1], void 0, function* (_, { imgKey }, __) {
         try {
             const preSignedUrl = yield (0, s3Query_1.handleSignUrl)(imgKey);
@@ -79,9 +22,9 @@ exports.imageQueries = {
             const alt = yield (0, s3Query_1.getImgTag)(imgKey);
             if (!alt) {
                 console.warn('Error in getting alt tag');
-                return { url: preSignedUrl, alt: "placeholder" };
+                return { url: preSignedUrl, alt: "placeholder", key: imgKey };
             }
-            return { url: preSignedUrl, alt };
+            return { url: preSignedUrl, alt, key: imgKey };
         }
         catch (err) {
             throw new Error('Error in getting upload url for s3: ' + err.message);
@@ -101,7 +44,7 @@ exports.imageQueries = {
                 throw new Error(`Error in getting alt tags for imgs: ${e}`);
             });
             const correctedAltTags = altTags.map(t => t !== null && t !== void 0 ? t : "placeholder");
-            const imgs = filteredUrls.map((url, i) => { var _a; return ({ url, alt: (_a = correctedAltTags[i]) !== null && _a !== void 0 ? _a : "" }); });
+            const imgs = filteredUrls.map((url, i) => { var _a; return ({ url, alt: (_a = correctedAltTags[i]) !== null && _a !== void 0 ? _a : "", key: imgKeys[i] }); });
             return imgs;
         }
         catch (err) {

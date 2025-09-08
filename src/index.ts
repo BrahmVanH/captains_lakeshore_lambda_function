@@ -28,6 +28,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 
 const startApolloServer = async () => {
 	try {
+		
 		await server.start();
 		app.use('/graphql', cors<cors.CorsRequest>({ origin: '*' }), express.json(), expressMiddleware(server));
 		app.use((req, res, next) => {

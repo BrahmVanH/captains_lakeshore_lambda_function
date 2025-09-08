@@ -34,3 +34,6 @@ codegen.ts
 
 src/seed
 lambda/dist/seed
+
+# Sentry Config File
+.sentryclirc

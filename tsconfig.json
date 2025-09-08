@@ -1,19 +1,21 @@
 {
 	"compilerOptions": {
-		"target": "es5",
-		"module": "commonjs",
-		"allowJs": true,
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"],
+        "target": "es5",
+        "module": "commonjs",
+        "allowJs": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "inlineSources": true,
 
-		}
-	},
+        // Set `sourceRoot` to  "/" to strip the build path prefix
+        // from generated source code references.
+        // This improves issue grouping in Sentry.
+        "sourceRoot": "/"
+    },
 	"files": ["src/types/graphql.d.ts"],
 	"include": ["src/*.ts", "src/**/*.ts", "src/**/*.js"],
 	"exclude": ["node_modules", "src/generated/*.ts", "src/seed/*.ts", "src/**/*.d.ts"]
