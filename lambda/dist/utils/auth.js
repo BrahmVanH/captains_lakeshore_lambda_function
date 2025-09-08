@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="8160c21b-30ff-5d78-8f0e-5cc210f9c812")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -46,3 +48,4 @@ const authMiddleware = ({ req }) => {
 };
 exports.authMiddleware = authMiddleware;
 //# sourceMappingURL=auth.js.map
+//# debugId=8160c21b-30ff-5d78-8f0e-5cc210f9c812

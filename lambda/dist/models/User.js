@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="b13fbbe8-fded-5e46-ba98-19e1ded2fe07")}catch(e){}}();
+
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -54,3 +56,4 @@ userSchema.methods.comparePassword = function (password) {
 const User = (0, mongoose_1.model)('User', userSchema);
 exports.default = User;
 //# sourceMappingURL=User.js.map
+//# debugId=b13fbbe8-fded-5e46-ba98-19e1ded2fe07

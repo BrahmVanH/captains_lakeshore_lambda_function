@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="ecfe4b6d-d48d-5654-a669-6a16dd6cb0f5")}catch(e){}}();
+
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -32,3 +34,4 @@ exports.bookingQueries = {
     })
 };
 //# sourceMappingURL=booking.js.map
+//# debugId=ecfe4b6d-d48d-5654-a669-6a16dd6cb0f5

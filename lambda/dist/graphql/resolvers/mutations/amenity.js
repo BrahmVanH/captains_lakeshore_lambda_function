@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="31d1b1df-400f-5cbb-af2e-bc177af00f49")}catch(e){}}();
+
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -87,3 +89,4 @@ exports.amenityMutations = {
     }),
 };
 //# sourceMappingURL=amenity.js.map
+//# debugId=31d1b1df-400f-5cbb-af2e-bc177af00f49

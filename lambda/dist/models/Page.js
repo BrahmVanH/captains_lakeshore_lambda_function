@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="040035db-39d3-5e7f-969f-e8dc35496afb")}catch(e){}}();
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_1 = require("../generated/graphql");
 const mongoose_1 = require("mongoose");
@@ -51,3 +53,4 @@ const pageSchema = new mongoose_1.Schema({
 const PageModel = (0, mongoose_1.model)('Page', pageSchema);
 exports.default = PageModel;
 //# sourceMappingURL=Page.js.map
+//# debugId=040035db-39d3-5e7f-969f-e8dc35496afb
