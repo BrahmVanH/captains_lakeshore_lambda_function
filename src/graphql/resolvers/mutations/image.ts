@@ -1,5 +1,6 @@
 import { connectToDb } from "../../../connection/db";
 import { MutationDeleteS3ObjectsArgs, MutationResolvers } from "../../../generated/graphql";
+import { invalidatePropertyCaches } from "../../../utils/redis";
 import { deleteS3Objects } from "../../../utils/s3Upload";
 
 export const imageMutations: MutationResolvers = {
@@ -16,6 +17,10 @@ export const imageMutations: MutationResolvers = {
       if (!response) {
         throw new Error('Could not delete object from s3');
       }
+
+            await invalidatePropertyCaches();
+      
+
       return response;
     } catch (err: any) {
       throw new Error('Error in deleting object from s3: ' + err.message);

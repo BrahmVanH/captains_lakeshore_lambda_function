@@ -1,4 +1,4 @@
-import { model, Schema, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { Space as SpaceType } from '../generated/graphql';
 
 const spaceSchema: Schema<SpaceType> = new Schema<SpaceType>({

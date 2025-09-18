@@ -1,14 +1,6 @@
 import { model, Schema, Types } from 'mongoose';
-import { Amenity as AmenityType, Property as PropertyType } from '../generated/graphql';
+import { Property as PropertyType } from '../generated/graphql';
 
-const amenitiesSchema: Schema<AmenityType> = new Schema<AmenityType>({
-	amenityName: {
-		type: String,
-	},
-	amenityType: {
-		type: String,
-	},
-});
 
 const propertySchema: Schema<PropertyType> = new Schema<PropertyType>({
 	propertyName: {

@@ -15,6 +15,8 @@ import {
   MutationUpdatePropertySpacesArgs,
   MutationUpdatePropertyS3DirectoryPrefixArgs,
 } from '../../../generated/graphql';
+import { invalidatePropertyCaches } from "../../../utils/redis";
+import { triggerRebuild } from "../../../utils/webhook";
 
 export const propertyMutations: MutationResolvers = {
 
@@ -32,6 +34,9 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not create property');
       }
+
+      await invalidatePropertyCaches();
+
       return property;
     } catch (err: any) {
       throw new Error('Error in creating property: ' + err.message);
@@ -54,6 +59,13 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyAmenities', propertyId: property.id }
+      })
+
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -76,6 +88,13 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyDescription', propertyId: property.id }
+      })
+
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -98,6 +117,12 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyHeaderImg', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -120,6 +145,12 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyS3DirectoryPrefix', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -142,6 +173,11 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+      triggerRebuild({
+        metadata: { action: 'updatePropertyOverviewItems', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -164,6 +200,12 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyRoomsAndBeds', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -186,6 +228,12 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      // await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyName', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -208,6 +256,13 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyHouseRules', propertyId: property.id }
+      })
+
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -230,6 +285,11 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+      triggerRebuild({
+        metadata: { action: 'updatePropertyImportantInfo', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -252,6 +312,12 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertySpaces', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property: ' + err.message);
@@ -271,6 +337,12 @@ export const propertyMutations: MutationResolvers = {
       if (!property) {
         throw new Error('Could not find property with that name');
       }
+
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'removeProperty', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in removing property: ' + err.message);
@@ -298,6 +370,11 @@ export const propertyMutations: MutationResolvers = {
         throw new Error('Could not find property with that name');
       }
 
+      await invalidatePropertyCaches();
+
+      triggerRebuild({
+        metadata: { action: 'updatePropertyInfo', propertyId: property.id }
+      })
       return property;
     } catch (err: any) {
       throw new Error('Error in updating property info: ' + err.message);

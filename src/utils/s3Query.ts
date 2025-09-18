@@ -37,7 +37,7 @@ export const handleSignUrl = async (imageItem: S3Object | string) => {
 					Key: imageItem?.Key,
 				}),
 				{
-					expiresIn: 60,
+					expiresIn: 60 * 60 * 24 * 7, // 7 days
 				}
 			);
 		}
@@ -58,7 +58,7 @@ export const handleSignUrl = async (imageItem: S3Object | string) => {
 };
 
 
-export const getImgTag = async (imageItem: S3Object | string) => {
+export const getImgAltTag = async (imageItem: S3Object | string) => {
 	const bucketName = process.env.S3_BUCKET_NAME;
 	const s3 = new S3Client({
 		region: process.env.S3_REGION ?? '',
@@ -132,7 +132,7 @@ export const getS3ImagesByDirectoryPrefix = async (directoryPrefix: string) => {
 		const images = await Promise.all(s3Objects
 			.filter((s3Object) => s3Object.Key !== Prefix) // Remove root object from s3 bucket directory list
 			.filter((obj) => !!obj.Key).map(async (obj) => {
-				const alt = await getImgTag(obj);
+				const alt = await getImgAltTag(obj);
 				const url = await handleSignUrl(obj);
 
 				if (!alt) {

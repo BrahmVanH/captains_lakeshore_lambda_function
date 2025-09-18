@@ -1,3 +1,7 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: brahmvanh
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: lake-superior-captains-lambda
 service: captains-lakefront-rentals-api
 
 provider:
@@ -5,9 +9,25 @@ provider:
   runtime: nodejs22.x
   stage: prod
   profile: production
+  region: us-east-2
   
   httpApi:
     cors: true
+
+  environment:
+    ALLOWED_ORIGINS: ${env:ALLOWED_ORIGINS}
+    AUTH_SECRET: ${env:AUTH_SECRET}
+    AUTH_EXPIRATION: ${env:AUTH_EXPIRATION}
+    ADMIN_CODE: ${env:ADMIN_CODE}
+    S3_ACCESS_KEY: ${env:S3_ACCESS_KEY}
+    S3_SECRET_ACCESS_KEY: ${env:S3_SECRET_ACCESS_KEY}
+    S3_REGION: ${env:S3_REGION}
+    S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
+    MONGODB_URI: ${env:MONGODB_URI}
+    SENTRY_DSN: ${env:SENTRY_DSN}
+    NODE_OPTIONS: ${env:NODE_OPTIONS}
+    SENTRY_AUTH_TOKEN: ${env:SENTRY_AUTH_TOKEN}
+    SENTRY_TRACES_SAMPLE_RATE: ${env:SENTRY_TRACES_SAMPLE_RATE}
 
 custom:
   hooks:
@@ -28,6 +48,7 @@ package:
     
 plugins:
   - serverless-offline
+  - serverless-dotenv-plugin
 
 functions:
   graphql:

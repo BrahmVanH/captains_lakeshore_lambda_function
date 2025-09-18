@@ -7,4 +7,5 @@ const resolvers: Resolvers = {
   Mutation: mutations
 }
 
+
 export default resolvers

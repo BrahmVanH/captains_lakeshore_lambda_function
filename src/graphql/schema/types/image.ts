@@ -8,7 +8,7 @@ export const imageTypes = /* GraphQL */ `
     }
 
     type Image {
-        url: String!
+        url: String
         alt: String!
         key: String!
     }

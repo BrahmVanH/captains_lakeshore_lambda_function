@@ -5,6 +5,8 @@ export const queries = /* GraphQL */ `
         getPropertyImgs(_id: ID!): [Image]!
         getImg(imgKey: String!): Image!
         getImgs(imgKeys: [String!]!): [Image!]!
+        getImg2(imgKey: String!): Image!
+        getImgs2(imgKeys: [String!]!): [Image!]!
         getPropertyInfo(_id: ID!): Property!
         getProperties: [Property!]!
         getPropertiesLite: [PropertyLite]
