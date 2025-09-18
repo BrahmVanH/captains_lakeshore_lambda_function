@@ -82,6 +82,13 @@ const corsMiddleware: middleware.MiddlewareFn<typeof requestHandler> = async (ev
 	}
 };
 
+const apolloHandler = startServerAndCreateLambdaHandler(
+	server,
+	handlers.createAPIGatewayProxyEventV2RequestHandler(), {
+	middleware: [corsMiddleware],
+});
+
+
 export const handler = async (event: APIGatewayProxyEventV2, context: any = []): Promise<APIGatewayProxyResultV2 | void> => {
 
 	if (event.requestContext.http.path.startsWith('/image/')) {
@@ -101,14 +108,6 @@ export const handler = async (event: APIGatewayProxyEventV2, context: any = []):
 			body: ''
 		};
 	}
-
-
-	const apolloHandler = startServerAndCreateLambdaHandler(
-		server,
-		handlers.createAPIGatewayProxyEventV2RequestHandler(), {
-		middleware: [corsMiddleware],
-	});
-
 
 	return await apolloHandler(event, context, () => { });
 } 
