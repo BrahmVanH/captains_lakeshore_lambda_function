@@ -60,3 +60,9 @@ functions:
       - httpApi:
           path: /
           method: GET
+      - httpApi:
+          path: /image/{key+}
+          method: GET
+      - httpApi:
+          path: /image/{key+}
+          method: OPTIONS

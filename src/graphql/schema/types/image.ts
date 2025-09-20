@@ -8,10 +8,10 @@ export const imageTypes = /* GraphQL */ `
     }
 
     type Image {
-        url: String
         alt: String!
         key: String!
     }
+
 
     type DeleteS3ObjectResponse {
         status: Int!

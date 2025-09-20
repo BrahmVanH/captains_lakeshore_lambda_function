@@ -42,3 +42,6 @@ lambda/dist/seed
 
 # Sentry Config File
 .sentryclirc
+
+
+AGENTS.md

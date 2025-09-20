@@ -176,7 +176,6 @@ export type Image = {
   __typename?: 'Image';
   alt: Scalars['String']['output'];
   key: Scalars['String']['output'];
-  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type ImageObject = {
@@ -500,9 +499,7 @@ export type Query = {
   getAllUsers?: Maybe<Array<User>>;
   getAmenities: Array<Amenity>;
   getImg: Image;
-  getImg2: Image;
   getImgs: Array<Image>;
-  getImgs2: Array<Image>;
   getPageBySlug: Page;
   getProperties: Array<Property>;
   getPropertiesLite?: Maybe<Array<Maybe<PropertyLite>>>;
@@ -534,17 +531,7 @@ export type QueryGetImgArgs = {
 };
 
 
-export type QueryGetImg2Args = {
-  imgKey: Scalars['String']['input'];
-};
-
-
 export type QueryGetImgsArgs = {
-  imgKeys: Array<Scalars['String']['input']>;
-};
-
-
-export type QueryGetImgs2Args = {
   imgKeys: Array<Scalars['String']['input']>;
 };
 
@@ -1048,7 +1035,6 @@ export type HouseRulesResolvers<ContextType = any, ParentType extends ResolversP
 export type ImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
   alt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   key?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1188,9 +1174,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getAllUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
   getAmenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
   getImg?: Resolver<ResolversTypes['Image'], ParentType, ContextType, RequireFields<QueryGetImgArgs, 'imgKey'>>;
-  getImg2?: Resolver<ResolversTypes['Image'], ParentType, ContextType, RequireFields<QueryGetImg2Args, 'imgKey'>>;
   getImgs?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<QueryGetImgsArgs, 'imgKeys'>>;
-  getImgs2?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType, RequireFields<QueryGetImgs2Args, 'imgKeys'>>;
   getPageBySlug?: Resolver<ResolversTypes['Page'], ParentType, ContextType, RequireFields<QueryGetPageBySlugArgs, 'slug'>>;
   getProperties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
   getPropertiesLite?: Resolver<Maybe<Array<Maybe<ResolversTypes['PropertyLite']>>>, ParentType, ContextType>;

@@ -21,6 +21,8 @@ const requestHandler = handlers.createAPIGatewayProxyEventV2RequestHandler();
 
 // Image proxy handler
 const handleImageRequest = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+	console.log('Image request - pathParameters:', event.pathParameters);
+	console.log('Image request - rawPath:', event.rawPath);
 	const imageKey = event.pathParameters?.key;
 
 	if (!imageKey) {
@@ -90,6 +92,8 @@ const apolloHandler = startServerAndCreateLambdaHandler(
 
 
 export const handler = async (event: APIGatewayProxyEventV2, context: any = []): Promise<APIGatewayProxyResultV2 | void> => {
+	console.log("event.requestContext.http.path:", event.requestContext.http.path);
+	console.log("event.requestContext.http.method :", event.requestContext.http.method);
 
 	if (event.requestContext.http.path.startsWith('/image/')) {
 		return handleImageRequest(event);
